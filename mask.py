@@ -96,13 +96,13 @@ def mask_4(fp):
 
 if __name__ == '__main__':
 
-  cfg.draft = 'mask' # draft or mask
+  cfg.draft = 'draft' # draft or mask
 
-  fp = dxf.start('EI-ICR-WG-R1-TV22-007')
+  fp = dxf.start(cfg.draft)
   key.cross(0, 0)
   dxf.conversion(fp)
 
-  ok = 0
+  ok = 1
   
   if ok == 0 or ok == 1: mask_1(fp)
   if ok == 0 or ok == 2: mask_2(fp)

@@ -52,11 +52,14 @@ def scuts(x, y):
   t = (ltip + 12.5) * 0.5
   w = cfg.size
 
-  for i in [t - j for j in [0, 100, 200, 300]]:
-    dxf.srect('cuts', x + i - 1, y + w * 0.5, 2, w)
-    dxf.srect('tops', x + i - 20, y + w * 0.5, 40, w)
-    dxf.srect('cuts', x + w - i - 1, y + w * 0.5, 2, w)
-    dxf.srect('tops', x + w - i - 20, y + w * 0.5, 40, w)
+  for i in [t - j for j in [100, 300]]:
+    dxf.crect('edge', x + i, y, x + i + 100, y + w)
+    dxf.crect('edge', x - i + w, y, x - i + w - 100, y + w)
+  
+  # t = t + 100
+  
+  # dxf.crect('recs', x, y, x + t, y + w)
+  # dxf.crect('recs', x + w, y, x + w - t, y + w)
 
 def sline(x, y, lchip):
 
