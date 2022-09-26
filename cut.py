@@ -12,7 +12,7 @@ wcut = 0.1
 
 fontsize = 25
 
-def wafer(layer):
+def wafer():
   
   a = np.linspace(-70, 250, 81) * np.pi / 180
   
@@ -20,7 +20,7 @@ def wafer(layer):
   yp = radius * np.sin(a)
 
   data = np.array([xp, yp]).transpose()
-  cfg.data.append([layer] + data.tolist())
+  cfg.data.append(['edge'] + data.tolist())
 
   t = 4000
 
@@ -29,7 +29,7 @@ def wafer(layer):
   dxf.crect('fill',  rmax, -rmax, rmax-t, t-rmax)
   dxf.crect('fill',  rmax,  rmax, rmax-t, rmax-t)
 
-def tooling(layer, x, y, title, ix, jy):
+def texts(layer, x, y, title, ix, jy):
 
   for i in range(5):
     xp = i * size + x
@@ -39,7 +39,7 @@ def tooling(layer, x, y, title, ix, jy):
         dxf.srect(layer, xp, yp, size, size)
         dxf.texts('text', xp + size * 0.5, yp, title, fontsize, 'cc')
 
-def dicing(x, y, ix, jy):
+def cells(x, y, ix, jy):
 
   dx = 400
   dy = 400 + cfg.size * 0.5
@@ -52,44 +52,55 @@ def dicing(x, y, ix, jy):
         key.bars(xp, yp)
         dxf.srect('recs', xp + dx, yp + dy, cfg.size, cfg.size)
 
-def toolings(x, y):
+def tooling(x, y):
 
   s = -5 * size
   d = size * 0.5
 
-  tooling('core', x + s, y + d, '01', 0, 4)
-  tooling('keys', x + 0, y + d, '03-04', 4, 4)
-  tooling('slab', x + s, y + s - d, '02', 0, 0)
-  tooling('gold', x + 0, y + s - d, '03-04', 4, 0)
+  texts('core', x + s, y + d, '01', 0, 4)
+  texts('keys', x + 0, y + d, '03-04', 4, 4)
+  texts('slab', x + s, y + s - d, '02', 0, 0)
+  texts('gold', x + 0, y + s - d, '03-04', 4, 0)
 
   for i in range(10):
     xp = (i - 5) * size + x
     dxf.srect('recs', xp, y, size, size)
 
+  wafer()
+
   dev.saveas('tooling')
 
-def cuttings(x, y):
+def cutting(x, y, worker):
 
   s = -5 * size
   d = size * 0.5
 
-  dicing(x + s, y + d, 0, 4)
-  dicing(x + 0, y + d, 4, 4)
-  dicing(x + s, y + s - d, 0, 0)
-  dicing(x + 0, y + s - d, 4, 0)
+  cells(x + s, y + d, 0, 4)
+  cells(x + 0, y + d, 4, 4)
+  cells(x + s, y + s - d, 0, 0)
+  cells(x + 0, y + s - d, 4, 0)
 
-  dxf.crect('cuts', -rmax, 0, rmax, wcut)
+  dxf.crect('cuts', -rmax, y, rmax, wcut)
 
-  for i in range(10):
-    xp = (i - 5) * size + x
-    dxf.srect('cuts', xp + wbar + 100, y, wcut, rmax * 2)
-    dxf.srect('cuts', xp + size - 100, y, wcut, rmax * 2)
+  if worker == 'ETRI':
+    for i in range(10):
+      xp = (i - 5) * size + x
+      dxf.srect('cuts', xp + wbar + 100, y, wcut, rmax * 2)
+      dxf.srect('cuts', xp + size - 100, y, wcut, rmax * 2)
+  else:
+    l = cfg.size * 6
+    dxf.crect('cuts', -rmax, y+l, rmax, wcut+l)
+    dxf.crect('cuts', -rmax, y-l, rmax, wcut-l)
 
-  dev.saveas('scribing')
+    for i in range(10):
+      xp = (i - 5) * size + x
+      dxf.srect('cuts', xp + wbar - 200, y, wcut, rmax * 2)
+
+  wafer()
+
+  dev.saveas('sawing')
 
 if __name__ == '__main__':
 
-  wafer('edge')
-
-  toolings(0, 0)
-  cuttings(0, 0)
+  tooling(0, 0)
+  cutting(0, 0, 'FiberPro')

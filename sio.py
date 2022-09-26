@@ -11,7 +11,7 @@ ysize = cfg.ch
 def device(x, y, lchip, length, sign):
   
   lext = lchip - ltip
-  wext = 125
+  wext = 60
 
   w = [0.1, 0.5, 0.8, cfg.wg]
   l = [50, 25]

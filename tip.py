@@ -11,7 +11,7 @@ ysize = cfg.ch
 def device(x, y, lchip, wtip, sign):
   
   lext = lchip - ltip
-  wext = 125
+  wext = 60
 
   w = [wtip, 0.5, 0.8, cfg.wg]
   l = [50, 20, 5]
@@ -49,18 +49,22 @@ def pd(x, y, lchip, sign):
 
 def scuts(x, y):
 
-  t = (ltip + 12.5) * 0.5
+  t = ltip - 460 + 2.5
   w = cfg.size
 
-  for i in [t - j for j in [100, 300]]:
-    dxf.crect('edge', x + i, y, x + i + 100, y + w)
-    dxf.crect('edge', x - i + w, y, x - i + w - 100, y + w)
-  
-  # t = t + 100
-  
-  # dxf.crect('recs', x, y, x + t, y + w)
-  # dxf.crect('recs', x + w, y, x + w - t, y + w)
+  dxf.crect('recs', x + t, y, x + t + 2.5, y + w)
+  dxf.crect('recs', x - t + w, y, x - t + w - 2.5, y + w)
 
+  s = t + 5.5
+
+  dxf.crect('edge', x + s, y, x + s + 54, y + w)
+  dxf.crect('edge', x - s + w, y, x - s + w - 54, y + w)
+  
+  s = t - 57
+
+  dxf.crect('edge', x + s, y, x + s + 54, y + w)
+  dxf.crect('edge', x - s + w, y, x - s + w - 54, y + w)
+  
 def sline(x, y, lchip):
 
   wtip = 0.36
