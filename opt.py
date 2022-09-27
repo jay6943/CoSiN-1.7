@@ -7,14 +7,14 @@ import tip
 import tap
 
 yqpsk = 1800
-xback = 2300
+xback = 1200
 
 xsize = 5000
 ysize = 5000
 
 def inbend(x, y, ystart, sign):
 
-  x1, y1 = dev.sbend(x, y, cfg.ch * 1.5, 45, 0, sign * 2)
+  x1, y1 = dev.sbend(x, y, 350, 45, 0, sign * 2)
   x2, y2 = dev.tline(x1, y1, sign * cfg.ch * 3.5)
   x3, y3 = dev.bends(x2, y2, 90, 90, sign)
   x4, y4 = dev.sline(x3, y3, -xback)
