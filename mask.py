@@ -110,3 +110,4 @@ if __name__ == '__main__':
   if ok == 0 or ok == 4: mask_4(fp)
 
   dxf.close(fp)
+  dev.removes('__pycache__/')

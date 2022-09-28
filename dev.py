@@ -1,3 +1,4 @@
+import os
 import cfg
 import dxf
 import tip
@@ -106,11 +107,19 @@ def move(idev, x, xp, length):
 
   return xtip, ltip
 
+def removes(folder):
+
+  files = os.listdir(folder)
+  for fp in files: os.remove(folder + fp)
+  os.rmdir(folder)
+
 def saveas(filename):
 
   fp = dxf.start(filename)
   dxf.conversion(fp)
   dxf.close(fp)
+
+  removes('__pycache__/')
 
 if __name__ == '__main__':
 
