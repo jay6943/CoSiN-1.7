@@ -109,9 +109,14 @@ def move(idev, x, xp, length):
 
 def removes(folder):
 
-  files = os.listdir(folder)
-  for fp in files: os.remove(folder + fp)
-  os.rmdir(folder)
+  if os.path.isdir(folder):
+    
+    files = os.listdir(folder)
+    
+    for fp in files:
+      if os.path.exists(folder + fp): os.remove(folder + fp)
+    
+    os.rmdir(folder)
 
 def saveas(filename):
 
