@@ -36,30 +36,31 @@ def device(x, y, sign):
 
 def chip(x, y, lchip):
 
+  ch = cfg.ch * 0.5
+
+  x4 = x
+
   idev = len(cfg.data)
+
+  for _ in range(5):
+    x1, y1, y2 = device(x4, y, 1)
+    x2, y3 = dev.sbend(x1, y1,  ch, 45, 0, 1)
+    x2, y4 = dev.sbend(x1, y2, -ch, 45, 0, 1)
+    x3, y1 = dev.sbend(x2, y3, -ch, 45, 0, 1)
+    x3, y2 = dev.sbend(x2, y4,  ch, 45, 0, 1)
+    x4, y1, y2 = device(x3, y, -1) 
   
-  x1, _ = taper(x, y, cfg.wg, cfg.wtpr)
-  for i in range(10):
-    x2, _ = dxf.srect('core', x1, y, cfg.l1x2, cfg.w1x2)
-    x3, _ = taper(x2, y + cfg.d1x2, cfg.wtpr, cfg.wtpr)
-    x3, _ = taper(x2, y - cfg.d1x2, cfg.wtpr, cfg.wtpr)
-    x4, _ = dxf.srect('core', x3, y, cfg.l1x2, cfg.w1x2)
-    if i < 9: x1, _ = taper(x4, y, cfg.wtpr, cfg.wtpr)
-  x2, _ = taper(x4, y, cfg.wtpr, cfg.wg)
+  x5, ltip = dev.move(idev, x, x4, lchip)
 
-  dxf.srect('edge', x, y, x2 - x, cfg.w1x2 + cfg.eg)
-
-  x3, ltip = dev.move(idev, x, x2, lchip)
-
-  x4, _, t1 = tip.fiber(x,  y, ltip, -1)
-  x4, _, t2 = tip.fiber(x3, y, ltip,  1)
+  x6, _, t1 = tip.fiber(x,  y, ltip, -1)
+  x6, _, t2 = tip.fiber(x5, y, ltip,  1)
 
   s = '1x2-' + str(int(cfg.l1x2))
   dev.texts(t1, y - ysize * 0.5, s, 0.5, 'lc')
   dev.texts(t2, y - ysize * 0.5, s, 0.5, 'rc')
-  print(s, int(x4 - x))
+  print(s, int(x6 - x))
 
-  return x4, y + ysize
+  return x6, y + ysize
 
 def chips(x, y, arange):
 
@@ -73,7 +74,7 @@ def chips(x, y, arange):
 
 if __name__ == '__main__':
 
-  chip(0, 0, 4000)
+  chip(0, 0, xsize)
   
   # chips(0, 0, dev.arange(16, 20, 1))
 

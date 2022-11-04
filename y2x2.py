@@ -37,29 +37,18 @@ def chip(x, y, lchip):
   y1 = y + ch
   y2 = y - ch
   
+  x9 = x
+
   idev = len(cfg.data)
 
-  x2, _ = dev.sbend(x, y + ch, -dh, 45, 0, 1)
-  x2, _ = dev.sbend(x, y - ch,  dh, 45, 0, 1)
-
-  x3, y3 = taper(x2, y + cfg.d2x2, cfg.wg, cfg.wtpr)
-  x3, y4 = taper(x2, y - cfg.d2x2, cfg.wg, cfg.wtpr)
-
-  for i in range(20):
-    x4, _ = dxf.srect('core', x3, y, cfg.l2x2, cfg.w2x2)
-    if i < 9:
-      x3, _ = taper(x4, y3, cfg.wtpr, cfg.wtpr)
-      x3, _ = taper(x4, y4, cfg.wtpr, cfg.wtpr)
-
-  x5, _ = taper(x4, y3, cfg.wtpr, cfg.wg)
-  x5, _ = taper(x4, y4, cfg.wtpr, cfg.wg)
-
-  dxf.srect('edge', x2, y, x5 - x2, cfg.w2x2 + cfg.eg)
-
-  x6, _ = dev.sbend(x5, y3,  dh, 45, 0, 1)
-  x6, _ = dev.sbend(x5, y4, -dh, 45, 0, 1)
+  for _ in range(10):
+    x1, y1 = dev.sbend(x9, y1, -dh, 45, 0, 1)
+    x1, y2 = dev.sbend(x9, y2,  dh, 45, 0, 1)
+    x2, y3, y4 = device(x1, y)
+    x9, y1 = dev.sbend(x2, y3,  dh, 45, 0, 1)
+    x9, y2 = dev.sbend(x2, y4, -dh, 45, 0, 1)
   
-  x8, ltip = dev.move(idev, x, x6, lchip)
+  x8, ltip = dev.move(idev, x, x9, lchip)
 
   x9, _, t1 = tip.fiber(x, y1, ltip, -1)
   x9, _, t1 = tip.fiber(x, y2, ltip, -1)
@@ -87,6 +76,6 @@ if __name__ == '__main__':
 
   # chip(0, 0, xsize)
 
-  chips(0, 0, dev.arange(51.5, 53.5, 0.5))
+  chips(0, 0, dev.arange(49, 53, 1))
 
   dev.saveas('y2x2')
