@@ -1,10 +1,10 @@
 import cfg
 import dev
 import tip
-import euler as er
+import euler as elr
 
 xsize = cfg.size
-ysize = cfg.ch * 2
+ysize = 200
 
 def device(x, y, angle):
 
@@ -30,7 +30,7 @@ def device(x, y, angle):
 
   if angle == 180:
 
-    l = er.bends[str(er.radius) + '_180_' + cfg.draft]['r'] + 80
+    l = elr.bends[str(elr.radius) + '_180_' + cfg.draft]['r'] + 80
 
     for _ in range(10):
       x1, y1 = dev.sline(x, y, l)
@@ -43,11 +43,11 @@ def device(x, y, angle):
       x8, y8 = dev.bends(x7, y7, 180, 180, 1)
       x, y = dev.sline(x8, y8, l)
 
-  if angle == 0:
+  if angle == 1:
 
     x, y = dev.sline(x, y, l)
 
-  if angle == 1:
+  if angle == 2:
 
     x1, y1 = dev.sline(x, y, 8000)
     x2, y2 = dev.bends(x1, y1, 180, 0, 1)
@@ -55,7 +55,7 @@ def device(x, y, angle):
     x4, y4 = dev.bends(x3, y3, 180, 180, -1)
     x , y  = dev.sline(x4, y4, 8000)
 
-  if angle == 2:
+  if angle == 3:
 
     x1, y1 = dev.sline(x, y, 8000)
     x2, y2 = dev.bends(x1, y1, 180, 0, 1)
@@ -69,7 +69,9 @@ def device(x, y, angle):
 
   return x, y
 
-def chip(x, y, lchip, angle):
+def chip(x, y, lchip, radius, angle):
+
+  if radius > 0: elr.radius = radius
 
   idev = len(cfg.data)
   x2, y2 = device(x, y, angle)
@@ -78,29 +80,41 @@ def chip(x, y, lchip, angle):
   x5, _, t1 = tip.fiber(x,  y,  ltip, -1)
   x5, _, t2 = tip.fiber(x4, y2, ltip,  1)
   
-  if angle > 2:
-    r = str(er.radius) + 'r-' + str(angle)
-    dev.texts(t1, y - cfg.ch * 0.5, r, 0.5, 'lc')
-    dev.texts(t2, y - cfg.ch * 0.5, r, 0.5, 'rc')
+  if angle > 3:
+    r = str(elr.radius) + 'r-' + str(angle)
+    dev.texts(t1, y - 50, r, 0.5, 'lc')
+    dev.texts(t2, y - 50, r, 0.5, 'rc')
     print(r, int(x5 - x))
+  else:
+    a = (angle * 2 - 1) * 8000 + 2000
+    b = (angle - 1) * 2 * 3.14 * 125
+    r = str(int((a + b)))
+    dev.texts(t1, y  - 50, r, 0.5, 'lc')
+    dev.texts(t2, y2 - 50, r, 0.5, 'rc')
+    print(r, int(x5 - x))
+
+  elr.radius = 125
 
   return x5, y
 
 def chips(x, y):
 
-  _, y = chip(x, y, xsize, 0)
-  _, y = chip(x, y + cfg.ch, xsize, 1)
-  _, y = chip(x, y + ysize, xsize, 2)
-  er.radius = 50
-  _, y = chip(x, y + cfg.ch * 3, xsize, 180)
-  er.radius = 75
-  _, y = chip(x, y + cfg.ch, xsize, 180)
-  er.radius = 100
-  _, y = chip(x, y + cfg.ch, xsize, 180)
-  er.radius = 125
-  _, y = chip(x, y + cfg.ch * 2, xsize, 180)
-  _, y = chip(x, y + ysize, xsize, 90)
-  _, y = chip(x, y + ysize, xsize, 45)
+  ch = 100
+
+  _, y = dev.sline(x, y, xsize)
+  _, y = dev.sline(x, y + ch, xsize)
+
+  _, y = chip(x, y + ch, xsize, 0, 1)
+  _, y = chip(x, y + ch, xsize, 0, 2)
+  _, y = chip(x, y + ch * 4, xsize, 0, 3)
+
+  _, y = chip(x, y + ch * 7, xsize, 50, 180)
+  _, y = chip(x, y + ch * 2, xsize, 75, 180)
+  _, y = chip(x, y + ch * 3, xsize, 100, 180)
+  
+  _, y = chip(x, y + ch * 3, xsize, 125, 180)
+  _, y = chip(x, y + ch * 4, xsize, 125, 90)
+  _, y = chip(x, y + ch * 4, xsize, 125, 45)
 
   return x + xsize, y
 

@@ -5,7 +5,7 @@ import cir
 import tip
 
 xsize = cfg.size
-ysize = cfg.ch * 2
+ysize = 200
 
 def taper(x, y, sign):
 
@@ -90,13 +90,10 @@ def mzi(x, y, inport, outport):
 
 def device(x, y):
 
-  # ch = cfg.ch * 0.5
   ch = 50
 
   x3, y31, y32 = mzi(x, y + cfg.d2x2, -1, 0)
 
-  # x4, y41 = dev.sbend(x3, y31, ch, 45, 0,  1)
-  # x4, y42 = dev.sbend(x3, y32, ch, 45, 0, -1)
   x4, y41 = dev.sbend(x3, y31, ch, 20, 0,  1)
   x4, y42 = dev.sbend(x3, y32, ch, 20, 0, -1)
   x5, _, y51 = mzi(x4, y41 - cfg.d2x2, 1,  1)
@@ -106,7 +103,7 @@ def device(x, y):
 
 def chip(x, y, lchip):
 
-  ch = cfg.ch * 0.5
+  ch = 50
 
   idev = len(cfg.data)
   x1, _, _ = device(x, y)

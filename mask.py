@@ -17,7 +17,6 @@ import y2x2
 # 'fill' layer : filled with soild
 # 'none' layer : not filled
 
-
 xk = key.wbar + key.wkey
 yk = key.wbar + key.wkey
 
@@ -34,13 +33,12 @@ def mask_1(fp):
   cfg.layer['sio2'] = 0
   cfg.layer['recs'] = 1
 
-  _, y1 = dev.sline(xk, yk + cfg.ch * 0.5, cfg.size)
-  _, y1 = ohm.chips(xk, y1 + cfg.ch)
-  _, y1 = tip.chips(xk, y1 + cfg.ch * 0.5, dev.arange(0.16, 0.41, 0.05))
-  _, y1 = y2x2.chips(xk, y1 + cfg.ch * 1.5, [50.5, 51.5, 52.5])
-  _, y1 = y1x2.chips(xk, y1 - cfg.ch * 0, [16, 17, 18])
-  _, y1 = sio.chips(xk, y1 - cfg.ch, dev.arange(300, 700, 100))
-  _, y1 = tap.chips(xk, y1)
+  _, y1 = ohm.chips(xk, yk + 200)
+  _, y1 = tip.chips(xk, y1 + 200, dev.arange(0.2, 0.4, 0.02))
+  _, y1 = y1x2.chips(xk, y1, dev.arange(15, 20, 1))
+  _, y1 = y2x2.chips(xk, y1 + 50, dev.arange(48, 53, 0.5))
+  _, y1 = sio.chips(xk, y1 - 50, dev.arange(500, 900, 100))
+  _, y1 = tap.chips(xk, y1 - 200, dev.arange(2, 4, 1))
 
   dxf.conversion(fp)
 
@@ -73,7 +71,7 @@ def mask_3(fp):
   cfg.layer['tops'] = 3
   cfg.layer['recs'] = 3
 
-  pbs.chips(xk, yk + cfg.ch, dev.arange(30, 68, 2))
+  pbs.chips(xk, yk + cfg.ch, dev.arange(30, 80, 2))
 
   dxf.conversion(fp)
 
@@ -102,7 +100,7 @@ if __name__ == '__main__':
   key.cross(0, 0)
   dxf.conversion(fp)
 
-  ok = 1
+  ok = 3
   
   if ok == 0 or ok == 1: mask_1(fp)
   if ok == 0 or ok == 2: mask_2(fp)

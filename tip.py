@@ -78,8 +78,8 @@ def chip(x, y, lchip, wtip):
   x2, _, _ = device(x1, y, lchip - x1 + x, wtip, 1)
 
   s = 'tip-' + str(round(wtip, 6))
-  dev.texts(x  + ltip, y - cfg.ch * 0.5, s, 0.5, 'lc')
-  dev.texts(x2 - ltip, y - cfg.ch * 0.5, s, 0.5, 'rc')
+  dev.texts(x  + ltip, y - 50, s, 0.5, 'lc')
+  dev.texts(x2 - ltip, y - 50, s, 0.5, 'rc')
   print(s, int(x2 - x))
 
   return x2, y + ysize
