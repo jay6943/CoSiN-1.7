@@ -49,7 +49,7 @@ def pd(x, y, lchip, sign):
 
 def scuts(x, y):
 
-  t = ltip - 460 + 2.5
+  t = ltip - 600 + 2.5
   w = cfg.size
 
   dxf.crect('recs', x + t, y, x + t + 2.5, y + w)
