@@ -38,7 +38,7 @@ def mask_1(fp):
   _, y1 = ohm.chips(xk, y1 + cfg.ch)
   _, y1 = tip.chips(xk, y1 + cfg.ch * 0.5, dev.arange(0.16, 0.41, 0.05))
   _, y1 = y2x2.chips(xk, y1 + cfg.ch * 1.5, [50.5, 51.5, 52.5])
-  _, y1 = y1x2.chips(xk, y1 - cfg.ch * 0.5, [16, 17, 18])
+  _, y1 = y1x2.chips(xk, y1 - cfg.ch * 0, [16, 17, 18])
   _, y1 = sio.chips(xk, y1 - cfg.ch, dev.arange(300, 700, 100))
   _, y1 = tap.chips(xk, y1)
 

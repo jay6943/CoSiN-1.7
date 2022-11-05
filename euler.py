@@ -104,7 +104,7 @@ def update():
   for r in [50, 75, 100, 125]:
 
     if r < 125: angles = [180]
-    else: angles = [45, 90, 180, 27, 32, 37, 53, 58, 63]
+    else: angles = [45, 90, 180, 20, 27, 32, 37, 53, 58, 63]
       
     for draft in ['mask', 'draft', 'edge']:
       for angle in angles:

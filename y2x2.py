@@ -4,7 +4,7 @@ import dev
 import tip
 
 xsize = cfg.size
-ysize = cfg.ch * 2
+ysize = 200
 
 def taper(x, y, wstart, wstop):
 
@@ -31,7 +31,7 @@ def device(x, y):
 
 def chip(x, y, lchip):
 
-  ch = cfg.ch * 0.5
+  ch = 50
   dh = ch - cfg.d2x2
 
   y1 = y + ch
@@ -42,11 +42,11 @@ def chip(x, y, lchip):
   idev = len(cfg.data)
 
   for _ in range(10):
-    x1, y1 = dev.sbend(x9, y1, -dh, 45, 0, 1)
-    x1, y2 = dev.sbend(x9, y2,  dh, 45, 0, 1)
+    x1, y1 = dev.sbend(x9, y1, -dh, 20, 0, 1)
+    x1, y2 = dev.sbend(x9, y2,  dh, 20, 0, 1)
     x2, y3, y4 = device(x1, y)
-    x9, y1 = dev.sbend(x2, y3,  dh, 45, 0, 1)
-    x9, y2 = dev.sbend(x2, y4, -dh, 45, 0, 1)
+    x9, y1 = dev.sbend(x2, y3,  dh, 20, 0, 1)
+    x9, y2 = dev.sbend(x2, y4, -dh, 20, 0, 1)
   
   x8, ltip = dev.move(idev, x, x9, lchip)
 

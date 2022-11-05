@@ -33,7 +33,7 @@ def chip(x, y, lchip):
   x2, y3 = dev.sbend(x1, y1, ch * 4, 45, 0,  1)
   x2, y4 = dev.sbend(x1, y2, ch * 4, 45, 0, -1)
 
-  x3, _ = tap.device(x2, y3, ysize * 0.5 + ch * 5, -1)
+  x3, _ = tap.device(x2, y3, 100, 300, -4, -1)
   x4, _ = voa.device(x3, y3)
   x4, _ = dev.sline(x2, y4, x4 - x2)
 

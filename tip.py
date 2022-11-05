@@ -6,7 +6,7 @@ ltip = 800
 lcut = 400
 
 xsize = cfg.size
-ysize = cfg.ch
+ysize = 100
 
 def device(x, y, lchip, wtip, sign):
   
@@ -82,11 +82,11 @@ def chip(x, y, lchip, wtip):
   dev.texts(x2 - ltip, y - cfg.ch * 0.5, s, 0.5, 'rc')
   print(s, int(x2 - x))
 
-  return x2, y
+  return x2, y + ysize
 
 def chips(x, y, arange):
   
-  for w in arange: x1, y = chip(x, y + cfg.ch, xsize, w)
+  for w in arange: x1, y = chip(x, y, xsize, w)
 
   return x1, y
 

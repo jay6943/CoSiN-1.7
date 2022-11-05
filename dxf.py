@@ -229,12 +229,16 @@ def bends(layer, x, y, df, angle, sign):
   
 def org(df, n, height, xp, yp):
 
+  dy = df['dy'] * 2 if height < df['dy'] * 2 else height
+
   if df['angle'] == 45:
     dx = height + (df['dx'] - df['dy']) * 2
     if dx < df['dx'] * 2: dx = df['dx'] * 2
-  if df['angle'] == 90: dx = df['dx'] * 2
-  
-  dy = df['dy'] * 2 if height < df['dy'] * 2 else height 
+  elif df['angle'] == 90: dx = df['dx'] * 2
+  else:
+    dh = height - df['dy'] * 2
+    dq = df['angle'] * np.pi / 180
+    dx = df['dx'] * 2 + dh / np.tan(dq)
 
   xt = np.append(xp[:n], dx - xp[n:])
   yt = np.append(yp[:n], dy - yp[n:])
