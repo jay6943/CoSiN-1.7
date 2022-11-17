@@ -1,4 +1,5 @@
 import cfg
+import dxf
 import dev
 import tip
 import euler as elr
@@ -6,7 +7,14 @@ import euler as elr
 xsize = cfg.size
 ysize = 200
 
-def device(x, y, angle):
+def devsbends(x, y, core, edge, rotate, sign):
+
+  x1, y1 = dxf.bends('edge', x, y, edge, rotate, sign)
+  x1, y1 = dxf.bends('core', x, y, core, rotate, sign)
+
+  return x1, y1
+
+def device(x, y, radius, angle):
 
   l = 25
 
@@ -30,17 +38,20 @@ def device(x, y, angle):
 
   if angle == 180:
 
-    l = elr.bends[str(elr.radius) + '_180_' + cfg.draft]['r'] + 80
+    core = elr.update(cfg.wg, radius, 180, cfg.draft)
+    edge = elr.update(cfg.wg, radius, 180, 'edge')
+
+    l = core['r'] + 80
 
     for _ in range(10):
       x1, y1 = dev.sline(x, y, l)
-      x2, y2 = dev.bends(x1, y1, 180, 0, 1)
+      x2, y2 = devsbends(x1, y1, core, edge, 0, 1)
       x3, y3 = dev.sline(x2, y2, -50)
-      x4, y4 = dev.bends(x3, y3, 180, 180, -1)
+      x4, y4 = devsbends(x3, y3, core, edge, 180, -1)
       x5, y5 = dev.sline(x4, y4, l * 2)
-      x6, y6 = dev.bends(x5, y5, 180, 0, -1)
+      x6, y6 = devsbends(x5, y5, core, edge, 0, -1)
       x7, y7 = dev.sline(x6, y6, -50)
-      x8, y8 = dev.bends(x7, y7, 180, 180, 1)
+      x8, y8 = devsbends(x7, y7, core, edge, 180, 1)
       x, y = dev.sline(x8, y8, l)
 
   if angle == 1:
@@ -71,17 +82,15 @@ def device(x, y, angle):
 
 def chip(x, y, lchip, radius, angle):
 
-  if radius > 0: elr.radius = radius
-
   idev = len(cfg.data)
-  x2, y2 = device(x, y, angle)
+  x2, y2 = device(x, y, radius, angle)
   x4, ltip = dev.move(idev, x, x2, lchip)
 
   x5, _, t1 = tip.fiber(x,  y,  ltip, -1)
   x5, _, t2 = tip.fiber(x4, y2, ltip,  1)
   
   if angle > 3:
-    r = str(elr.radius) + 'r-' + str(angle)
+    r = str(radius) + 'r-' + str(angle)
     dev.texts(t1, y - 50, r, 0.5, 'lc')
     dev.texts(t2, y - 50, r, 0.5, 'rc')
     print(r, int(x5 - x))
@@ -92,8 +101,6 @@ def chip(x, y, lchip, radius, angle):
     dev.texts(t1, y  - 50, r, 0.5, 'lc')
     dev.texts(t2, y2 - 50, r, 0.5, 'rc')
     print(r, int(x5 - x))
-
-  elr.radius = 125
 
   return x5, y
 

@@ -251,6 +251,8 @@ def org(df, n, height, xp, yp):
 
 def inv(df, n, height, xp, yp):
 
+  xt, yt = xp, yp
+
   if df['angle'] == 45:
     dh = df['dx'] + df['dy']
     dx = dh if height < dh else height
@@ -276,7 +278,7 @@ def inv(df, n, height, xp, yp):
 
 def sbend(layer, x, y, height, df, angle, shape):
 
-  sign = 1 if height > 0 else -1
+  sign = -1 if height < 0 else 1
 
   n  = df['n']
   k  = df['n'] * 2
