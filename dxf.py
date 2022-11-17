@@ -301,9 +301,9 @@ def sbend(layer, x, y, height, df, angle, shape):
 
   return xo, yo
 
-def tilts(layer, x, y, length, wg, angle):
+def tilts(layer, x, y, length, width, angle):
 
-  w = wg * 0.5
+  w = width * 0.5
 
   xp = np.array([0, length, length, 0])
   yp = np.array([w, w, -w, -w])
