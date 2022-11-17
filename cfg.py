@@ -1,5 +1,5 @@
-work = '../mask/'
-libs = '../mask/lib/'
+work = '../mask/SiN-1.7/'
+libs = '../mask/SiN-1.7/lib/'
 
 data = []
 
