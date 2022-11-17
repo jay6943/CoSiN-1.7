@@ -58,17 +58,20 @@ def conversion(fp):
 
     layer = device[0]
 
-    if cfg.layer[layer] > 0:
+    if layer in cfg.layer:
+      if cfg.layer[layer] > 0:
 
-      dx = cfg.area[cfg.layer[layer]][0] * cfg.mask
-      dy = cfg.area[cfg.layer[layer]][1] * cfg.mask
+        dx = cfg.area[cfg.layer[layer]][0] * cfg.mask
+        dy = cfg.area[cfg.layer[layer]][1] * cfg.mask
 
-      polyline(fp, layer)
-      
-      for [x, y] in device[1:]: vertex(fp, layer, x + dx, y + dy)                    
-          
-      seqend(fp, layer)
-  
+        polyline(fp, layer)
+        
+        for [x, y] in device[1:]: vertex(fp, layer, x + dx, y + dy)                    
+            
+        seqend(fp, layer)
+    
+    else: print('There is NO layer ----', layer, '----')
+
     i += 1
 
   cfg.data.clear()
