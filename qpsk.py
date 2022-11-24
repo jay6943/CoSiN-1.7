@@ -64,4 +64,4 @@ if __name__ == '__main__':
 
   chip(0, 0, xsize)
 
-  dev.saveas('qpsk')
+  dev.saveas(cfg.work + 'qpsk')

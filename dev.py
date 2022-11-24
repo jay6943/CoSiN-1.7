@@ -65,20 +65,25 @@ def sbend(x, y, offset, angle, rotate, shape):
 
   return x1, y1
 
-def rectangles(x, y):
+def cover(x, y, pattern):
 
-  d, w = 50, 125
+  if pattern == 'stress release':
 
-  xp = np.arange(0, cfg.size, w) + x + (w - d) * 0.5
-  yp = np.arange(0, cfg.size, w) + y + (w - d) * 0.5
+    d, w = 50, 125
 
-  for j in yp:
-    for i in xp:
-      dxf.crect('recs', i, j, i+d, j+d)
+    xp = np.arange(0, cfg.size, w) + x + (w - d) * 0.5
+    yp = np.arange(0, cfg.size, w) + y + (w - d) * 0.5
 
-  for j in yp[:-1] + w * 0.5:
-    for i in xp[:-1] + w * 0.5:
-      dxf.crect('recs', i, j, i+d, j+d)
+    for j in yp:
+      for i in xp:
+        dxf.crect('recs', i, j, i+d, j+d)
+
+    for j in yp[:-1] + w * 0.5:
+      for i in xp[:-1] + w * 0.5:
+        dxf.crect('recs', i, j, i+d, j+d)
+  
+  if pattern == 'block':
+    dxf.crect('recs', x, y, x + cfg.size, y + cfg.size)
 
 def texts(x, y, title, scale, align):
 
@@ -140,4 +145,4 @@ if __name__ == '__main__':
   # sbend(0, 0, 100, 90, 180, 2)
   sbend(0, 0, 100, 90, 270, 2)
 
-  saveas('sbend')
+  saveas(cfg.work + 'sbend')

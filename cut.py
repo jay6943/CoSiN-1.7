@@ -68,7 +68,7 @@ def tooling(x, y):
 
   wafer()
 
-  dev.saveas('tooling')
+  dev.saveas(cfg.work + 'tooling')
 
 def cutting(x, y, worker):
 
@@ -98,7 +98,7 @@ def cutting(x, y, worker):
 
   wafer()
 
-  dev.saveas('sawing')
+  dev.saveas(cfg.work + 'sawing')
 
 if __name__ == '__main__':
 

@@ -65,4 +65,4 @@ if __name__ == '__main__':
 
   chips(0, 0, dev.arange(500, 900, 100))
 
-  dev.saveas('sio')
+  dev.saveas(cfg.work + 'sio')

@@ -88,4 +88,4 @@ if __name__ == '__main__':
 
   chip(0, 0)
 
-  dev.saveas('opt')
+  dev.saveas(cfg.work + 'opt')

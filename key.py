@@ -156,4 +156,4 @@ if __name__ == '__main__':
   frame(3, 2)
   frame(4, 3)
 
-  dev.saveas('key')
+  dev.saveas(cfg.work + 'key')

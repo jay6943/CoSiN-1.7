@@ -24,7 +24,7 @@ def mask_1(fp):
 
   key.frame(1, 1)
   tip.scuts(xk, yk)
-  dev.rectangles(xk, yk)
+  dev.cover(xk, yk, 'block')
 
   cfg.layer['core'] = 1
   cfg.layer['edge'] = 1
@@ -46,7 +46,7 @@ def mask_2(fp):
 
   key.frame(2, 1)
   tip.scuts(xk, yk)
-  dev.rectangles(xk, yk)
+  dev.cover(xk, yk, 'stress release')
 
   cfg.layer['core'] = 2
   cfg.layer['edge'] = 2
@@ -63,7 +63,7 @@ def mask_3(fp):
 
   key.frame(3, 1)
   tip.scuts(xk, yk)
-  dev.rectangles(xk, yk)
+  dev.cover(xk, yk, 'none')
 
   cfg.layer['core'] = 3
   cfg.layer['edge'] = 3
@@ -79,7 +79,7 @@ def mask_4(fp):
 
   key.frame(4, 1)
   tip.scuts(xk, yk)
-  dev.rectangles(xk, yk)
+  dev.cover(xk, yk, 'block')
 
   cfg.layer['core'] = 4
   cfg.layer['edge'] = 4
@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
   cfg.draft = 'draft' # draft or mask
 
-  fp = dxf.start(cfg.draft)
+  fp = dxf.start(cfg.work + cfg.draft)
   key.cross(0, 0)
   dxf.conversion(fp)
 

@@ -61,4 +61,4 @@ if __name__ == '__main__':
   electrode('gold', 0, 0, 100, 2, 1)
   electrode('edge', 0, 0, 100, cfg.eg, 1)
 
-  dev.saveas('pad')
+  dev.saveas(cfg.work + 'pad')

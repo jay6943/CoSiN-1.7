@@ -44,4 +44,4 @@ if __name__ == '__main__':
 
   chips(0, 0, dev.arange(2, 4, 1))
 
-  dev.saveas('tap')
+  dev.saveas(cfg.work + 'tap')

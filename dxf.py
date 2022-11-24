@@ -4,7 +4,7 @@ import numpy as np
 
 def start(filename):
 
-  fp = open(cfg.work + filename + '.dxf', 'w')
+  fp = open(filename + '.dxf', 'w')
 
   fp.write('0\nSECTION\n')
   fp.write('2\nHEADER\n')

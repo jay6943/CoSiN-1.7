@@ -33,6 +33,7 @@ area = [[1, 0], [-1, 0], [0, 0], [-1, -1], [0, -1]]
 
 layer = {} # 2 for (0, 0) mask position
 layer['core'] = 2
+layer['clad'] = 2
 layer['edge'] = 2
 layer['slab'] = 2
 layer['sio2'] = 2
