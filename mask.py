@@ -6,7 +6,7 @@ import ohm
 import pbs
 import psk
 import tip
-import sio
+import ssc
 import tap
 import icr
 import y1x2
@@ -37,7 +37,7 @@ def mask_1(fp):
   _, y1 = tip.chips(xk, y1 + 200, dev.arange(0.2, 0.4, 0.02))
   _, y1 = y1x2.chips(xk, y1, dev.arange(15, 20, 1))
   _, y1 = y2x2.chips(xk, y1 + 50, dev.arange(48, 53, 0.5))
-  _, y1 = sio.chips(xk, y1 - 50, dev.arange(600, 900, 50))
+  _, y1 = ssc.chips(xk, y1 - 50, dev.arange(600, 900, 50))
   _, y1 = tap.chips(xk, y1 - 200, dev.arange(2, 4, 1))
 
   dxf.conversion(fp)

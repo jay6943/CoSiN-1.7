@@ -11,31 +11,24 @@ ysize = 100
 def device(x, y, lchip, wtip, sign):
   
   lext = lchip - ltip
-  wext = 60
 
   w = [wtip, 0.5, 0.8, cfg.wg]
-  l = [50, 20, 5]
-  t = sum(l)
-  l.insert(0, ltip - t)
+  l = [ltip - 75, 50, 20, 5]
 
   if sign < 0:
-    x1, y = dxf.srect('core', x,  y, l[0], w[0])
-    x1, y = dxf.srect('edge', x,  y, l[0], wext)
-    x2, y = dxf.taper('core', x1, y, l[1], w[0], w[1])
-    x3, y = dxf.taper('core', x2, y, l[2], w[1], w[2])
-    x4, y = dxf.taper('core', x3, y, l[3], w[2], w[3])
-    x4, y = dxf.taper('edge', x1, y, t, wext, cfg.eg)
+    x1, y = dev.srect(x,  y, l[0], w[0])
+    x2, y = dev.taper(x1, y, l[1], w[0], w[1])
+    x3, y = dev.taper(x2, y, l[2], w[1], w[2])
+    x4, y = dev.taper(x3, y, l[3], w[2], w[3])
     if lext > 0: x5, y = dev.sline(x4, y, lext)
     else: x5 = x4
   else:
     if lext > 0: x1, _ = dev.sline(x, y, lext)
     else: x1 = x
-    x2, y = dxf.taper('core', x1, y, l[3], w[3], w[2])
-    x3, y = dxf.taper('core', x2, y, l[2], w[2], w[1])
-    x4, y = dxf.taper('core', x3, y, l[1], w[1], w[0])
-    x4, y = dxf.taper('edge', x1, y, t, cfg.eg, wext)
-    x5, y = dxf.srect('core', x4, y, l[0], w[0])
-    x5, y = dxf.srect('edge', x4, y, l[0], wext)
+    x2, y = dev.taper(x1, y, l[3], w[3], w[2])
+    x3, y = dev.taper(x2, y, l[2], w[2], w[1])
+    x4, y = dev.taper(x3, y, l[1], w[1], w[0])
+    x5, y = dev.srect(x4, y, l[0], w[0])
 
   return x5, y, x4 if sign < 0 else x1
 
