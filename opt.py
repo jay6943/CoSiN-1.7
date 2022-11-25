@@ -54,10 +54,6 @@ def chip(x, y):
   x2, y3 = dev.sbend(x1, y1, ch * 2, 90, 0,  1)
   x2, y4 = dev.sbend(x1, y2, ch * 2, 90, 0, -1)
 
-  h = ysize * 0.5 - ch * 3
-  
-  tap.optima((x2 + x1) * 0.5, (y3 + y1) * 0.5, h, 1)
-  
   x4, _ = voa.device(x2, y3)
   x4, _ = dev.sline(x2, y4, x4 - x2)
 
