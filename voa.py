@@ -48,10 +48,10 @@ def chip(x, y, lchip):
   x8, t2 = tip.fiber(x6, y, ltip,  1)
 
   s = 'voa-' + str(int(cfg.lvoa))
-  dev.texts(t1, y + ch, s, 0.5, 'lc')
-  dev.texts(t1, y - ch, s, 0.5, 'lc')
-  dev.texts(t2, y + ch, s, 0.5, 'rc')
-  dev.texts(t2, y - ch, s, 0.5, 'rc')
+  dev.texts(t1, y + ch, s, 0.2, 'lc')
+  dev.texts(t1, y - ch, s, 0.2, 'lc')
+  dev.texts(t2, y + ch, s, 0.2, 'rc')
+  dev.texts(t2, y - ch, s, 0.2, 'rc')
   print(s, int(x6 - x5), int(x8 - x7))
 
   return x + lchip, y + ysize
@@ -67,7 +67,7 @@ def chips(x, y, arange):
 
   for cfg.lvoa in arange:
     x2, _ = device(x1, y)
-    dev.texts((x2 + x1) * 0.5, y, str(int(cfg.lvoa)), 1, 'cc')
+    dev.texts((x2 + x1) * 0.2, y, str(int(cfg.lvoa)), 1, 'cc')
     dxf.srect('edge', (x2 + x1 - cfg.lvoa) * 0.5, y, cfg.lvoa, 120)
     x1, y = dev.sline(x2, y, 600)
 

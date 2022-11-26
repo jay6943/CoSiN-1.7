@@ -87,16 +87,18 @@ def cover(x, y, pattern):
 
 def texts(x, y, title, scale, align):
 
-  if align[0] == 'l': x = x + 10
-  if align[0] == 'r': x = x - 10
+  d = 10 * scale * 2 # 10 when scale = 0.5
+
+  if align[0] == 'l': x = x + d
+  if align[0] == 'r': x = x - d
 
   l, w = dxf.texts('core', x, y, title, scale, align)
 
-  if align[0] == 'l': xalign = x - 10
-  if align[0] == 'c': xalign = x - l * 0.5 - 10
-  if align[0] == 'r': xalign = x - l - 10
+  if align[0] == 'l': xalign = x - d
+  if align[0] == 'c': xalign = x - l * 0.5 - d
+  if align[0] == 'r': xalign = x - l - d
 
-  dxf.srect('edge', xalign, y, l + 20, w + 20)
+  dxf.srect('edge', xalign, y, l + d * 2, w + d * 2)
 
 def arange(start, stop, step):
 

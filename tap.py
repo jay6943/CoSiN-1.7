@@ -26,8 +26,8 @@ def chip(x, y, lchip, dy):
   x8, t2 = tip.fiber(x6, y2, ltip,  1)
 
   s = 'tap-' + str(dy)
-  dev.texts(t1, y1 - 50, s, 0.5, 'lc')
-  dev.texts(t2, y2 - 50, s, 0.5, 'rc')
+  dev.texts(t1, y1 - 50, s, 0.2, 'lc')
+  dev.texts(t2, y2 - 50, s, 0.2, 'rc')
   print(s, int(x6 - x5), int(x8 - x7))
 
   return x + lchip, y

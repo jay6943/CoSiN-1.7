@@ -14,11 +14,13 @@ def device(x, y, ltip, wtip, sign):
   t = l[0] - sum(l[1:])
 
   if t > 0: x, _ = dev.sline(x, y, t * sign)
-  x1, _ = dev.taper(x,  y, sign * l[1], w[0], w[1])
-  x2, _ = dev.taper(x1, y, sign * l[2], w[1], w[2])
-  x3, _ = dev.taper(x2, y, sign * l[3], w[2], w[3])
-  x4, _ = dev.srect(x3, y, sign * l[4], w[3])
+  x1, _ = dxf.taper('core', x,  y, sign * l[1], w[0], w[1])
+  x2, _ = dxf.taper('core', x1, y, sign * l[2], w[1], w[2])
+  x3, _ = dxf.taper('core', x2, y, sign * l[3], w[2], w[3])
+  x4, _ = dxf.srect('core', x3, y, sign * l[4], w[3])
 
+  dxf.srect('edge', x, y, x4 - x, cfg.eg)
+  
   return x4, x
 
 def fiber(x, y, ltip, sign):
@@ -31,9 +33,7 @@ def pd(x, y, ltip, sign):
 
 def scuts(x, y):
 
-  t = 200
-  w = cfg.size
-  d = 5
+  t, w, d = 200, cfg.size, 1
 
   dxf.srect('edge', x + t - d, y + w * 0.5, d * 2, w)
   dxf.srect('edge', x - t - d + w, y + w * 0.5, d * 2, w)
@@ -55,8 +55,8 @@ def chip(x, y, lchip, wtip):
   x5, t2 = device(x3, y, ltip, wtip,  1)
 
   s = 'tip-' + str(round(wtip, 6))
-  dev.texts(t1, y - 50, s, 0.5, 'lc')
-  dev.texts(t2, y - 50, s, 0.5, 'rc')
+  dev.texts(t1, y - 50, s, 0.2, 'lc')
+  dev.texts(t2, y - 50, s, 0.2, 'rc')
   print(s, int(x3 - x2), int(x5 - x4))
 
   return x2, y + ysize

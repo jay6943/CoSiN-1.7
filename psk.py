@@ -87,8 +87,8 @@ def chip(x, y, lchip):
   for i in [3,1,-1,-3]: x8, t2 = tip.fiber(x6, y + ch * i, ltip, 1)
 
   s = 'iq-' + str(round(cfg.phase,1))
-  dev.texts(t1, y, s, 0.5, 'lc')
-  dev.texts(t2, y, s, 0.5, 'rc')
+  dev.texts(t1, y, s, 0.2, 'lc')
+  dev.texts(t2, y, s, 0.2, 'rc')
   print(s, int(x6 - x5), int(x8 - x7))
   
   return x + lchip, y + ysize
