@@ -12,6 +12,8 @@ ysize = cfg.ch * 8
 
 def chip(x, y, lchip):
 
+  ch = cfg.ch * 0.5
+
   idev = len(cfg.data)
 
   x2, y1 = voa.device(x, y + cfg.ch)
@@ -21,23 +23,15 @@ def chip(x, y, lchip):
   x4, y41, y42 = pbs.device(x3, y1)
   x4, y43, y44 = pbs.device(x3, y2)
 
-  x5, _ = dev.taper(x4, y41, cfg.ltpr, cfg.wt, cfg.wg)
-  x5, _ = dev.taper(x4, y42, cfg.ltpr, cfg.wt, cfg.wg)
-  x5, _ = dev.taper(x4, y43, cfg.ltpr, cfg.wt, cfg.wg)
-  x5, _ = dev.taper(x4, y44, cfg.ltpr, cfg.wt, cfg.wg)
+  h = [y + ch * (i * 2 - 7) for i in range(8)]
 
-  x6, y71 = dev.sbend(x5, y41,  cfg.ch, 45, 0, 1)
-  x6, y74 = dev.sbend(x5, y44, -cfg.ch, 45, 0, 1)
-  x7, y72 = dev.sbend(x5, y42, -yqpsk, 45, 0, 1)
-  x7, y73 = dev.sbend(x5, y43,  yqpsk, 45, 0, 1)
+  x6, y71 = dev.sbend(x4, y41, h[6] - y41, 45, 0, 1)
+  x6, y74 = dev.sbend(x4, y44, h[1] - y44, 45, 0, 1)
+  x7, y72 = dev.sbend(x4, y42, h[2] - y42, 45, 0, 1)
+  x7, y73 = dev.sbend(x4, y43, h[5] - y43, 45, 0, 1)
 
-  x8, _ = dev.taper(x6, y71, cfg.ltpr, cfg.wg, cfg.wt)
-  x8, _ = dev.taper(x6, y74, cfg.ltpr, cfg.wg, cfg.wt)
-  x9, _ = dev.taper(x7, y72, cfg.ltpr, cfg.wg, cfg.wt)
-  x9, _ = dev.taper(x7, y73, cfg.ltpr, cfg.wg, cfg.wt)
-
-  x9, _ = dev.srect(x8, y71, x9 - x8, cfg.wt)
-  x9, _ = dev.srect(x8, y74, x9 - x8, cfg.wt)
+  x9, _ = dev.sline(x6, y71, x7 - x6)
+  x9, _ = dev.sline(x6, y74, x7 - x6)
 
   x10, _ = psk.device(x9, y + yqpsk)
   x10, _ = psk.device(x9, y - yqpsk)
@@ -47,8 +41,7 @@ def chip(x, y, lchip):
   x13, _ = tip.fiber(x11, y1, ltip, -1)
   x13, _ = tip.fiber(x11, y2, ltip, -1)
 
-  for i in range(8):
-    x14, _ = tip.fiber(x12, y + (i - 3.5) * cfg.ch, ltip, 1)
+  for i in h: x14, _ = tip.diode(x12, i, ltip, 1)
 
   print('DP-QPSK', int(x12 - x11), int(x14 - x13))
 

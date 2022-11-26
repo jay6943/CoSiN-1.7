@@ -25,7 +25,7 @@ wpbs = 1.8
 ltpr = 5
 wtpr = 2
 targ = 58
-lvoa = 400
+lvoa = 200
 
 size = 10000
 mask = 10900

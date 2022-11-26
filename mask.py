@@ -46,7 +46,7 @@ def mask_2(fp):
 
   key.frame(2, 1)
   tip.scuts(xk, yk)
-  dev.cover(xk, yk, 'stress release')
+  dev.cover(xk, yk, 'block')
 
   cfg.layer['core'] = 2
   cfg.layer['edge'] = 2
@@ -100,7 +100,7 @@ if __name__ == '__main__':
   key.cross(0, 0)
   dxf.conversion(fp)
 
-  ok = 0
+  ok = 4
   
   if ok == 0 or ok == 1: mask_1(fp)
   if ok == 0 or ok == 2: mask_2(fp)

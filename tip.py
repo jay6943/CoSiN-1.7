@@ -27,7 +27,7 @@ def fiber(x, y, ltip, sign):
 
   return device(x, y, ltip, 0.36, sign)
 
-def pd(x, y, ltip, sign):
+def diode(x, y, ltip, sign):
 
   return device(x, y, ltip, 0.36, sign)
 

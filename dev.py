@@ -104,15 +104,15 @@ def arange(start, stop, step):
 
   return np.arange(start, stop + step * 0.5, step)
 
-def move(idev, x, xt, lchip):
+# def move(idev, x, xt, lchip):
 
-  ltip = (lchip - xt + x) * 0.5
+#   ltip = (lchip - xt + x) * 0.5
 
-  if ltip < tip.ltip: ltip = tip.ltip
+#   if ltip < tip.ltip: ltip = tip.ltip
 
-  xtip, _ = dxf.move(idev, x, 0, xt, 0, ltip, 0, 0)
+#   xtip, _ = dxf.move(idev, x, 0, xt, 0, ltip, 0, 0)
 
-  return xtip, ltip
+#   return xtip, ltip
 
 def xshift(idev, x, xt, lchip):
 

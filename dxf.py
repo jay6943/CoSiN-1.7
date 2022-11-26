@@ -104,7 +104,7 @@ def rotate(xp, yp, angle):
 
   return xp, yp
 
-def move(idev, x, y, xp, yp, dx, dy, angle):
+def move(idev, x, y, xt, yt, dx, dy, angle):
 
   for data in cfg.data[idev:len(cfg.data)]:
     xy = np.array(data[1:]).transpose()
@@ -112,10 +112,10 @@ def move(idev, x, y, xp, yp, dx, dy, angle):
     if angle != 0:
       xy = rxt(angle) @ xy
       s = rxt(angle) @ [[x], [y]]
-      t = rxt(angle) @ [[xp], [yp]]
+      t = rxt(angle) @ [[xt], [yt]]
     else:
       s = [[x], [y]]
-      t = [[xp], [yp]]
+      t = [[xt], [yt]]
     
     px = x - s[0][0] + dx
     py = y - s[1][0] + dy
@@ -126,16 +126,16 @@ def move(idev, x, y, xp, yp, dx, dy, angle):
   
   return t[0][0] + px, t[1][0] + py
 
-def xreverse(idev, x, y, xp):
+def xreverse(idev, x, y, xt):
   
   for data in cfg.data[idev:len(cfg.data)]:
     xy = np.array(data[1:]) - [x, 0]
     xy = xy * [-1, 1]
-    xy = xy + [xp, 0]
+    xy = xy + [xt, 0]
 
     data[1:] = xy.tolist()
 
-  return x + xp, y
+  return x + xt, y
 
 def circle(layer, x, y, radius, n):
 

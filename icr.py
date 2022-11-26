@@ -13,10 +13,14 @@ ysize = 8000
 
 def fiber_pd(x, y, lchip):
 
-  x1, _ = tip.fiber(x, y, lchip * 0.5, -1)
-  x2, _ = tip.pd(x1, y, lchip * 0.5, 1)
+  idev = len(cfg.data)
+  x1, _ = dev.sline(x, y, 1000)
+  x2, x3, ltip = dev.xshift(idev, x, x1, lchip)
 
-  return x2, y
+  tip.fiber(x2, y, ltip, -1)
+  tip.diode(x3, y, ltip,  1)
+
+  return x + lchip, y
 
 def chip(x, y, lchip):
   
@@ -29,15 +33,15 @@ def chip(x, y, lchip):
   tip.fiber(x1, y1, ltip, -1)
   tip.fiber(x1, y2, ltip, -1)
   
-  x2, y3 = dev.sbend(x1, y1, ch * 4, 45, 0,  1)
-  x2, y4 = dev.sbend(x1, y2, ch * 4, 45, 0, -1)
+  x2, y3 = dev.sbend(x1, y1, ch * 2, 45, 0,  1)
+  x2, y4 = dev.sbend(x1, y2, ch * 2, 45, 0, -1)
 
   x3, _ = tap.device(x2, y3, 100, 300, -4, -1)
   x4, _ = voa.device(x3, y3)
   x4, _ = dev.sline(x2, y4, x4 - x2)
 
-  x5, y5 = dev.sbend(x4, y3, ch * 3, 45, 0, -1)
-  x5, y6 = dev.sbend(x4, y4, ch * 3, 45, 0,  1)
+  x5, y5 = dev.sbend(x4, y3, ch * 2, 45, 0, -1)
+  x5, y6 = dev.sbend(x4, y4, ch * 2, 45, 0,  1)
 
   x6, _ = dev.sline(x5, y5, 500)
   x6, _ = dev.sline(x5, y6, 500)
@@ -69,8 +73,8 @@ def chip(x, y, lchip):
   ltip = lchip - x11 + x
 
   for i in [-3,-1,1,3]:
-    x12, _ = tip.pd(x11, y7 + i * ch, ltip, 1)
-    x12, _ = tip.pd(x11, y8 + i * ch, ltip, 1)
+    x12, _ = tip.diode(x11, y7 + i * ch, ltip, 1)
+    x12, _ = tip.diode(x11, y8 + i * ch, ltip, 1)
 
   print('ICR chip length =', int(x11 - x1), int(x12 - x))
 
