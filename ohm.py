@@ -84,10 +84,10 @@ def chip(x, y, lchip, radius, angle):
 
   idev = len(cfg.data)
   x2, y2 = device(x, y, radius, angle)
-  x4, ltip = dev.move(idev, x, x2, lchip)
+  x5, x6, ltip = dev.xshift(idev, x, x2, lchip)
 
-  x5, _, t1 = tip.fiber(x,  y,  ltip, -1)
-  x5, _, t2 = tip.fiber(x4, y2, ltip,  1)
+  x7, t1 = tip.fiber(x5, y,  ltip, -1)
+  x8, t2 = tip.fiber(x6, y2, ltip,  1)
   
   if angle > 3:
     r = str(radius) + 'r-' + str(angle)
@@ -100,9 +100,9 @@ def chip(x, y, lchip, radius, angle):
     r = str(int((a + b)))
     dev.texts(t1, y  - 50, r, 0.5, 'lc')
     dev.texts(t2, y2 - 50, r, 0.5, 'rc')
-    print(r, int(x5 - x))
+    print(r, int(x6 - x5), int(x8 - x7))
 
-  return x5, y
+  return x + lchip, y
 
 def chips(x, y):
 

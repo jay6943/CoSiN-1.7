@@ -20,15 +20,14 @@ def fiber_pd(x, y, lchip):
 
 def chip(x, y, lchip):
   
-  ch = cfg.ch * 0.5
+  ch, ltip = cfg.ch * 0.5, 2000
 
+  x1 = x + ltip
   y1 = y + ch
   y2 = y - ch
   
-  ltip = tip.ltip + 1000
-
-  x1, _, _ = tip.fiber(x, y1, ltip, -1)
-  x1, _, _ = tip.fiber(x, y2, ltip, -1)
+  tip.fiber(x1, y1, ltip, -1)
+  tip.fiber(x1, y2, ltip, -1)
   
   x2, y3 = dev.sbend(x1, y1, ch * 4, 45, 0,  1)
   x2, y4 = dev.sbend(x1, y2, ch * 4, 45, 0, -1)
@@ -70,12 +69,12 @@ def chip(x, y, lchip):
   ltip = lchip - x11 + x
 
   for i in [-3,-1,1,3]:
-    x12, _, _ = tip.pd(x11, y7 + i * ch, ltip, 1)
-    x12, _, _ = tip.pd(x11, y8 + i * ch, ltip, 1)
+    x12, _ = tip.pd(x11, y7 + i * ch, ltip, 1)
+    x12, _ = tip.pd(x11, y8 + i * ch, ltip, 1)
 
-  print('ICR chip length =', int(x12 - x))
+  print('ICR chip length =', int(x11 - x1), int(x12 - x))
 
-  return x12, y
+  return x + lchip, y
 
 def chips(x, y):
 

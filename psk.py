@@ -79,19 +79,19 @@ def chip(x, y, lchip):
 
   idev = len(cfg.data)
   x1, _ = device(x, y)
-  x2, ltip = dev.move(idev, x, x1, lchip)
+  x5, x6, ltip = dev.xshift(idev, x, x1, lchip)
 
-  _, _, t1 = tip.fiber(x, y + ch, ltip, -1)
-  _, _, t1 = tip.fiber(x, y - ch, ltip, -1)
+  x7, t1 = tip.fiber(x5, y + ch, ltip, -1)
+  x7, t1 = tip.fiber(x5, y - ch, ltip, -1)
 
-  for i in [3,1,-1,-3]: x4, _, t2 = tip.fiber(x2, y + ch * i, ltip, 1)
+  for i in [3,1,-1,-3]: x8, t2 = tip.fiber(x6, y + ch * i, ltip, 1)
 
   s = 'iq-' + str(round(cfg.phase,1))
   dev.texts(t1, y, s, 0.5, 'lc')
   dev.texts(t2, y, s, 0.5, 'rc')
-  print(s, int(x4 - x))
+  print(s, int(x6 - x5), int(x8 - x7))
   
-  return x4, y + ysize
+  return x + lchip, y + ysize
 
 def chips(x, y, arange):
 

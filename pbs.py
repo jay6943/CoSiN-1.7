@@ -107,19 +107,19 @@ def chip(x, y, lchip):
 
   idev = len(cfg.data)
   x1, _, _ = device(x, y)
-  x2, ltip = dev.move(idev, x, x1, lchip)
+  x5, x6, ltip = dev.xshift(idev, x, x1, lchip)
 
-  _ , _, t3 = tip.fiber(x, y, ltip, -1)
-  x4, _, t4 = tip.fiber(x2, y + ch, ltip, 1)
-  x4, _, t4 = tip.fiber(x2, y - ch, ltip, 1)
+  x7, t1 = tip.fiber(x5, y, ltip, -1)
+  x8, t2 = tip.fiber(x6, y + ch, ltip, 1)
+  x8, t2 = tip.fiber(x6, y - ch, ltip, 1)
 
   s = 'pbs-' + str(round(cfg.lpbs,1))
-  dev.texts(t3, y - ch, s, 0.5, 'lc')
-  dev.texts(t3, y + ch, s, 0.5, 'lc')
-  dev.texts(t4, y, s, 0.5, 'rc')
-  print(s, int(x4 - x))
+  dev.texts(t1, y - ch, s, 0.5, 'lc')
+  dev.texts(t1, y + ch, s, 0.5, 'lc')
+  dev.texts(t2, y, s, 0.5, 'rc')
+  print(s, int(x6 - x5), int(x8 - x7))
 
-  return x4, y + ysize
+  return x + lchip, y + ysize
 
 def chips(x, y, arange):
 

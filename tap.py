@@ -19,17 +19,18 @@ def chip(x, y, lchip, dy):
   x1, y1 = dev.sline(x, y + dy, 100)
   x2, y2 = dev.sbend(x1, y1, 100 - dy, 20, 0, 1)
   x2, y1 = dev.sline(x, y, x2 - x)
-  x3, ltip = dev.move(idev, x, x2, lchip)
+  x5, x6, ltip = dev.xshift(idev, x, x2, lchip)
 
-  x6, _, t1 = tip.fiber(x,  y,  ltip, -1)
-  x6, _, t2 = tip.fiber(x3, y,  ltip,  1)
-  x6, _, t2 = tip.fiber(x3, y2, ltip,  1)
+  x7, t1 = tip.fiber(x5, y1, ltip, -1)
+  x8, t2 = tip.fiber(x6, y1, ltip,  1)
+  x8, t2 = tip.fiber(x6, y2, ltip,  1)
 
   s = 'tap-' + str(dy)
-  dev.texts(t1, y - 50, s, 0.5, 'lc')
-  print(s, int(x6 - x))
+  dev.texts(t1, y1 - 50, s, 0.5, 'lc')
+  dev.texts(t2, y2 - 50, s, 0.5, 'rc')
+  print(s, int(x6 - x5), int(x8 - x7))
 
-  return x6, y
+  return x + lchip, y
 
 def chips(x, y, arange):
 

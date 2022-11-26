@@ -48,19 +48,19 @@ def chip(x, y, lchip):
     x9, y1 = dev.sbend(x2, y3,  dh, 20, 0, 1)
     x9, y2 = dev.sbend(x2, y4, -dh, 20, 0, 1)
   
-  x8, ltip = dev.move(idev, x, x9, lchip)
+  x5, x6, ltip = dev.xshift(idev, x, x9, lchip)
 
-  x9, _, t1 = tip.fiber(x, y1, ltip, -1)
-  x9, _, t1 = tip.fiber(x, y2, ltip, -1)
-  x9, _, t2 = tip.fiber(x8, y1, ltip, 1)
-  x9, _, t2 = tip.fiber(x8, y2, ltip, 1)
+  x7, t1 = tip.fiber(x5, y1, ltip, -1)
+  x7, t1 = tip.fiber(x5, y2, ltip, -1)
+  x8, t2 = tip.fiber(x6, y1, ltip, 1)
+  x8, t2 = tip.fiber(x6, y2, ltip, 1)
 
   s = '2x2-' + str(round(cfg.l2x2, 1))
   dev.texts(t1, y, s, 0.5, 'lc')
   dev.texts(t2, y, s, 0.5, 'rc')
-  print(s, int(x9 - x))
+  print(s, int(x6 - x5), int(x8 - x7))
 
-  return x9, y + ysize
+  return x + lchip, y + ysize
 
 def chips(x, y, arange):
 

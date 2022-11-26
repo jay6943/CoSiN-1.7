@@ -42,17 +42,17 @@ def chip(x, y, lchip):
   x10, _ = psk.device(x9, y + yqpsk)
   x10, _ = psk.device(x9, y - yqpsk)
 
-  x11, ltip = dev.move(idev, x, x10, lchip)
+  x11, x12, ltip = dev.xshift(idev, x, x10, lchip)
 
-  tip.fiber(x, y1, ltip, -1)
-  tip.fiber(x, y2, ltip, -1)
+  x13, _ = tip.fiber(x11, y1, ltip, -1)
+  x13, _ = tip.fiber(x11, y2, ltip, -1)
 
   for i in range(8):
-    x12, _, _ = tip.fiber(x11, y + (i - 3.5) * cfg.ch, ltip, 1)
+    x14, _ = tip.fiber(x12, y + (i - 3.5) * cfg.ch, ltip, 1)
 
-  print('DP-QPSK chip length =', int(x12 - x))
+  print('DP-QPSK', int(x12 - x11), int(x14 - x13))
 
-  return x12, y
+  return x + lchip, y
 
 def chips(x, y):
 

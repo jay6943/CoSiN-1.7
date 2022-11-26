@@ -38,29 +38,29 @@ def chip(x, y, lchip):
 
   ch = 50
 
-  x4 = x
+  x9 = x
 
   idev = len(cfg.data)
 
   for _ in range(5):
-    x1, y1, y2 = device(x4, y, 1)
+    x1, y1, y2 = device(x9, y, 1)
     x2, y3 = dev.sbend(x1, y1,  ch, 20, 0, 1)
     x2, y4 = dev.sbend(x1, y2, -ch, 20, 0, 1)
     x3, y1 = dev.sbend(x2, y3, -ch, 20, 0, 1)
     x3, y2 = dev.sbend(x2, y4,  ch, 20, 0, 1)
-    x4, y1, y2 = device(x3, y, -1) 
+    x9, y1, y2 = device(x3, y, -1) 
   
-  x5, ltip = dev.move(idev, x, x4, lchip)
+  x5, x6, ltip = dev.xshift(idev, x, x9, lchip)
 
-  x6, _, t1 = tip.fiber(x,  y, ltip, -1)
-  x6, _, t2 = tip.fiber(x5, y, ltip,  1)
+  x7, t1 = tip.fiber(x5, y, ltip, -1)
+  x8, t2 = tip.fiber(x6, y, ltip,  1)
 
   s = '1x2-' + str(int(cfg.l1x2))
   dev.texts(t1, y - 50, s, 0.5, 'lc')
   dev.texts(t2, y - 50, s, 0.5, 'rc')
-  print(s, int(x6 - x))
+  print(s, int(x6 - x5), int(x8 - x7))
 
-  return x6, y + ysize
+  return x + lchip, y + ysize
 
 def chips(x, y, arange):
 
@@ -74,8 +74,8 @@ def chips(x, y, arange):
 
 if __name__ == '__main__':
 
-  chip(0, 0, xsize)
+  # chip(0, 0, xsize)
   
-  # chips(0, 0, dev.arange(16, 20, 1))
+  chips(0, 0, dev.arange(16, 20, 1))
 
   dev.saveas(cfg.work + 'y1x2')
