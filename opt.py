@@ -7,21 +7,21 @@ import psk
 import tip
 import tap
 
-yqpsk = 1800
-xback = 2000
-yhigh = 900
-
-xsize = 5000
+xsize = 4000
 ysize = 5000
+
+yqpsk = 1800
+xback = 1500
+yhigh = 900
 
 def inbend(x, y, ystart, sign):
 
   x1, y1 = dev.sbend(x, y, 250, 45, 0, sign * 2)
   x2, y2 = dev.tline(x1, y1, sign * yhigh)
   x3, y3 = dev.bends(x2, y2, 90, 90, sign)
-  x4, y4 = dev.sline(x3, y3, -xback)
+  x6, y4 = dev.sline(x3, y3, -xback)
   h = sign * (yqpsk - cfg.ch * 0.5) + ystart - y4
-  x5, y5 = dev.sbend(x4, y4, h, 90, 180, -2)
+  x5, y5 = dev.sbend(x6, y4, h, 90, 180, -2)
 
   return x5, y5
 
@@ -43,52 +43,58 @@ def fiber_pd(x, y, lchip):
 
 def chip(x, y, lchip):
   
-  ch, ltip = cfg.ch * 0.5, 2000
+  ch = cfg.ch * 0.5
 
-  x1 = x + ltip
   y1 = y + ch
   y2 = y - ch
   
-  tip.fiber(x1, y1, 0, -1)
-  tip.fiber(x1, y2, 0, -1)
+  idev = len(cfg.data)
+  x1, _ = tip.fiber(x, y1, 0, -1)
+  x1, _ = tip.fiber(x, y2, 0, -1)
+  dxf.move(idev, x, 0, x1, 0, x - x1, 0, 0)
   
-  x2, y3 = dev.sbend(x1, y1, 300, 90, 0,  1)
-  x2, y4 = dev.sbend(x1, y2, 300, 90, 0, -1)
+  x2 = x * 2 - x1
 
-  x4, _ = voa.device(x2, y3)
-  x4, _ = dev.sline(x2, y4, x4 - x2)
+  x3, _ = tap.device(x2, y1, 4, 100, 300, yqpsk)
+  x3, _ = dev.sline(x2, y2, x3 - x2)
 
-  x6, y5 = dev.sbend(x4, y3, 300, 90, 0, -1)
-  x6, y6 = dev.sbend(x4, y4, 300, 90, 0,  1)
+  x4, y3 = dev.sbend(x3, y1, 300, 90, 0,  1)
+  x4, y4 = dev.sbend(x3, y2, 300, 90, 0, -1)
 
-  x7, y61, y62 = pbs.device(x6, y5)
-  x7, y63, y64 = pbs.device(x6, y6)
+  x6, _ = voa.device(x4, y3)
+  x6, _ = dev.sline(x4, y4, x6 - x4)
 
-  x8, y73 = inbend(x7, y63, y,  1)
-  x8, y72 = inbend(x7, y62, y, -1)
+  x8, y5 = dev.sbend(x6, y3, 300, 90, 0, -1)
+  x8, y6 = dev.sbend(x6, y4, 300, 90, 0,  1)
 
-  x9, y71 = outbend(x7, y61, y,  1)
-  x9, y74 = outbend(x7, y64, y, -1)
+  x9, y61, y62 = pbs.device(x8, y5)
+  x9, y63, y64 = pbs.device(x8, y6)
+
+  x10, y73 = inbend(x9, y63, y,  1)
+  x10, y72 = inbend(x9, y62, y, -1)
+
+  x11, y71 = outbend(x9, y61, y,  1)
+  x11, y74 = outbend(x9, y64, y, -1)
 
   idev = len(cfg.data)
 
-  x10, _ = psk.device(x, y + yqpsk)
-  x10, _ = psk.device(x, y - yqpsk)
+  x12, _ = psk.device(x, y + yqpsk)
+  x12, _ = psk.device(x, y - yqpsk)
 
   for i in [-3,-1,1,3]:
-    x11, _ = tip.diode(x10, y + i * ch + yqpsk, 0, 1)
-    x11, _ = tip.diode(x10, y + i * ch - yqpsk, 0, 1)
+    x13, _ = tip.diode(x12, y + i * ch + yqpsk, 0, 1)
+    x13, _ = tip.diode(x12, y + i * ch - yqpsk, 0, 1)
 
-  x12, _ = dxf.move(idev, x, 0, x11, 0, lchip - x11 + x, 0, 0)
+  x14, _ = dxf.move(idev, x, 0, x13, 0, lchip - x13 + x, 0, 0)
 
-  dev.sline(x8, y73, x12 - x11 + x - x8)
-  dev.sline(x8, y72, x12 - x11 + x - x8)
-  dev.sline(x9, y71, x12 - x11 + x - x9)
-  dev.sline(x9, y74, x12 - x11 + x - x9)
+  dev.sline(x10, y73, x14 - x13 + x - x10)
+  dev.sline(x10, y72, x14 - x13 + x - x10)
+  dev.sline(x11, y71, x14 - x13 + x - x11)
+  dev.sline(x11, y74, x14 - x13 + x - x11)
 
-  print('Optimized ICR', int(x12 - x))
+  print('Optimized ICR', int(x14 - x))
 
-  return x11, y
+  return x + lchip, y
 
 if __name__ == '__main__':
 

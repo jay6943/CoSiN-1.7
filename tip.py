@@ -2,15 +2,13 @@ import cfg
 import dxf
 import dev
 
-lcut = 400
-
 xsize = cfg.size
 ysize = 100
 
 def device(x, y, ltip, wtip, sign):
   
   w = [cfg.wg, 0.8, 0.5, wtip]
-  l = [ltip, 5, 20, 50, 800]
+  l = [ltip, 5, 20, 50, 500]
   t = l[0] - sum(l[1:])
 
   if t > 0: x, _ = dev.sline(x, y, t * sign)

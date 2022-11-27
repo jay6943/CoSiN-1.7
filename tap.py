@@ -5,13 +5,17 @@ import tip
 xsize = cfg.size
 ysize = 200
 
-def device(x, y, l1, l2, dy, sign):
+def device(x, y, dy, l1, l2, h):
+
+  sign = 1 if dy > 0 else -1
 
   x1, y1 = dev.sline(x, y + dy, l1)
-  x1, y2 = dev.bends(x1, y1, 90, 0, sign)
-  x1, y1 = dev.sline(x, y, l2)
+  x2, y2 = dev.bends(x1, y1, 90, 0, sign)
+  x3, y3 = dev.tline(x2, y2, h * sign)
 
-  return x1, y2
+  x3, y3 = dev.sline(x, y, l2)
+
+  return x3, y3
 
 def chip(x, y, lchip, dy):
   
@@ -40,7 +44,6 @@ def chips(x, y, arange):
 
 if __name__ == '__main__':
 
-  # device(0, 0, 1500, -1)
   # chip(0, 0, 3000)
 
   chips(0, 0, dev.arange(2, 4, 1))
