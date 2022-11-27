@@ -24,6 +24,7 @@ def curve(wg, radius, angle, m):
   py = np.cos(p * p)
 
   rc = np.array([0] + (radius / p[1:] * 0.5).tolist())
+  
   dx = x - rc * px
   dy = y + rc * py
 

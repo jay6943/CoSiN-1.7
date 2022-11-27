@@ -44,5 +44,4 @@ layer['bars'] = 2
 layer['hole'] = 2
 layer['recs'] = 2
 layer['tops'] = 2
-layer['cuts'] = 2
 layer['text'] = 2

@@ -28,7 +28,6 @@ def mask_1(fp):
 
   cfg.layer['core'] = 1
   cfg.layer['edge'] = 1
-  cfg.layer['cuts'] = 1
   cfg.layer['tops'] = 1
   cfg.layer['sio2'] = 0
   cfg.layer['recs'] = 1
@@ -50,7 +49,6 @@ def mask_2(fp):
 
   cfg.layer['core'] = 2
   cfg.layer['edge'] = 2
-  cfg.layer['cuts'] = 2
   cfg.layer['tops'] = 2
   cfg.layer['recs'] = 2
   
@@ -67,7 +65,6 @@ def mask_3(fp):
 
   cfg.layer['core'] = 3
   cfg.layer['edge'] = 3
-  cfg.layer['cuts'] = 3
   cfg.layer['tops'] = 3
   cfg.layer['recs'] = 3
 
@@ -84,7 +81,6 @@ def mask_4(fp):
   cfg.layer['core'] = 4
   cfg.layer['edge'] = 4
   cfg.layer['gold'] = 0
-  cfg.layer['cuts'] = 4
   cfg.layer['tops'] = 4
   cfg.layer['recs'] = 4
 
