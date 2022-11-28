@@ -96,6 +96,7 @@ def chips(x, y):
   
 if __name__ == '__main__':
 
-  chip(0, 0, xsize)
+  # chip(0, 0, xsize)
+  chips(0, 0)
 
   dev.saveas(cfg.work + 'icr')

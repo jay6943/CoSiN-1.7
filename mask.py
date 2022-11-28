@@ -96,7 +96,7 @@ if __name__ == '__main__':
   key.cross(0, 0)
   dxf.conversion(fp)
 
-  ok = 1
+  ok = 0
   
   if ok == 0 or ok == 1: mask_1(fp)
   if ok == 0 or ok == 2: mask_2(fp)
