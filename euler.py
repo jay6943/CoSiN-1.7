@@ -36,12 +36,17 @@ def curve(wg, radius, angle, m):
   xp = np.append(xinner, xouter[::-1])
   yp = np.append(yinner, youter[::-1])
 
+  xo = dx + rc * px
+  yo = dy - rc * py
+
   df = {}
   df['n'] = n
   df['x'] = xp
   df['y'] = yp
   df['dx'] = dx[-1]
   df['dy'] = dy[-1]
+  df['xo'] = xo[-1]
+  df['yo'] = yo[-1]
 
   return df
 
