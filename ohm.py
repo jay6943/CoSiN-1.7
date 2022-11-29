@@ -84,7 +84,7 @@ def chip(x, y, lchip, radius, angle):
 
   idev = len(cfg.data)
   x2, y2 = device(x, y, radius, angle)
-  x5, x6, ltip = dev.xshift(idev, x, x2, lchip)
+  x5, x6, ltip = dev.center(idev, x, x2, lchip)
 
   x7, t1 = tip.fiber(x5, y,  ltip, -1)
   x8, t2 = tip.fiber(x6, y2, ltip,  1)

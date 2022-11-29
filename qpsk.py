@@ -36,7 +36,7 @@ def chip(x, y, lchip):
   x10, _ = psk.device(x9, y + yqpsk)
   x10, _ = psk.device(x9, y - yqpsk)
 
-  x11, x12, ltip = dev.xshift(idev, x, x10, lchip)
+  x11, x12, ltip = dev.center(idev, x, x10, lchip)
 
   x13, _ = tip.fiber(x11, y1, ltip, -1)
   x13, _ = tip.fiber(x11, y2, ltip, -1)

@@ -23,7 +23,7 @@ def chip(x, y, lchip, dy):
   x1, y1 = dev.sline(x, y + dy, 100)
   x2, y2 = dev.sbend(x1, y1, 100 - dy, 20, 0, 1)
   x2, y1 = dev.sline(x, y, x2 - x)
-  x5, x6, ltip = dev.xshift(idev, x, x2, lchip)
+  x5, x6, ltip = dev.center(idev, x, x2, lchip)
 
   x7, t1 = tip.fiber(x5, y1, ltip, -1)
   x8, t2 = tip.fiber(x6, y1, ltip,  1)

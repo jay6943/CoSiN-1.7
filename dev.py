@@ -1,7 +1,6 @@
 import os
 import cfg
 import dxf
-import tip
 import euler as elr
 import numpy as np
 
@@ -104,17 +103,7 @@ def arange(start, stop, step):
 
   return np.arange(start, stop + step * 0.5, step)
 
-# def move(idev, x, xt, lchip):
-
-#   ltip = (lchip - xt + x) * 0.5
-
-#   if ltip < tip.ltip: ltip = tip.ltip
-
-#   xtip, _ = dxf.move(idev, x, 0, xt, 0, ltip, 0, 0)
-
-#   return xtip, ltip
-
-def xshift(idev, x, xt, lchip):
+def center(idev, x, xt, lchip):
 
   ldev = xt - x
   ltip = (lchip - ldev) * 0.5

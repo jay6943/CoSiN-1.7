@@ -47,7 +47,7 @@ def chip(x, y, lchip, wtip):
 
   idev = len(cfg.data)
   x1, _ = dev.sline(x, y, 1000)
-  x2, x3, ltip = dev.xshift(idev, x, x1, lchip)
+  x2, x3, ltip = dev.center(idev, x, x1, lchip)
 
   x4, t1 = device(x2, y, ltip, wtip, -1)
   x5, t2 = device(x3, y, ltip, wtip,  1)

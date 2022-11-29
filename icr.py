@@ -15,7 +15,7 @@ def fiber_pd(x, y, lchip):
 
   idev = len(cfg.data)
   x1, _ = dev.sline(x, y, 1000)
-  x2, x3, ltip = dev.xshift(idev, x, x1, lchip)
+  x2, x3, ltip = dev.center(idev, x, x1, lchip)
 
   tip.fiber(x2, y, ltip, -1)
   tip.diode(x3, y, ltip,  1)

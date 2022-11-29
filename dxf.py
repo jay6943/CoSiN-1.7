@@ -223,7 +223,7 @@ def bends(layer, x, y, df, angle, sign):
   cfg.data.append([layer] + data.tolist())
 
   return xo, yo
-  
+
 def org(df, n, height, xp, yp):
 
   dy = df['dy'] * 2 if height < df['dy'] * 2 else height

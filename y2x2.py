@@ -48,7 +48,7 @@ def chip(x, y, lchip):
     x9, y1 = dev.sbend(x2, y3,  dh, 20, 0, 1)
     x9, y2 = dev.sbend(x2, y4, -dh, 20, 0, 1)
   
-  x5, x6, ltip = dev.xshift(idev, x, x9, lchip)
+  x5, x6, ltip = dev.center(idev, x, x9, lchip)
 
   x7, t1 = tip.fiber(x5, y1, ltip, -1)
   x7, t1 = tip.fiber(x5, y2, ltip, -1)
