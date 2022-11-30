@@ -12,7 +12,7 @@ wt = 0.8
 eg = 30
 ch = 250
 
-radius = 125
+radius = 100
 
 w1x2 = 5.6
 l1x2 = 17

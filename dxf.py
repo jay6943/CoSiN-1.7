@@ -137,6 +137,16 @@ def xreverse(idev, x, y, xt):
 
   return x + xt, y
 
+def yreverse(idev, x, y, xt):
+  
+  for data in cfg.data[idev:len(cfg.data)]:
+    xy = np.array(data[1:])
+    xy = xy * [1, -1]
+
+    data[1:] = xy.tolist()
+
+  return x + xt, y
+
 def circle(layer, x, y, radius, n):
 
   t = np.linspace(0, np.pi * 2, n)

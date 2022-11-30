@@ -1,6 +1,7 @@
 import os
 import cfg
 import dxf
+import dev
 import numpy as np
 import scipy.special as ss
 
@@ -114,3 +115,72 @@ def update(wg, radius, angle, draft):
   else: changed = True
   
   return save(fp, w, radius, angle, m) if changed else df
+
+def bends(layer, x, y, angle):
+
+  m = 100 if cfg.draft != 'mask' else 1000
+  cf = curve(cfg.wg, cfg.radius, angle, m)
+
+  xp, yp = cf['x'] + x, cf['y'] + y
+  data = np.array([xp, yp]).transpose()
+  cfg.data.append([layer] + data.tolist())
+
+  xp, yp = cf['xo'] - cf['x'], cf['y'] - cf['yo']
+  xp, yp = dxf.rotate(xp, yp, angle)
+  xp, yp = xp + cf['xo'] + x, yp + cf['yo'] + y
+  data = np.array([xp, yp]).transpose()
+  cfg.data.append([layer] + data.tolist())
+
+  return xp, yp, cf
+
+def sbend(layer, x, y, angle):
+
+  xp, yp, cf = bends(layer, x, y, angle)
+
+  dx = (xp[0] + xp[cf['n'] * 2 - 1]) * 0.5
+  dy = (yp[0] + yp[cf['n'] * 2 - 1]) * 0.5
+
+  xp, yp = cf['x'], -cf['y']
+  xp, yp = dxf.rotate(xp, yp, angle)
+  xp, yp = xp + dx + x, yp + dy + y
+  data = np.array([xp, yp]).transpose()
+  cfg.data.append([layer] + data.tolist())
+
+  dx = (xp[cf['n']-1] + xp[cf['n']]) * 0.5
+  dy = (yp[cf['n']-1] + yp[cf['n']]) * 0.5
+
+  xp, yp = cf['xo'] - cf['x'], cf['yo'] - cf['y']
+  xp, yp = xp + dx, yp + dy
+  data = np.array([xp, yp]).transpose()
+  cfg.data.append([layer] + data.tolist())
+
+def tbend(layer, x, y, angle):
+
+  xp, yp, cf = bends(layer, x, y, angle)
+
+  dx = (xp[0] + xp[cf['n'] * 2 - 1]) * 0.5
+  dy = (yp[0] + yp[cf['n'] * 2 - 1]) * 0.5
+
+  xp, yp = cf['x'], cf['y']
+  xp, yp = dxf.rotate(xp, yp, angle)
+  xp, yp = xp + dx + x, yp + dy + y
+  data = np.array([xp, yp]).transpose()
+  cfg.data.append([layer] + data.tolist())
+
+  dx = (xp[cf['n']-1] + xp[cf['n']]) * 0.5
+  dy = (yp[cf['n']-1] + yp[cf['n']]) * 0.5
+
+  xp, yp = cf['xo'] - cf['x'], cf['y'] - cf['yo']
+  xp, yp = dxf.rotate(xp, yp, angle * 2)
+  xp, yp = xp + dx, yp + dy
+  data = np.array([xp, yp]).transpose()
+  cfg.data.append([layer] + data.tolist())
+
+if __name__ == '__main__':
+
+  df = update(cfg.wg + 1, cfg.radius, 45, cfg.draft)
+  dxf.sbend('core', 0, 0, 0, df, 0, 1)
+
+  tbend('edge', 0, 0, 45)
+  
+  dev.saveas(cfg.work + 'euler')
