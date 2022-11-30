@@ -10,7 +10,7 @@ def device(x, y, dy, l1, l2, h):
   sign = 1 if dy > 0 else -1
 
   x1, y1 = dev.sline(x, y + dy, l1)
-  x2, y2 = dev.bends(x1, y1, 90, 0, sign)
+  x2, y2 = dev.bends(x1, y1, 90, 0, 1, sign)
   x3, y3 = dev.tline(x2, y2, h * sign)
 
   x3, y3 = dev.sline(x, y, l2)
@@ -21,7 +21,7 @@ def chip(x, y, lchip, dy):
   
   idev = len(cfg.data)
   x1, y1 = dev.sline(x, y + dy, 100)
-  x2, y2 = dev.sbend(x1, y1, 100 - dy, 20, 0, 1)
+  x2, y2 = dev.sbend(x1, y1, 100 - dy, 20)
   x2, y1 = dev.sline(x, y, x2 - x)
   x5, x6, ltip = dev.center(idev, x, x2, lchip)
 

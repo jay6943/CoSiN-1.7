@@ -89,30 +89,30 @@ def copier(fp, layer, area):
   
     i += 1
 
-def rxt(angle):
+def rxt(rotate):
   
-  arg = angle * np.pi / 180
+  arg = rotate * np.pi / 180
 
   rcos = np.cos(arg)
   rsin = np.sin(arg)
 
   return np.array([[rcos, -rsin], [rsin, rcos]])
   
-def rotate(xp, yp, angle):
+def rotator(xp, yp, rotate):
 
-  [xp, yp] = rxt(angle) @ np.array([xp, yp])
+  [xp, yp] = rxt(rotate) @ np.array([xp, yp])
 
   return xp, yp
 
-def move(idev, x, y, xt, yt, dx, dy, angle):
+def move(idev, x, y, xt, yt, dx, dy, rotate):
 
   for data in cfg.data[idev:len(cfg.data)]:
     xy = np.array(data[1:]).transpose()
     
-    if angle != 0:
-      xy = rxt(angle) @ xy
-      s = rxt(angle) @ [[x], [y]]
-      t = rxt(angle) @ [[xt], [yt]]
+    if rotate != 0:
+      xy = rxt(rotate) @ xy
+      s = rxt(rotate) @ [[x], [y]]
+      t = rxt(rotate) @ [[xt], [yt]]
     else:
       s = [[x], [y]]
       t = [[xt], [yt]]
@@ -214,17 +214,17 @@ def tline(layer, x, y, length):
 
   return x, y + length
 
-def bends(layer, x, y, df, angle, sign):
+def bends(layer, x, y, df, rotate, xsign, ysign):
 
   n = df['n']
 
   xp = np.array(df['x'])
   yp = np.array(df['y'])
 
-  if angle > 0: xp, yp = rotate(xp, yp, angle)
+  if rotate > 0: xp, yp = rotator(xp, yp, rotate)
 
-  xp = x + xp
-  yp = y + yp * sign
+  xp = x + xp * xsign
+  yp = y + yp * ysign
 
   xo = (xp[n-1] + xp[n]) * 0.5
   yo = (yp[n-1] + yp[n]) * 0.5
@@ -234,88 +234,41 @@ def bends(layer, x, y, df, angle, sign):
 
   return xo, yo
 
-def org(df, n, height, xp, yp):
+def sbend(layer, x, y, df, dy, angle):
 
-  dy = df['dy'] * 2 if height < df['dy'] * 2 else height
+  sign = 1 if dy > 0 else -1
 
-  if df['angle'] == 45:
-    dx = height + (df['dx'] - df['dy']) * 2
-    if dx < df['dx'] * 2: dx = df['dx'] * 2
-  elif df['angle'] == 90: dx = df['dx'] * 2
-  else:
-    dh = height - df['dy'] * 2
-    dq = df['angle'] * np.pi / 180
-    dx = df['dx'] * 2 + dh / np.tan(dq)
+  yo = dy - df['dy'] * 2 * sign
+  xo = yo * sign / np.tan(angle / 180 * np.pi)
 
-  xt = np.append(xp[:n], dx - xp[n:])
-  yt = np.append(yp[:n], dy - yp[n:])
-  xt = np.append(xt, dx - xp[:n])
-  yt = np.append(yt, dy - yp[:n])
-  xt = np.append(xt, xp[n:])
-  yt = np.append(yt, yp[n:])
+  data = [layer]
 
-  return xt, yt
+  x1, y1 = df['x'][df['n']-1], df['y'][df['n']-1] * sign
+  x2, y2 = df['x'][df['n']  ], df['y'][df['n']  ] * sign
+  x3, y3 = df['dx'] * 2 + xo - x1, dy - y1
+  x4, y4 = df['dx'] * 2 + xo - x2, dy - y2
 
-def inv(df, n, height, xp, yp):
-
-  xt, yt = xp, yp
-
-  if df['angle'] == 45:
-    dh = df['dx'] + df['dy']
-    dx = dh if height < dh else height
-    dy = dh if height < dh else height
-    xt = np.append(xp[:n], dx - yp[:n][::-1])
-    yt = np.append(yp[:n], dy - xp[:n][::-1])
-    xt = np.append(xt, dx - yp[n:][::-1])
-    yt = np.append(yt, dy - xp[n:][::-1])
-    xt = np.append(xt, xp[n:])
-    yt = np.append(yt, yp[n:])
-
-  if df['angle'] == 90:
-    dh = df['dy'] * 2
-    dy = dh if height < dh else height
-    xt = np.append(xp[:n], xp[:n][::-1])
-    yt = np.append(yp[:n], dy - yp[:n][::-1])
-    xt = np.append(xt, xp[n:][::-1])
-    yt = np.append(yt, dy - yp[n:][::-1])
-    xt = np.append(xt, xp[n:])
-    yt = np.append(yt, yp[n:])
-
-  return xt, yt
-
-def sbend(layer, x, y, height, df, angle, shape):
-
-  sign = -1 if height < 0 else 1
-
-  n  = df['n']
-  k  = df['n'] * 2
-  xt = df['x']
-  yt = df['y']
-
-  if abs(shape) == 1: xp, yp = org(df, n, abs(height), xt, yt)
-  if abs(shape) == 2: xp, yp = inv(df, n, abs(height), xt, yt)
-  if shape < 0: yp = -yp
-  if angle > 0: xp, yp = rotate(xp, yp, angle)
-
-  xp = x + xp
-  yp = y + yp * sign
-
-  xo = (xp[k-1] + xp[k]) * 0.5
-  yo = (yp[k-1] + yp[k]) * 0.5
+  data.append([x + x1, y + y1])
+  data.append([x + x2, y + y2])
+  data.append([x + x3, y + y3])
+  data.append([x + x4, y + y4])
   
-  data = np.array([xp, yp]).transpose()
-  cfg.data.append([layer] + data.tolist())
+  cfg.data.append(data)
 
-  return xo, yo
+  x1, y1 = bends(layer, x, y, df, 0, 1, sign)
+  x2, y2 = x1 + df['dx'] + xo, y1 + df['dy'] * sign + yo
+  x3, y3 = bends(layer, x2, y2, df, 0, -1, -sign)
 
-def tilts(layer, x, y, length, width, angle):
+  return x3 + df['dx'], y3 + df['dy'] * sign
+
+def tilts(layer, x, y, length, width, rotate):
 
   w = width * 0.5
 
   xp = np.array([0, length, length, 0])
   yp = np.array([w, w, -w, -w])
 
-  xp, yp = rotate(xp, yp, angle)
+  xp, yp = rotator(xp, yp, rotate)
   xp, yp = xp + x, yp + y
 
   data = np.array([xp, yp]).transpose()

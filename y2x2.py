@@ -42,11 +42,11 @@ def chip(x, y, lchip):
   idev = len(cfg.data)
 
   for _ in range(10):
-    x1, y1 = dev.sbend(x9, y1, -dh, 20, 0, 1)
-    x1, y2 = dev.sbend(x9, y2,  dh, 20, 0, 1)
+    x1, y1 = dev.sbend(x9, y1, -dh, 20)
+    x1, y2 = dev.sbend(x9, y2,  dh, 20)
     x2, y3, y4 = device(x1, y)
-    x9, y1 = dev.sbend(x2, y3,  dh, 20, 0, 1)
-    x9, y2 = dev.sbend(x2, y4, -dh, 20, 0, 1)
+    x9, y1 = dev.sbend(x2, y3,  dh, 20)
+    x9, y2 = dev.sbend(x2, y4, -dh, 20)
   
   x5, x6, ltip = dev.center(idev, x, x9, lchip)
 

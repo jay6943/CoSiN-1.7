@@ -34,19 +34,17 @@ def save(fp, wg, radius, angle, m):
 
   return df
 
-def update(wg, radius, angle, draft):
+def update(wg, radius, angle, layer):
 
-  m = 25 if draft != 'mask' else 1000
-  w = wg if draft != 'edge' else cfg.eg
+  m = 25 if layer != 'mask' else 1000
+  w = wg if layer != 'edge' else cfg.eg
 
-  ip = str(radius) + '_' + str(angle) + '_' + draft
-  fp = cfg.libs + 'cir_' + ip + '.npy'
+  ip = str(wg) + '-' + str(radius) + '-' + str(angle)
+  fp = cfg.libs + 'cir-' + ip + '-' + layer + '.npy'
 
-  changed = False
   if os.path.isfile(fp):
     df = np.load(fp, allow_pickle=True).item()
-    if df['m'] != m: changed = True
-    if df['w'] != w: changed = True
-  else: changed = True
+  else:
+    df = save(fp, w, radius, angle, m)
 
-  return save(fp, w, radius, angle, m) if changed else df
+  return df

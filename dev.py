@@ -44,23 +44,23 @@ def taper(x, y, length, wstart, wstop):
 
   return x1, y1
 
-def bends(x, y, angle, rotate, sign):
+def bends(x, y, angle, rotate, xsign, ysign):
 
   core = elr.update(cfg.wg, cfg.radius, angle, cfg.draft)
   edge = elr.update(cfg.wg, cfg.radius, angle, 'edge')
 
-  x1, y1 = dxf.bends('edge', x, y, edge, rotate, sign)
-  x1, y1 = dxf.bends('core', x, y, core, rotate, sign)
+  x1, y1 = dxf.bends('edge', x, y, edge, rotate, xsign, ysign)
+  x1, y1 = dxf.bends('core', x, y, core, rotate, xsign, ysign)
 
   return x1, y1
 
-def sbend(x, y, offset, angle, rotate, shape):
+def sbend(x, y, dy, angle):
 
   core = elr.update(cfg.wg, cfg.radius, angle, cfg.draft)
   edge = elr.update(cfg.wg, cfg.radius, angle, 'edge')
 
-  x1, y1 = dxf.sbend('edge', x, y, offset, edge, rotate, shape)
-  x1, y1 = dxf.sbend('core', x, y, offset, core, rotate, shape)
+  x1, y1 = dxf.sbend('edge', x, y, edge, dy, angle)
+  x1, y1 = dxf.sbend('core', x, y, core, dy, angle)
 
   return x1, y1
 

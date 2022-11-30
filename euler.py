@@ -51,7 +51,7 @@ def curve(wg, radius, angle, m):
 
   return df
 
-def rotate(df, oxt, rxt):
+def rotator(df, oxt, rxt):
 
   dx = df['dx'] - oxt[0]
   dy = df['dy'] - oxt[1]
@@ -78,7 +78,7 @@ def save(fp, wg, radius, angle, m):
   obj = curve(wg, radius, angle, m)
   oxt = rxt @ np.array([-obj['dx'], obj['dy']]).reshape(2,1)
 
-  xp, yp = rotate(obj, oxt, rxt)
+  xp, yp = rotator(obj, oxt, rxt)
 
   n = obj['n'] * 2
 
@@ -99,88 +99,24 @@ def save(fp, wg, radius, angle, m):
 
   return df
 
-def update(wg, radius, angle, draft):
+def update(wg, radius, angle, layer):
 
-  m = 50 if draft != 'mask' else 1000
-  w = wg if draft != 'edge' else cfg.eg
+  m = 100 if layer != 'mask' else 1000
+  w = wg  if layer != 'edge' else cfg.eg
 
-  ip = str(radius) + '_' + str(angle) + '_' + draft
-  fp = cfg.libs + 'euler_' + ip + '.npy'
+  ip = str(wg) + '-' + str(radius) + '-' + str(angle)
+  fp = cfg.libs + 'euler-' + ip + '-' + layer + '.npy'
 
-  changed = False
   if os.path.isfile(fp):
     df = np.load(fp, allow_pickle=True).item()
-    if df['m'] != m: changed = True
-    if df['w'] != w: changed = True
-  else: changed = True
+  else:
+    df = save(fp, w, radius, angle, m)
   
-  return save(fp, w, radius, angle, m) if changed else df
-
-def bends(layer, x, y, angle):
-
-  m = 100 if cfg.draft != 'mask' else 1000
-  cf = curve(cfg.wg, cfg.radius, angle, m)
-
-  xp, yp = cf['x'] + x, cf['y'] + y
-  data = np.array([xp, yp]).transpose()
-  cfg.data.append([layer] + data.tolist())
-
-  xp, yp = cf['xo'] - cf['x'], cf['y'] - cf['yo']
-  xp, yp = dxf.rotate(xp, yp, angle)
-  xp, yp = xp + cf['xo'] + x, yp + cf['yo'] + y
-  data = np.array([xp, yp]).transpose()
-  cfg.data.append([layer] + data.tolist())
-
-  return xp, yp, cf
-
-def sbend(layer, x, y, angle):
-
-  xp, yp, cf = bends(layer, x, y, angle)
-
-  dx = (xp[0] + xp[cf['n'] * 2 - 1]) * 0.5
-  dy = (yp[0] + yp[cf['n'] * 2 - 1]) * 0.5
-
-  xp, yp = cf['x'], -cf['y']
-  xp, yp = dxf.rotate(xp, yp, angle)
-  xp, yp = xp + dx + x, yp + dy + y
-  data = np.array([xp, yp]).transpose()
-  cfg.data.append([layer] + data.tolist())
-
-  dx = (xp[cf['n']-1] + xp[cf['n']]) * 0.5
-  dy = (yp[cf['n']-1] + yp[cf['n']]) * 0.5
-
-  xp, yp = cf['xo'] - cf['x'], cf['yo'] - cf['y']
-  xp, yp = xp + dx, yp + dy
-  data = np.array([xp, yp]).transpose()
-  cfg.data.append([layer] + data.tolist())
-
-def tbend(layer, x, y, angle):
-
-  xp, yp, cf = bends(layer, x, y, angle)
-
-  dx = (xp[0] + xp[cf['n'] * 2 - 1]) * 0.5
-  dy = (yp[0] + yp[cf['n'] * 2 - 1]) * 0.5
-
-  xp, yp = cf['x'], cf['y']
-  xp, yp = dxf.rotate(xp, yp, angle)
-  xp, yp = xp + dx + x, yp + dy + y
-  data = np.array([xp, yp]).transpose()
-  cfg.data.append([layer] + data.tolist())
-
-  dx = (xp[cf['n']-1] + xp[cf['n']]) * 0.5
-  dy = (yp[cf['n']-1] + yp[cf['n']]) * 0.5
-
-  xp, yp = cf['xo'] - cf['x'], cf['y'] - cf['yo']
-  xp, yp = dxf.rotate(xp, yp, angle * 2)
-  xp, yp = xp + dx, yp + dy
-  data = np.array([xp, yp]).transpose()
-  cfg.data.append([layer] + data.tolist())
+  return df
 
 if __name__ == '__main__':
 
   df = update(cfg.wg + 1, cfg.radius, 45, cfg.draft)
   dxf.sbend('core', 0, 0, 0, df, 0, 1)
 
-  tbend('edge', 0, 0, 45)
-  
   dev.saveas(cfg.work + 'euler')

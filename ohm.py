@@ -7,10 +7,13 @@ import euler as elr
 xsize = cfg.size
 ysize = 200
 
-def devsbends(x, y, core, edge, rotate, sign):
+def bends(x, y, radius, angle, rotate, xsign, ysign):
 
-  x1, y1 = dxf.bends('edge', x, y, edge, rotate, sign)
-  x1, y1 = dxf.bends('core', x, y, core, rotate, sign)
+  core = elr.update(cfg.wg, radius, angle, cfg.draft)
+  edge = elr.update(cfg.wg, radius, angle, 'edge')
+
+  x1, y1 = dxf.bends('edge', x, y, edge, rotate, xsign, ysign)
+  x1, y1 = dxf.bends('core', x, y, core, rotate, xsign, ysign)
 
   return x1, y1
 
@@ -22,36 +25,33 @@ def device(x, y, radius, angle):
     
     for _ in range(10):
       x1, y1 = dev.sline(x, y, l)
-      x2, y2 = dev.sbend(x1, y1, cfg.ch * 0.5, 45, 0, 1)
+      x2, y2 = dev.sbend(x1, y1, cfg.ch * 0.5, 45)
       x3, y3 = dev.sline(x2, y2, l * 2)
-      x4, y4 = dev.sbend(x3, y3, -cfg.ch * 0.5, 45, 0, 1)
+      x4, y4 = dev.sbend(x3, y3, -cfg.ch * 0.5, 45)
       x, y = dev.sline(x4, y4, l)
 
   if angle == 90:
 
     for _ in range(10):
       x1, y1 = dev.sline(x, y, l)
-      x2, y2 = dev.sbend(x1, y1, cfg.ch, 90, 0, 1)
+      x2, y2 = dev.sbend(x1, y1, cfg.ch, 90)
       x3, y3 = dev.sline(x2, y2, l * 2)
-      x4, y4 = dev.sbend(x3, y3, -cfg.ch, 90, 0, 1)
+      x4, y4 = dev.sbend(x3, y3, -cfg.ch, 90)
       x, y = dev.sline(x4, y4, l)
 
   if angle == 180:
 
-    core = elr.update(cfg.wg, radius, 180, cfg.draft)
-    edge = elr.update(cfg.wg, radius, 180, 'edge')
-
-    l = core['r'] + 80
+    l = 200
 
     for _ in range(10):
       x1, y1 = dev.sline(x, y, l)
-      x2, y2 = devsbends(x1, y1, core, edge, 0, 1)
+      x2, y2 = bends(x1, y1, radius, 180, 0, 1, 1)
       x3, y3 = dev.sline(x2, y2, -50)
-      x4, y4 = devsbends(x3, y3, core, edge, 180, -1)
+      x4, y4 = bends(x3, y3, radius, 180, 180, 1, -1)
       x5, y5 = dev.sline(x4, y4, l * 2)
-      x6, y6 = devsbends(x5, y5, core, edge, 0, -1)
+      x6, y6 = bends(x5, y5, radius, 180, 0, 1, -1)
       x7, y7 = dev.sline(x6, y6, -50)
-      x8, y8 = devsbends(x7, y7, core, edge, 180, 1)
+      x8, y8 = bends(x7, y7, radius, 180, 180, 1, 1)
       x, y = dev.sline(x8, y8, l)
 
   if angle == 1:
@@ -61,21 +61,21 @@ def device(x, y, radius, angle):
   if angle == 2:
 
     x1, y1 = dev.sline(x, y, 8000)
-    x2, y2 = dev.bends(x1, y1, 180, 0, 1)
+    x2, y2 = dev.bends(x1, y1, 180, 0, 1, 1)
     x3, y3 = dev.sline(x2, y2, -8000)
-    x4, y4 = dev.bends(x3, y3, 180, 180, -1)
+    x4, y4 = dev.bends(x3, y3, 180, 0, -1, 1)
     x , y  = dev.sline(x4, y4, 8000)
 
   if angle == 3:
 
     x1, y1 = dev.sline(x, y, 8000)
-    x2, y2 = dev.bends(x1, y1, 180, 0, 1)
+    x2, y2 = dev.bends(x1, y1, 180, 0, 1, 1)
     x3, y3 = dev.sline(x2, y2, -8000)
-    x4, y4 = dev.bends(x3, y3, 180, 180, -1)
+    x4, y4 = dev.bends(x3, y3, 180, 0, -1, 1)
     x5, y5 = dev.sline(x4, y4, 8000)
-    x6, y6 = dev.bends(x5, y5, 180, 0, 1)
+    x6, y6 = dev.bends(x5, y5, 180, 0, 1, 1)
     x7, y7 = dev.sline(x6, y6, -8000)
-    x8, y8 = dev.bends(x7, y7, 180, 180, -1)
+    x8, y8 = dev.bends(x7, y7, 180, 0, -1, 1)
     x, y = dev.sline(x8, y8, 8000)
 
   return x, y

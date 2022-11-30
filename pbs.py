@@ -46,7 +46,7 @@ def tail(x, y, angle, rotate, port, sign):
   core = cir.update(cfg.wg, 5, angle, 'draft')
 
   x1, y1 = dxf.taper('core', x, y, sign * cfg.ltpr, cfg.wg, cfg.wtpr)
-  x1, y1 = dxf.bends('core', x, y, core, rotate, port)
+  x1, y1 = dxf.bends('core', x, y, core, rotate, 1, port)
 
   w = cfg.wg * 0.5
   s = 1 if rotate != 90 else -1
@@ -94,8 +94,8 @@ def device(x, y):
 
   x3, y31, y32 = mzi(x, y + cfg.d2x2, -1, 0)
 
-  x4, y41 = dev.sbend(x3, y31, ch, 20, 0,  1)
-  x4, y42 = dev.sbend(x3, y32, ch, 20, 0, -1)
+  x4, y41 = dev.sbend(x3, y31,  ch, 20)
+  x4, y42 = dev.sbend(x3, y32, -ch, 20)
   x5, _, y51 = mzi(x4, y41 - cfg.d2x2, 1,  1)
   x5, y52, _ = mzi(x4, y42 - cfg.d2x2, 1, -1)
 

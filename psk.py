@@ -19,7 +19,7 @@ def sbend(x, y):
   cfg.draft = 'mask'
 
   x1, y1 = dev.sline(x, y, 10)
-  x2, y2 = dev.sbend(x1, y1, 20, 45, 0, 1)
+  x2, y2 = dev.sbend(x1, y1, 20, 45)
   x3, y3 = dev.sline(x2, y2, 10)
 
   return x3, y3
@@ -39,10 +39,10 @@ def device(x, y):
   x1, y11, y12 = y1x2.device(x, y + cfg.ch * 0.5, 1)
   x2, y21, y22 = y1x2.device(x, y - cfg.ch * 0.5, 1)
 
-  x3, y1 = dev.sbend(x1, y11,  ph1x2, 45, 0, 1)
-  x4, y2 = dev.sbend(x1, y12, -ch1x2, 45, 0, 1)
-  x4, y3 = dev.sbend(x2, y21,  ch1x2, 45, 0, 1)
-  x4, y4 = dev.sbend(x2, y22, -ch1x2, 45, 0, 1)
+  x3, y1 = dev.sbend(x1, y11,  ph1x2, 45)
+  x4, y2 = dev.sbend(x1, y12, -ch1x2, 45)
+  x4, y3 = dev.sbend(x2, y21,  ch1x2, 45)
+  x4, y4 = dev.sbend(x2, y22, -ch1x2, 45)
 
   xl = np.sqrt(0.5) * cfg.eg
 
@@ -58,18 +58,18 @@ def device(x, y):
   x6, _ = dev.sline(x4, y3, l)
   x6, _ = dev.sline(x4, y4, l)
 
-  x7, _ = dev.sbend(x5, y1, -ph2x2, 45, 0, 1)
-  x7, _ = dev.sbend(x6, y2, -ch2x2, 45, 0, 1)
-  x7, _ = dev.sbend(x6, y3,  ch2x2, 45, 0, 1)
-  x7, _ = dev.sbend(x6, y4,  ch2x2, 45, 0, 1)
+  x7, _ = dev.sbend(x5, y1, -ph2x2, 45)
+  x7, _ = dev.sbend(x6, y2, -ch2x2, 45)
+  x7, _ = dev.sbend(x6, y3,  ch2x2, 45)
+  x7, _ = dev.sbend(x6, y4,  ch2x2, 45)
 
   x8, y31, y32 = y2x2.device(x7, y + cfg.ch)
   x8, y41, y42 = y2x2.device(x7, y - cfg.ch)
 
-  x9, _ = dev.sbend(x8, y31,  ch2x2, 45, 0, 1)
-  x9, _ = dev.sbend(x8, y32, -ch2x2, 45, 0, 1)
-  x9, _ = dev.sbend(x8, y41,  ch2x2, 45, 0, 1)
-  x9, _ = dev.sbend(x8, y42, -ch2x2, 45, 0, 1)
+  x9, _ = dev.sbend(x8, y31,  ch2x2, 45)
+  x9, _ = dev.sbend(x8, y32, -ch2x2, 45)
+  x9, _ = dev.sbend(x8, y41,  ch2x2, 45)
+  x9, _ = dev.sbend(x8, y42, -ch2x2, 45)
 
   return x9, y
 

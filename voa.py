@@ -23,14 +23,14 @@ def device(x, y):
 
   x2, y1, y2 = y1x2.device(x, y, 1)
 
-  x3, y3 = dev.sbend(x2, y1,  ch, 45, 0, 1)
-  x3, y4 = dev.sbend(x2, y2, -ch, 45, 0, 1)
+  x3, y3 = dev.sbend(x2, y1,  ch, 45)
+  x3, y4 = dev.sbend(x2, y2, -ch, 45)
 
   x5, y3 = arm(x3, y3,  1)
   x5, y4 = arm(x3, y4, -1)
 
-  x9, y1 = dev.sbend(x5, y3, -ch, 45, 0, 1)
-  x9, y2 = dev.sbend(x5, y4,  ch, 45, 0, 1)
+  x9, y1 = dev.sbend(x5, y3, -ch, 45)
+  x9, y2 = dev.sbend(x5, y4,  ch, 45)
 
   x10, y1, y2 = y1x2.device(x9, y, -1)
 
@@ -67,8 +67,7 @@ def chips(x, y, arange):
 
   for cfg.lvoa in arange:
     x2, _ = device(x1, y)
-    dev.texts((x2 + x1) * 0.2, y, str(int(cfg.lvoa)), 1, 'cc')
-    dxf.srect('edge', (x2 + x1 - cfg.lvoa) * 0.5, y, cfg.lvoa, 120)
+    dev.texts((x2 + x1) * 0.5, y, str(int(cfg.lvoa)), 1, 'cc')
     x1, y = dev.sline(x2, y, 600)
 
   x1, _ = tip.fiber(x1, y, xsize - x1 + x, 1)

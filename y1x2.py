@@ -44,10 +44,10 @@ def chip(x, y, lchip):
 
   for _ in range(5):
     x1, y1, y2 = device(x9, y, 1)
-    x2, y3 = dev.sbend(x1, y1,  ch, 20, 0, 1)
-    x2, y4 = dev.sbend(x1, y2, -ch, 20, 0, 1)
-    x3, y1 = dev.sbend(x2, y3, -ch, 20, 0, 1)
-    x3, y2 = dev.sbend(x2, y4,  ch, 20, 0, 1)
+    x2, y3 = dev.sbend(x1, y1,  ch, 20)
+    x2, y4 = dev.sbend(x1, y2, -ch, 20)
+    x3, y1 = dev.sbend(x2, y3, -ch, 20)
+    x3, y2 = dev.sbend(x2, y4,  ch, 20)
     x9, y1, y2 = device(x3, y, -1) 
   
   x5, x6, ltip = dev.center(idev, x, x9, lchip)
