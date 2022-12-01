@@ -52,10 +52,10 @@ def chip(x, y, lchip, wtip):
   x4, t1 = device(x2, y, ltip, wtip, -1)
   x5, t2 = device(x3, y, ltip, wtip,  1)
 
-  s = 'tip-' + str(round(wtip, 6))
+  s = 'tip-' + str(round(wtip, 2))
   dev.texts(t1, y - 50, s, 0.2, 'lc')
   dev.texts(t2, y - 50, s, 0.2, 'rc')
-  print(s, int(round(x3 - x2, 0)), int(round(x5 - x4, 0)))
+  print(s, round(x3 - x2), round(x5 - x4))
 
   return x2, y + ysize
 

@@ -43,7 +43,7 @@ def chip(x, y, lchip):
 
   for i in h: x14, _ = tip.diode(x12, i, ltip, 1)
 
-  print('DP-QPSK', int(round(x12 - x11, 0)), int(round(x14 - x13, 0)))
+  print('DP-QPSK', round(x12 - x11), round(x14 - x13))
 
   return x + lchip, y
 

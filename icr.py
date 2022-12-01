@@ -97,7 +97,7 @@ def chip(x, y, lchip):
     x12, _ = tip.diode(x11, y7 + i * ch, ltip, 1)
     x12, _ = tip.diode(x11, y8 + i * ch, ltip, 1)
 
-  print('ICR', int(round(x11 - x1, 0)), int(round(x12 - x, 0)))
+  print('ICR', round(x11 - x1), round(x12 - x))
 
   return x + lchip, y
 

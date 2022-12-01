@@ -93,14 +93,14 @@ def chip(x, y, lchip, radius, angle):
     r = str(radius) + 'r-' + str(angle)
     dev.texts(t1, y - 50, r, 0.2, 'lc')
     dev.texts(t2, y - 50, r, 0.2, 'rc')
-    print(r, int(round(x5 - x, 0)))
+    print(r, round(x5 - x))
   else:
     a = (angle * 2 - 1) * 8000 + 2000
     b = (angle - 1) * 2 * 3.14 * 125
-    r = str(int((a + b)))
+    r = str(round(a + b))
     dev.texts(t1, y  - 50, r, 0.2, 'lc')
     dev.texts(t2, y2 - 50, r, 0.2, 'rc')
-    print(r, int(round(x6 - x5, 0)), int(round(x8 - x7, 0)))
+    print(r, round(x6 - x5), round(x8 - x7))
 
   return x + lchip, y
 

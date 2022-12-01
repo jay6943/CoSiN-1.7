@@ -103,10 +103,6 @@ def arange(start, stop, step):
 
   return np.arange(start, stop + step * 0.5, step)
 
-def jnt(value):
-
-  return int(round(value, 0))
-
 def center(idev, x, xt, lchip):
 
   ldev = xt - x

@@ -32,7 +32,7 @@ def chip(x, y, lchip, dy):
   s = 'tap-' + str(dy)
   dev.texts(t1, y1 - 50, s, 0.2, 'lc')
   dev.texts(t2, y2 - 50, s, 0.2, 'rc')
-  print(s, int(round(x6 - x5, 0)), int(round(x8 - x7, 0)))
+  print(s, round(x6 - x5), round(x8 - x7))
 
   return x + lchip, y
 

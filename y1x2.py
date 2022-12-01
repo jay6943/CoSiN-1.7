@@ -55,10 +55,10 @@ def chip(x, y, lchip):
   x7, t1 = tip.fiber(x5, y, ltip, -1)
   x8, t2 = tip.fiber(x6, y, ltip,  1)
 
-  s = '1x2-' + str(int(cfg.l1x2))
+  s = '1x2-' + str(round(cfg.l1x2, 1))
   dev.texts(t1, y - 50, s, 0.2, 'lc')
   dev.texts(t2, y - 50, s, 0.2, 'rc')
-  print(s, int(round(x6 - x5, 0)), int(round(x8 - x7, 0)))
+  print(s, round(x6 - x5), round(x8 - x7))
 
   return x + lchip, y + ysize
 

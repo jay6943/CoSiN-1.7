@@ -47,12 +47,12 @@ def chip(x, y, lchip):
   x7, t1 = tip.fiber(x5, y, ltip, -1)
   x8, t2 = tip.fiber(x6, y, ltip,  1)
 
-  s = 'voa-' + str(int(cfg.lvoa))
+  s = 'voa-' + str(round(cfg.lvoa))
   dev.texts(t1, y + ch, s, 0.2, 'lc')
   dev.texts(t1, y - ch, s, 0.2, 'lc')
   dev.texts(t2, y + ch, s, 0.2, 'rc')
   dev.texts(t2, y - ch, s, 0.2, 'rc')
-  print(s, int(round(x6 - x5, 0)), int(round(x8 - x7, 0)))
+  print(s, round(x6 - x5), round(x8 - x7))
 
   return x + lchip, y + ysize
 
@@ -72,7 +72,7 @@ def chips(x, y, arange):
 
   x1, _ = tip.fiber(x1, y, xsize - x1 + x, 1)
 
-  print('VOA', int(x1 - x))
+  print('VOA', round(x1 - x))
 
   cfg.lvoa = var
 
