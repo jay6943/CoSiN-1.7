@@ -74,7 +74,7 @@ def rotator(df, oxt, rxt):
 
 def save(fp, wg, radius, angle, m):
   
-  rxt = dxf.rxt(angle)
+  rxt = dxf.rmatrix(angle)
   obj = curve(wg, radius, angle, m)
   oxt = rxt @ np.array([-obj['dx'], obj['dy']]).reshape(2,1)
 

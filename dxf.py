@@ -89,7 +89,7 @@ def copier(fp, layer, area):
   
     i += 1
 
-def rxt(rotate):
+def rmatrix(rotate):
   
   arg = rotate * np.pi / 180
 
@@ -100,7 +100,7 @@ def rxt(rotate):
   
 def rotator(xp, yp, rotate):
 
-  [xp, yp] = rxt(rotate) @ np.array([xp, yp])
+  [xp, yp] = rmatrix(rotate) @ np.array([xp, yp])
 
   return xp, yp
 
@@ -110,9 +110,9 @@ def move(idev, x, y, xt, yt, dx, dy, rotate):
     xy = np.array(data[1:]).transpose()
     
     if rotate != 0:
-      xy = rxt(rotate) @ xy
-      s = rxt(rotate) @ [[x], [y]]
-      t = rxt(rotate) @ [[xt], [yt]]
+      xy = rmatrix(rotate) @ xy
+      s = rmatrix(rotate) @ [[x], [y]]
+      t = rmatrix(rotate) @ [[xt], [yt]]
     else:
       s = [[x], [y]]
       t = [[xt], [yt]]
