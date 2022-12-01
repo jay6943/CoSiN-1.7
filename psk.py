@@ -89,7 +89,7 @@ def chip(x, y, lchip):
   s = 'iq-' + str(round(cfg.phase,1))
   dev.texts(t1, y, s, 0.2, 'lc')
   dev.texts(t2, y, s, 0.2, 'rc')
-  print(s, int(x6 - x5), int(x8 - x7))
+  print(s, int(round(x6 - x5, 0)), int(round(x8 - x7, 0)))
   
   return x + lchip, y + ysize
 

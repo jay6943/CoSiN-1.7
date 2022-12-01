@@ -127,7 +127,7 @@ def chip(x, y, lchip):
   dev.sline(x11, y71, x14 - x13 + x - x11)
   dev.sline(x11, y74, x14 - x13 + x - x11)
 
-  print('Optimized ICR', int(x14 - x))
+  print('Optimized ICR', int(round(x14 - x, 0)))
 
   return x + lchip, y
 

@@ -32,7 +32,7 @@ def chip(x, y, lchip, ltaper):
   s = 'sio-' + str(int(ltaper))
   dev.texts(t1, y - 50, s, 0.2, 'lc')
   dev.texts(t2, y - 50, s, 0.2, 'rc')
-  print(s, int(x3 - x2), int(x5 - x4))
+  print(s, int(round(x3 - x2, 0)), int(round(x5 - x4, 0)))
 
   return x + lchip, y + ysize
 
