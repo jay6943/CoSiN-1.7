@@ -234,7 +234,7 @@ def bends(layer, x, y, df, rotate, xsign, ysign):
 
   return xo, yo
 
-def sbend(layer, x, y, df, dy, angle):
+def sbend(layer, x, y, df, angle, dy):
 
   sign = 1 if dy > 0 else -1
 

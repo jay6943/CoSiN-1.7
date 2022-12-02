@@ -3,7 +3,7 @@ libs = '../mask/SiN-1.7/lib/'
 
 data = []
 
-draft = 'draft' # draft: 100, mask: 1000
+draft = 'mask' # draft: 100, mask: 1000
 
 phase = 90
 

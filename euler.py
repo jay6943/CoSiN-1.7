@@ -72,7 +72,9 @@ def rotator(df, oxt, rxt):
 
   return xp, yp
 
-def save(fp, wg, radius, angle, m):
+def save(fp, wg, radius, angle):
+  
+  m = 100 if cfg.draft != 'mask' else 1000
   
   rxt = dxf.rmatrix(angle)
   obj = curve(wg, radius, angle, m)
@@ -99,24 +101,24 @@ def save(fp, wg, radius, angle, m):
 
   return df
 
-def update(wg, radius, angle, layer):
+def update(wg, radius, angle):
 
-  m = 100 if layer != 'mask' else 1000
-  w = wg  if layer != 'edge' else cfg.eg
+  draft = 'draft' if wg > cfg.wg else cfg.draft
 
-  ip = str(wg) + '-' + str(radius) + '-' + str(angle)
-  fp = cfg.libs + 'euler-' + ip + '-' + layer + '.npy'
+  ip = str(wg) + '_' + str(radius) + '_' + str(angle)
+  fp = cfg.libs + 'euler_' + ip + '_' + draft + '.npy'
 
   if os.path.isfile(fp):
     df = np.load(fp, allow_pickle=True).item()
   else:
-    df = save(fp, w, radius, angle, m)
+    df = save(fp, wg, radius, angle)
   
   return df
 
 if __name__ == '__main__':
 
-  df = update(cfg.wg + 1, cfg.radius, 45, cfg.draft)
-  dxf.sbend('core', 0, 0, 0, df, 0, 1)
+  df = update(cfg.wg, cfg.radius, 45)
+
+  dev.sbend(0, 0, 45, 100)
 
   dev.saveas(cfg.work + 'euler')

@@ -1,88 +1,83 @@
 import cfg
 import dxf
 import dev
+import dci
 import tip
 import numpy as np
 import euler as elr
-
-spacing = 1
-radius = 50
-tilt = 3
 
 xsize = cfg.size
 ysize = 200
 
 def bends(x, y, wg, angle, rotate, xsign, ysign):
 
-  core = elr.update(wg, radius, angle, cfg.draft)
-  edge = elr.update(wg, radius, angle, 'edge')
-
-  x1, y1 = dxf.bends('edge', x, y, edge, rotate, xsign, ysign)
+  core = elr.update(wg, dci.radius, angle)
   x1, y1 = dxf.bends('core', x, y, core, rotate, xsign, ysign)
 
   return x1, y1
 
-def sbend(x, y, wg, dy, angle):
+def sbend(x, y, wg, angle, dy):
 
-  core = elr.update(wg, radius, angle, cfg.draft)
-  edge = elr.update(wg, radius, angle, 'edge')
-
-  x1, y1 = dxf.sbend('edge', x, y, edge, dy, angle)
-  x1, y1 = dxf.sbend('core', x, y, core, dy, angle)
+  core = elr.update(wg, dci.radius, angle)
+  x1, y1 = dxf.sbend('core', x, y, core, angle, dy)
 
   return x1, y1
 
 def arms(x, y, wg, ch, sign):
 
-  x1, y1 = dev.srect(x, y + spacing * sign, cfg.dc, wg)
-  x2, y2 = sbend(x1, y1, wg,  ch * sign, tilt)
-  x3, y3 = dev.sline(x2, y2, 100)
-  x4, y4 = sbend(x3, y3, wg, -ch * sign, tilt)
-  x5, y5 = dev.srect(x4, y4, cfg.dc, wg)
+  x1, y1 = dxf.srect('core', x, y + dci.spacing * sign, cfg.dc, wg)
+  x2, y2 = sbend(x1, y1, wg, dci.tilt,  ch * sign)
+  x3, y3 = dxf.sline('core', x2, y2, 100)
+  x4, y4 = sbend(x3, y3, wg, dci.tilt, -ch * sign)
+  x5, y5 = dxf.srect('core', x4, y4, cfg.dc, wg)
 
   return x5, y5
 
-def polarizer(x, y, wg, ch):
+def polarizer(x, y, ch):
 
-  x1, y1 = arms(x, y, wg, ch,  1)
-  x1, y2 = arms(x, y, wg, ch, -1)
+  x1, y1 = arms(x, y, dci.wg, ch,  1)
+  x1, y2 = arms(x, y, dci.wg, ch, -1)
 
-  x2, y3 = sbend(x1, y1, wg,  ch * 2, tilt)
-  x2, y4 = sbend(x1, y2, wg, -ch * 2, tilt)
+  x2, y3 = sbend(x1, y1, dci.wg, dci.tilt,  ch * 2)
+  x2, y4 = sbend(x1, y2, dci.wg, dci.tilt, -ch * 2)
 
-  x3, y1 = arms(x2, y3 + spacing, wg, ch,  1)
-  x3, y2 = arms(x2, y3 + spacing, wg, ch, -1)
+  x3, y1 = arms(x2, y3 + dci.spacing, dci.wg, ch,  1)
+  x3, y2 = arms(x2, y3 + dci.spacing, dci.wg, ch, -1)
 
-  x3, y3 = arms(x2, y4 - spacing, wg, ch,  1)
-  x3, y4 = arms(x2, y4 - spacing, wg, ch, -1)
+  x3, y3 = arms(x2, y4 - dci.spacing, dci.wg, ch,  1)
+  x3, y4 = arms(x2, y4 - dci.spacing, dci.wg, ch, -1)
 
-  x4, _ = bends(x2, y1, wg, tilt, 0, -1,  1)
-  x4, _ = bends(x2, y4, wg, tilt, 0, -1, -1)
+  x4, _ = bends(x2, y1, dci.wg, dci.tilt, 0, -1,  1)
+  x4, _ = bends(x2, y4, dci.wg, dci.tilt, 0, -1, -1)
 
-  x5, _ = bends(x3, y2, wg, tilt, 0, 1, -1)
-  x5, _ = bends(x3, y4, wg, tilt, 0, 1, -1)
+  x5, _ = bends(x3, y2, dci.wg, dci.tilt, 0, 1, -1)
+  x5, _ = bends(x3, y4, dci.wg, dci.tilt, 0, 1, -1)
 
-  x6, y1 = sbend(x3, y1, wg, 1, tilt)
-  x6, y3 = sbend(x3, y3, wg, 1, tilt)
+  x6, y1 = sbend(x3, y1, dci.wg, dci.tilt, 1)
+  x6, y3 = sbend(x3, y3, dci.wg, dci.tilt, 1)
 
-  x7, _ = sbend(x6, y1, wg, -2, tilt)
-  x7, _ = sbend(x6, y3, wg, -2, tilt)
+  x7, _ = sbend(x6, y1, dci.wg, dci.tilt, -2)
+  x7, _ = sbend(x6, y3, dci.wg, dci.tilt, -2)
+
+  dxf.srect('edge', x, y, x7 - x, 40)
 
   return x7, y
 
-def units(x, y, wg, dy, angle, xsign, ysign):
+def units(x, y, angle, dy, xsign, ysign):
   
-  df = elr.update(wg, cfg.radius, angle, cfg.draft)
+  df = elr.update(dci.wg, cfg.radius, angle)
+  ef = elr.update(cfg.eg, dci.radius, dci.tilt)
 
   sign = xsign * ysign
 
-  x1, y1 = x, y + spacing * ysign
-  x2, y2 = bends(x1, y1, wg, tilt, 0, xsign, ysign)
+  x1, y1 = x, y + dci.spacing * ysign
+  x2, y2 = dxf.bends('edge', x1, y1, ef, 0, xsign, ysign)
+  x2, y2 = bends(x1, y1, dci.wg, dci.tilt, 0, xsign, ysign)
 
   idev = len(cfg.data)
-  x3, y3 = dev.taper(x2, y2, 100 * xsign, wg, cfg.wg)
-  x4, y4 = dev.bends(x3, y3, angle - tilt, 0, xsign, ysign)
-  x5, y5 = dxf.move(idev, x2, y2, x4, y4, 0, 0, tilt * sign)
+  x3, y3 = dev.taper(x2, y2, 100 * xsign, dci.wg, cfg.wg)
+  x4, y4 = dev.bends(x3, y3, angle - dci.tilt, 0, xsign, ysign)
+  x5, y5 = dxf.move(idev, x2, y2, x4, y4, 0, 0, dci.tilt * sign)
 
   dh = dy - (y5 - y) * ysign - df['dy']
   dl = dh * xsign / np.sin(angle / 180 * np.pi)
@@ -97,15 +92,14 @@ def device(x, y, dy, angle):
 
   ch = 2
   dh = ch + 3
-  wg = 0.38
 
   idev = len(cfg.data)
 
-  x1, _ = units(x, y, wg, dy, angle, -1,  1)
-  x1, _ = units(x, y, wg, dy, angle, -1, -1)
-  x2, _ = polarizer(x, y, wg, ch)
-  x1, _ = units(x2, y + dh, wg, dy - dh, angle,  1,  1)
-  x1, _ = units(x2, y - dh, wg, dy - dh, angle,  1, -1)
+  x1, _ = units(x, y, angle, dy, -1,  1)
+  x1, _ = units(x, y, angle, dy, -1, -1)
+  x2, _ = polarizer(x, y, ch)
+  x1, _ = units(x2, y + dh, angle, dy - dh, 1,  1)
+  x1, _ = units(x2, y - dh, angle, dy - dh, 1, -1)
 
   dxf.move(idev, x, y, x1, y, x1 - x2, 0, 0)
 

@@ -46,21 +46,21 @@ def taper(x, y, length, wstart, wstop):
 
 def bends(x, y, angle, rotate, xsign, ysign):
 
-  core = elr.update(cfg.wg, cfg.radius, angle, cfg.draft)
-  edge = elr.update(cfg.wg, cfg.radius, angle, 'edge')
+  core = elr.update(cfg.wg, cfg.radius, angle)
+  edge = elr.update(cfg.eg, cfg.radius, angle)
 
   x1, y1 = dxf.bends('edge', x, y, edge, rotate, xsign, ysign)
   x1, y1 = dxf.bends('core', x, y, core, rotate, xsign, ysign)
 
   return x1, y1
 
-def sbend(x, y, dy, angle):
+def sbend(x, y, angle, dy):
 
-  core = elr.update(cfg.wg, cfg.radius, angle, cfg.draft)
-  edge = elr.update(cfg.wg, cfg.radius, angle, 'edge')
+  core = elr.update(cfg.wg, cfg.radius, angle)
+  edge = elr.update(cfg.eg, cfg.radius, angle)
 
-  x1, y1 = dxf.sbend('edge', x, y, edge, dy, angle)
-  x1, y1 = dxf.sbend('core', x, y, core, dy, angle)
+  x1, y1 = dxf.sbend('edge', x, y, edge, angle, dy)
+  x1, y1 = dxf.sbend('core', x, y, core, angle, dy)
 
   return x1, y1
 
@@ -133,16 +133,6 @@ def saveas(filename):
 
 if __name__ == '__main__':
 
-  cfg.draft = 'mask'
-
-  # bends(0, 0, 45, 0, -1)
-  # bends(0, 0, 45, 90, -1)
-  # bends(0, 0, 45, 180, -1)
-  # bends(0, 0, 45, 270, -1)
-
-  # sbend(0, 0, 100, 90, 0, 2)
-  # sbend(0, 0, 100, 90, 90, 2)
-  # sbend(0, 0, 100, 90, 180, 2)
-  sbend(0, 0, 100, 90, 270, 2)
+  sbend(0, 0, 45, 100)
 
   saveas(cfg.work + 'sbend')

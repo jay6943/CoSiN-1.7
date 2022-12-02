@@ -5,13 +5,18 @@ import tip
 import numpy as np
 import euler as elr
 
+wg = 0.38
+spacing = 1.1
+radius = 50
+tilt = 3
+
 xsize = cfg.size
 ysize = 200
 
-def bends(x, y, wg, angle, rotate, xsign, ysign):
+def bends(x, y, angle, rotate, xsign, ysign):
 
-  core = elr.update(wg, cfg.radius, angle, cfg.draft)
-  edge = elr.update(wg, cfg.radius, angle, 'edge')
+  core = elr.update(wg, radius, angle)
+  edge = elr.update(cfg.eg, radius, angle)
 
   x1, y1 = dxf.bends('edge', x, y, edge, rotate, xsign, ysign)
   x1, y1 = dxf.bends('core', x, y, core, rotate, xsign, ysign)
@@ -20,17 +25,16 @@ def bends(x, y, wg, angle, rotate, xsign, ysign):
 
 def units(x, y, dy, angle, xsign, ysign):
 
-  wg, tilt, h = 0.38, 3, 1
-  df = elr.update(wg, cfg.radius, angle, cfg.draft)
+  df = elr.update(cfg.wg, cfg.radius, angle)
 
   sign = xsign * ysign
 
-  x1, y1 = dev.srect(x, y + h * ysign, cfg.dc * 0.5 * xsign, wg)
-  x2, y2 = bends(x1, y1, wg, tilt, 0, xsign, ysign)
+  x1, y1 = dev.srect(x, y + spacing * ysign, cfg.dc * 0.5 * xsign, wg)
+  x2, y2 = bends(x1, y1, tilt, 0, xsign, ysign)
 
   idev = len(cfg.data)
   x3, y3 = dev.taper(x2, y2, 100 * xsign, wg, cfg.wg)
-  x4, y4 = bends(x3, y3, cfg.wg, angle - tilt, 0, xsign, ysign)
+  x4, y4 = dev.bends(x3, y3, angle - tilt, 0, xsign, ysign)
   x5, y5 = dxf.move(idev, x2, y2, x4, y4, 0, 0, tilt * sign)
 
   dh = dy - (y5 - y) * ysign - df['dy']
@@ -97,7 +101,7 @@ def chips(x, y, arange):
 
 if __name__ == '__main__':
 
-  # chip(0, 0, xsize)
-  chips(0, 0, dev.arange(18, 20, 1))
+  chip(0, 0, xsize)
+  # chips(0, 0, dev.arange(18, 20, 1))
 
   dev.saveas(cfg.work + 'coupler')
