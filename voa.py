@@ -23,14 +23,14 @@ def device(x, y):
 
   x2, y1, y2 = y1x2.device(x, y, 1)
 
-  x3, y3 = dev.sbend(x2, y1,  ch, 45)
-  x3, y4 = dev.sbend(x2, y2, -ch, 45)
+  x3, y3 = dev.sbend(x2, y1, 45,  ch)
+  x3, y4 = dev.sbend(x2, y2, 45, -ch)
 
   x5, y3 = arm(x3, y3,  1)
   x5, y4 = arm(x3, y4, -1)
 
-  x9, y1 = dev.sbend(x5, y3, -ch, 45)
-  x9, y2 = dev.sbend(x5, y4,  ch, 45)
+  x9, y1 = dev.sbend(x5, y3, 45, -ch)
+  x9, y2 = dev.sbend(x5, y4, 45,  ch)
 
   x10, y1, y2 = y1x2.device(x9, y, -1)
 

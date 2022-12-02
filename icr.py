@@ -17,7 +17,7 @@ def tbend(x, y, dy, xsign):
 
   ysign = 1 if dy > 0 else -1
 
-  df = elr.update(cfg.wg, cfg.radius, 45, cfg.draft)
+  df = elr.update(cfg.wg, cfg.radius, 45)
   dl = np.sqrt(2) * (dy * ysign - df['dx'] - df['dy'])
 
   a1 = 0 if xsign > 0 else 90
@@ -54,15 +54,15 @@ def chip(x, y, lchip):
   tip.fiber(x1, y1, ltip, -1)
   tip.fiber(x1, y2, ltip, -1)
   
-  x2, y3 = dev.sbend(x1, y1,  ch * 2, 45)
-  x2, y4 = dev.sbend(x1, y2, -ch * 2, 45)
+  x2, y3 = dev.sbend(x1, y1, 45,  ch * 2)
+  x2, y4 = dev.sbend(x1, y2, 45, -ch * 2)
 
   x3, _ = tap.device(x2, y3, -4, 100, 500, ysize * 0.5 + y3)
   x4, _ = voa.device(x3, y3)
   x4, _ = dev.sline(x2, y4, x4 - x2)
 
-  x5, y5 = dev.sbend(x4, y3, -ch * 2, 45)
-  x5, y6 = dev.sbend(x4, y4,  ch * 2, 45)
+  x5, y5 = dev.sbend(x4, y3, 45, -ch * 2)
+  x5, y6 = dev.sbend(x4, y4, 45,  ch * 2)
 
   x6, _ = dev.sline(x5, y5, 500)
   x6, _ = dev.sline(x5, y6, 500)

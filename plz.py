@@ -6,6 +6,9 @@ import tip
 import numpy as np
 import euler as elr
 
+wpbs = 0.6
+lpbs = 20
+
 xsize = cfg.size
 ysize = 200
 
@@ -27,39 +30,25 @@ def arms(x, y, wg, ch, sign):
 
   x1, y1 = dxf.srect('core', x, y + dci.spacing * sign, cfg.dc, wg)
   x2, y2 = sbend(x1, y1, wg, dci.tilt,  ch * sign)
-  x3, y3 = dxf.sline('core', x2, y2, 100)
-  x4, y4 = sbend(x3, y3, wg, dci.tilt, -ch * sign)
-  x5, y5 = dxf.srect('core', x4, y4, cfg.dc, wg)
+  x3, y3 = dxf.taper('core', x2, y2, 10, dci.wg, wpbs)
+  if sign > 0: x3, y3 = dxf.srect('core', x3, y3, lpbs, wpbs)
+  x4, y4 = dxf.taper('core', x3, y3, 10, wpbs, dci.wg)
+  if sign < 0: x4, y4 = dxf.srect('core', x4, y4, lpbs, dci.wg)
+  x5, y5 = sbend(x4, y4, wg, dci.tilt, -ch * sign)
+  x6, y6 = dxf.srect('core', x5, y5, cfg.dc, wg)
 
-  return x5, y5
+  return x6, y6
 
-def polarizer(x, y, ch):
+def polarizer(x, y, ch, sign):
 
-  x1, y1 = arms(x, y, dci.wg, ch,  1)
-  x1, y2 = arms(x, y, dci.wg, ch, -1)
-
-  x2, y3 = sbend(x1, y1, dci.wg, dci.tilt,  ch * 2)
-  x2, y4 = sbend(x1, y2, dci.wg, dci.tilt, -ch * 2)
-
-  x3, y1 = arms(x2, y3 + dci.spacing, dci.wg, ch,  1)
-  x3, y2 = arms(x2, y3 + dci.spacing, dci.wg, ch, -1)
-
-  x3, y3 = arms(x2, y4 - dci.spacing, dci.wg, ch,  1)
-  x3, y4 = arms(x2, y4 - dci.spacing, dci.wg, ch, -1)
-
-  x4, _ = bends(x2, y1, dci.wg, dci.tilt, 0, -1,  1)
-  x4, _ = bends(x2, y4, dci.wg, dci.tilt, 0, -1, -1)
-
-  x5, _ = bends(x3, y2, dci.wg, dci.tilt, 0, 1, -1)
-  x5, _ = bends(x3, y4, dci.wg, dci.tilt, 0, 1, -1)
-
-  x6, y1 = sbend(x3, y1, dci.wg, dci.tilt, 1)
-  x6, y3 = sbend(x3, y3, dci.wg, dci.tilt, 1)
-
-  x7, _ = sbend(x6, y1, dci.wg, dci.tilt, -2)
-  x7, _ = sbend(x6, y3, dci.wg, dci.tilt, -2)
-
-  dxf.srect('edge', x, y, x7 - x, 40)
+  x1, y1 = arms(x, y, dci.wg, ch, sign)
+  x2, y3 = sbend(x1, y1 + 10.2 * sign, dci.wg, dci.tilt, -ch * 2 * sign)
+  x2, y3 = sbend(x1, y1, dci.wg, dci.tilt,  ch * 2 * sign)
+  x3, y1 = arms(x2, y3 + dci.spacing * sign, dci.wg, ch,  1)
+  x3, y2 = arms(x2, y3 + dci.spacing * sign, dci.wg, ch, -1)
+  x5, y1 = sbend(x3, y1, dci.wg, dci.tilt,  1)
+  x5, y2 = sbend(x3, y2, dci.wg, dci.tilt, -1)
+  x7, y7 = sbend(x5, y1, dci.wg, dci.tilt, -2)
 
   return x7, y
 
@@ -97,13 +86,16 @@ def device(x, y, dy, angle):
 
   x1, _ = units(x, y, angle, dy, -1,  1)
   x1, _ = units(x, y, angle, dy, -1, -1)
-  x2, _ = polarizer(x, y, ch)
+  x2, _ = polarizer(x, y, ch,  1)
+  x2, _ = polarizer(x, y, ch, -1)
   x1, _ = units(x2, y + dh, angle, dy - dh, 1,  1)
   x1, _ = units(x2, y - dh, angle, dy - dh, 1, -1)
 
+  dxf.srect('edge', x, y, x2 - x, 40)
+
   dxf.move(idev, x, y, x1, y, x1 - x2, 0, 0)
 
-  return x + (x1 - x) * 2 - (x2 - x), y
+  return x, y
 
 def chip(x, y, lchip):
   

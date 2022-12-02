@@ -20,7 +20,7 @@ def tbend(x, y, dy, xsign):
 
   ysign = 1 if dy > 0 else -1
 
-  df = elr.update(cfg.wg, cfg.radius, 45, cfg.draft)
+  df = elr.update(cfg.wg, cfg.radius, 45)
   dl = np.sqrt(2) * (dy * ysign - df['dx'] - df['dy'])
 
   a1 = 0 if xsign > 0 else 90
@@ -39,7 +39,7 @@ def cbend(x, y, dy, xsign):
 
   ysign = 1 if dy > 0 else -1
 
-  df = elr.update(cfg.wg, cfg.radius, 90, cfg.draft)
+  df = elr.update(cfg.wg, cfg.radius, 90)
   dl = dy * ysign - df['dx'] - df['dy']
 
   x1, y1 = dev.bends(x, y, 90, 0, xsign, ysign)
@@ -93,14 +93,14 @@ def chip(x, y, lchip):
   x3, _ = tap.device(x2, y1, 4, 100, 300, yqpsk)
   x3, _ = dev.sline(x2, y2, x3 - x2)
 
-  x4, y3 = dev.sbend(x3, y1,  300, 90)
-  x4, y4 = dev.sbend(x3, y2, -300, 90)
+  x4, y3 = dev.sbend(x3, y1, 90,  300)
+  x4, y4 = dev.sbend(x3, y2, 90, -300)
 
   x6, _ = voa.device(x4, y3)
   x6, _ = dev.sline(x4, y4, x6 - x4)
 
-  x8, y5 = dev.sbend(x6, y3, -300, 90)
-  x8, y6 = dev.sbend(x6, y4,  300, 90)
+  x8, y5 = dev.sbend(x6, y3, 90, -300)
+  x8, y6 = dev.sbend(x6, y4, 90,  300)
 
   x9, y61, y62 = pbs.device(x8, y5)
   x9, y63, y64 = pbs.device(x8, y6)

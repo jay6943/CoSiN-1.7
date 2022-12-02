@@ -25,10 +25,10 @@ def chip(x, y, lchip):
 
   h = [y + ch * (i * 2 - 7) for i in range(8)]
 
-  x6, y71 = dev.sbend(x4, y41, h[6] - y41, 45)
-  x6, y74 = dev.sbend(x4, y44, h[1] - y44, 45)
-  x7, y72 = dev.sbend(x4, y42, h[2] - y42, 45)
-  x7, y73 = dev.sbend(x4, y43, h[5] - y43, 45)
+  x6, y71 = dev.sbend(x4, y41, 45, h[6] - y41)
+  x6, y74 = dev.sbend(x4, y44, 45, h[1] - y44)
+  x7, y72 = dev.sbend(x4, y42, 45, h[2] - y42)
+  x7, y73 = dev.sbend(x4, y43, 45, h[5] - y43)
 
   x9, _ = dev.sline(x6, y71, x7 - x6)
   x9, _ = dev.sline(x6, y74, x7 - x6)

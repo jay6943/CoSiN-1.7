@@ -21,7 +21,7 @@ def chip(x, y, lchip, dy):
   
   idev = len(cfg.data)
   x1, y1 = dev.sline(x, y + dy, 100)
-  x2, y2 = dev.sbend(x1, y1, 100 - dy, 20)
+  x2, y2 = dev.sbend(x1, y1, 20, 100 - dy)
   x2, y1 = dev.sline(x, y, x2 - x)
   x5, x6, ltip = dev.center(idev, x, x2, lchip)
 

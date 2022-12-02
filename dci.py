@@ -5,7 +5,7 @@ import tip
 import numpy as np
 import euler as elr
 
-wg = 0.38
+wg = 0.4
 spacing = 1.1
 radius = 50
 tilt = 3
