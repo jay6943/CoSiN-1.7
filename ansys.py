@@ -72,23 +72,15 @@ def sbend(filename):
 
   cfg.draft = 'mask'
 
-  radius, angle, spacing, dy = 50, 3, 1.1, 1
+  wg, radius, angle, dy = 0.36, 50, 3, 1
 
-  for wg in [i * 0.02 + 0.36 for i in range(5)]:
-    
-    df = elr.update(wg, radius, angle)
+  df = elr.update(wg, radius, angle)
 
-    for sign in [1, -1]:
-      x, y = dxf.srect('core', 0, (spacing + dy) * sign, l, wg)
-      x, y = dxf.sbend('core', x, y, df, angle, -dy * sign)
+  dxf.sbend('core', 0, 0, df, angle, -dy)
+  dev.saveas(filename + str(wg) + '-1')
 
-    dev.saveas(filename + '-' + str(round(wg, 2)) + '-1')
-
-    for sign in [1, -1]:
-      x, y = dxf.sbend('core', 0, spacing * sign, df, angle, dy * sign)
-      x, y = dxf.srect('core', x, y, l, wg)
-
-    dev.saveas(filename + '-' + str(round(wg, 2)) + '-2')
+  dxf.sbend('core', 0, 0, df, angle, dy)
+  dev.saveas(filename + str(wg) + '-2')
 
 if __name__ == '__main__':
 
@@ -98,4 +90,4 @@ if __name__ == '__main__':
   # angle_90('D:/ansys/Euler/90')
   # angle_180('C:/Git/mask/SiN-1.7/180')
   # angle_90x2('D:/ansys/Euler/90x2')
-  sbend('D:/ansys/coupler/sbend')
+  sbend('D:/ansys/coupler/')
