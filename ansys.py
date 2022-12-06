@@ -72,7 +72,7 @@ def sbend(filename):
 
   cfg.draft = 'mask'
 
-  wg, radius, angle, dy = 0.46, 50, 3, 1
+  wg, radius, angle, dy = 0.41, 50, 3, 1
 
   df = elr.update(wg, radius, angle)
 
