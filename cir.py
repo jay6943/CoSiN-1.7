@@ -2,10 +2,11 @@ import os
 import cfg
 import numpy as np
 
-def save(fp, wg, radius, angle, m):
+def save(fp, wg, radius, angle):
 
   width = wg * 0.5
 
+  m = 100 if cfg.draft != 'mask' else 1000
   n = int(m * angle / 45)
   t = np.linspace(0, angle, n) * np.pi / 180
 
@@ -34,17 +35,18 @@ def save(fp, wg, radius, angle, m):
 
   return df
 
-def update(wg, radius, angle, layer):
+def update(wg, radius, angle):
 
-  m = 25 if layer != 'mask' else 1000
-  w = wg if layer != 'edge' else cfg.eg
+  draft = 'draft' if wg > cfg.wg else cfg.draft
 
-  ip = str(wg) + '-' + str(radius) + '-' + str(angle)
-  fp = cfg.libs + 'cir-' + ip + '-' + layer + '.npy'
+  w = str(round(wg, 4)) + '_'
+  r = str(round(radius, 4)) + '_'
+  a = str(round(angle, 4)) + '_'
+  fp = cfg.libs + 'cir_' + w + r + a + draft + '.npy'
 
   if os.path.isfile(fp):
     df = np.load(fp, allow_pickle=True).item()
   else:
-    df = save(fp, w, radius, angle, m)
+    df = save(fp, wg, radius, angle)
 
   return df

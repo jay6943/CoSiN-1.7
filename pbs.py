@@ -43,7 +43,7 @@ def arm(x, y, length, width):
 
 def tail(x, y, angle, rotate, port, sign):
 
-  core = cir.update(cfg.wg, 5, angle, 'draft')
+  core = cir.update(cfg.wg, 5, angle)
 
   x1, y1 = dxf.taper('core', x, y, sign * cfg.ltpr, cfg.wg, cfg.wtpr)
   x1, y1 = dxf.bends('core', x, y, core, rotate, 1, port)
