@@ -105,8 +105,10 @@ def update(wg, radius, angle):
 
   draft = 'draft' if wg > cfg.wg else cfg.draft
 
-  ip = str(wg) + '_' + str(radius) + '_' + str(angle)
-  fp = cfg.libs + 'euler_' + ip + '_' + draft + '.npy'
+  w = str(round(wg, 4)) + '_'
+  r = str(round(radius, 4)) + '_'
+  a = str(round(angle, 4)) + '_'
+  fp = cfg.libs + 'euler_' + w + r + a + draft + '.npy'
 
   if os.path.isfile(fp):
     df = np.load(fp, allow_pickle=True).item()
