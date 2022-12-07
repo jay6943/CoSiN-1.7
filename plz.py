@@ -2,12 +2,10 @@ import cfg
 import dxf
 import dev
 import dci
+import cir
 import tip
 import numpy as np
 import euler as elr
-
-wpbs = 0.6
-lpbs = 20
 
 xsize = cfg.size
 ysize = 200
@@ -30,10 +28,10 @@ def arms(x, y, wg, ch, sign):
 
   x1, y1 = dxf.srect('core', x, y + dci.spacing * sign, cfg.dc, wg)
   x2, y2 = sbend(x1, y1, wg, dci.tilt,  ch * sign)
-  x3, y3 = dxf.taper('core', x2, y2, 10, dci.wg, wpbs)
-  if sign > 0: x3, y3 = dxf.srect('core', x3, y3, lpbs, wpbs)
-  x4, y4 = dxf.taper('core', x3, y3, 10, wpbs, dci.wg)
-  if sign < 0: x4, y4 = dxf.srect('core', x4, y4, lpbs, dci.wg)
+  x3, y3 = dxf.taper('core', x2, y2, 10, dci.wg, cfg.wdc)
+  if sign > 0: x3, y3 = dxf.srect('core', x3, y3, cfg.ldc, cfg.wdc)
+  x4, y4 = dxf.taper('core', x3, y3, 10, cfg.wdc, dci.wg)
+  if sign < 0: x4, y4 = dxf.srect('core', x4, y4, cfg.ldc, dci.wg)
   x5, y5 = sbend(x4, y4, wg, dci.tilt, -ch * sign)
   x6, y6 = dxf.srect('core', x5, y5, cfg.dc, wg)
 
@@ -42,13 +40,19 @@ def arms(x, y, wg, ch, sign):
 def polarizer(x, y, ch, sign):
 
   x1, y1 = arms(x, y, dci.wg, ch, sign)
-  x2, y3 = sbend(x1, y1 + 10.2 * sign, dci.wg, dci.tilt, -ch * 2 * sign)
-  x2, y3 = sbend(x1, y1, dci.wg, dci.tilt,  ch * 2 * sign)
-  x3, y1 = arms(x2, y3 + dci.spacing * sign, dci.wg, ch,  1)
-  x3, y2 = arms(x2, y3 + dci.spacing * sign, dci.wg, ch, -1)
-  x5, y1 = sbend(x3, y1, dci.wg, dci.tilt,  1)
-  x5, y2 = sbend(x3, y2, dci.wg, dci.tilt, -1)
-  x7, y7 = sbend(x5, y1, dci.wg, dci.tilt, -2)
+  x2, y2 = sbend(x1, y1, dci.wg, dci.tilt,  ch * 2 * sign)
+  x3, y4 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch,  1)
+  x3, y5 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch, -1)
+  x5, y6 = sbend(x3, y4, dci.wg, dci.tilt,  1)
+  x5, y7 = sbend(x3, y5, dci.wg, dci.tilt, -1)
+  x7, y8 = sbend(x5, y6, dci.wg, dci.tilt, -ch)
+  x9, y9 = x1, y2 + (dci.spacing * 2 + ch * 2) * sign
+  sbend(x9, y9, dci.wg, dci.tilt, -ch * 2 * sign)
+
+  core = cir.update(dci.wg, 5, 90)
+
+  dxf.bends('core', x9, y9, core, 90, 1, -sign)
+  dxf.bends('core', x5, y7, core, 90, -1, 1)
 
   return x7, y
 

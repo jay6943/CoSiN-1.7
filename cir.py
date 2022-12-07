@@ -6,7 +6,7 @@ def save(fp, wg, radius, angle):
 
   width = wg * 0.5
 
-  m = 100 if cfg.draft != 'mask' else 1000
+  m = 10 if cfg.draft != 'mask' else 20
   n = int(m * angle / 45)
   t = np.linspace(0, angle, n) * np.pi / 180
 
