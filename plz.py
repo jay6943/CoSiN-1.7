@@ -37,26 +37,7 @@ def arms(x, y, wg, ch, sign):
 
   return x6, y6
 
-def polarizer(x, y, ch, sign):
-
-  x1, y1 = arms(x, y, dci.wg, ch, sign)
-  x2, y2 = sbend(x1, y1, dci.wg, dci.tilt,  ch * 2 * sign)
-  x3, y4 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch,  1)
-  x3, y5 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch, -1)
-  x5, y6 = sbend(x3, y4, dci.wg, dci.tilt,  1)
-  x5, y7 = sbend(x3, y5, dci.wg, dci.tilt, -1)
-  x7, y8 = sbend(x5, y6, dci.wg, dci.tilt, -ch)
-  x9, y9 = x1, y2 + (dci.spacing * 2 + ch * 2) * sign
-  sbend(x9, y9, dci.wg, dci.tilt, -ch * 2 * sign)
-
-  core = cir.update(dci.wg, 5, 90)
-
-  dxf.bends('core', x9, y9, core, 90, 1, -sign)
-  dxf.bends('core', x5, y7, core, 90, -1, 1)
-
-  return x7, y
-
-def units(x, y, angle, dy, xsign, ysign):
+def ports(x, y, angle, dy, xsign, ysign):
   
   df = elr.update(dci.wg, cfg.radius, angle)
   ef = elr.update(cfg.eg, dci.radius, dci.tilt)
@@ -78,26 +59,87 @@ def units(x, y, angle, dy, xsign, ysign):
   x6, y6 = dev.tilts(x5, y5, dl, angle * sign)
   x7, y7 = x6 + df['dx'] * xsign, y + dy * ysign
   x8, y8 = dev.bends(x7, y7, angle, 0, -xsign, -ysign)
-
+  
   return x7, y
   
+def pbs2(x, y, ch, sign):
+
+  dh = 1
+
+  x1, y1 = arms(x, y, dci.wg, ch, sign)
+  x2, y2 = sbend(x1, y1, dci.wg, dci.tilt,  ch * 2 * sign)
+  x3, y4 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch,  1)
+  x3, y5 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch, -1)
+  x5, y6 = sbend(x3, y4, dci.wg, dci.tilt,  dh)
+  x5, y7 = sbend(x3, y5, dci.wg, dci.tilt, -dh)
+  # x7, y8 = sbend(x5, y6, dci.wg, dci.tilt, -ch)
+
+  x9, y9 = x1, y2 + (dci.spacing * 2 + ch * 2) * sign
+  sbend(x9, y9, dci.wg, dci.tilt, -ch * 2 * sign)
+
+  core = cir.update(dci.wg, 5, 90)
+
+  dxf.bends('core', x9, y9, core, 90, 1, -sign)
+  dxf.bends('core', x5, y7, core, 90, -1, 1)
+
+  return x5, y
+
+def pbs4(x, y, angle, dy, ch, sign):
+
+  dh = 1
+
+  x1, y1 = arms(x, y, dci.wg, ch, sign)
+  x2, y2 = sbend(x1, y1, dci.wg, dci.tilt,  ch * 2 * sign)
+  x3, y4 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch,  1)
+  x3, y5 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch, -1)
+  x5, y6 = sbend(x3, y4, dci.wg, dci.tilt,  dh)
+  x5, y7 = sbend(x3, y5, dci.wg, dci.tilt, -dh)
+  x7, y8 = sbend(x5, y6, dci.wg, dci.tilt, -ch)
+
+  x9, y9 = x2, y2 + dci.spacing * sign
+  ports(x9, y9, angle, dy, -1, sign)
+
+  return x7, y
+
 def device(x, y, dy, angle):
 
   ch = 2
-  dh = ch + 3
+  dh = 1
+  yh = ch * 2 + dci.spacing
+  th = dci.spacing + dh
 
   idev = len(cfg.data)
 
-  x1, _ = units(x, y, angle, dy, -1,  1)
-  x1, _ = units(x, y, angle, dy, -1, -1)
-  x2, _ = polarizer(x, y, ch,  1)
-  x2, _ = polarizer(x, y, ch, -1)
-  x1, _ = units(x2, y + dh, angle, dy - dh, 1,  1)
-  x1, _ = units(x2, y - dh, angle, dy - dh, 1, -1)
+  x1, _ = ports(x, y, angle, dy, -1,  1)
+  x1, _ = ports(x, y, angle, dy, -1, -1)
+  x2, _ = pbs2(x, y, ch,  1)
+  x2, _ = pbs2(x, y, ch, -1)
+  x3, _ = ports(x2, y + yh + th, angle, dy - yh, 1,  1)
+  x3, _ = ports(x2, y - yh + th, angle, dy - yh, 1, -1)
 
   dxf.srect('edge', x, y, x2 - x, 40)
 
-  dxf.move(idev, x, y, x1, y, x1 - x2, 0, 0)
+  dxf.move(idev, x1, y, x3, y, x - x1, 0, 0)
+
+  return x, y
+
+def device4(x, y, dy, angle):
+
+  ch = 2
+  dh = (ch + dci.spacing) * 2
+
+  idev = len(cfg.data)
+
+  x1, _ = ports(x, y, angle, dy, -1,  1)
+  x1, _ = ports(x, y, angle, dy, -1, -1)
+  x2, _ = pbs4(x, y, angle, dy, ch,  1)
+  x2, _ = pbs4(x, y, angle, dy, ch, -1)
+  x3, _ = ports(x2, y + dh, angle, dy - dh, 1,  1)
+  x3, _ = ports(x2, y - dh, angle, dy - dh, 1, -1)
+
+  dxf.srect('edge', x, y, x2 - x, 40)
+
+  dxf.move(idev, x1, y, x3, y, x - x1, 0, 0)
 
   return x, y
 
@@ -112,7 +154,7 @@ def chip(x, y, lchip):
 
   x1, _ = dev.sline(x2, y1, 50)
   x1, _ = dev.sline(x2, y2, 50)
-  x1, _ = device(x1, y, ch, 20)
+  x1, _ = device4(x1, y, ch, 20)
   x2, _ = dev.sline(x1, y1, 50)
   x2, _ = dev.sline(x1, y2, 50)
 
@@ -144,7 +186,7 @@ if __name__ == '__main__':
 
   device(0, 0, 50, 20)
 
-  # chip(0, 0, 3000)
+  # chip(0, 0, 50, 20)
   # chips(0, 0, dev.arange(18, 20, 1))
 
   dev.saveas(cfg.work + 'polarizer')
