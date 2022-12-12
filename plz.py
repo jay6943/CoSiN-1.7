@@ -70,9 +70,8 @@ def pbs2(x, y, ch, sign):
   x2, y2 = sbend(x1, y1, dci.wg, dci.tilt,  ch * 2 * sign)
   x3, y4 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch,  1)
   x3, y5 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch, -1)
-  x5, y6 = sbend(x3, y4, dci.wg, dci.tilt,  dh)
+  x4, y6 = sbend(x3, y4, dci.wg, dci.tilt,  dh)
   x5, y7 = sbend(x3, y5, dci.wg, dci.tilt, -dh)
-  # x7, y8 = sbend(x5, y6, dci.wg, dci.tilt, -ch)
 
   x9, y9 = x1, y2 + (dci.spacing * 2 + ch * 2) * sign
   sbend(x9, y9, dci.wg, dci.tilt, -ch * 2 * sign)
@@ -82,7 +81,7 @@ def pbs2(x, y, ch, sign):
   dxf.bends('core', x9, y9, core, 90, 1, -sign)
   dxf.bends('core', x5, y7, core, 90, -1, 1)
 
-  return x5, y
+  return x4, y6
 
 def pbs4(x, y, angle, dy, ch, sign):
 
@@ -92,14 +91,13 @@ def pbs4(x, y, angle, dy, ch, sign):
   x2, y2 = sbend(x1, y1, dci.wg, dci.tilt,  ch * 2 * sign)
   x3, y4 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch,  1)
   x3, y5 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch, -1)
-  x5, y6 = sbend(x3, y4, dci.wg, dci.tilt,  dh)
+  x4, y6 = sbend(x3, y4, dci.wg, dci.tilt,  dh)
   x5, y7 = sbend(x3, y5, dci.wg, dci.tilt, -dh)
-  x7, y8 = sbend(x5, y6, dci.wg, dci.tilt, -ch)
 
   x9, y9 = x2, y2 + dci.spacing * sign
   ports(x9, y9, angle, dy, -1, sign)
 
-  return x7, y
+  return x4, y6
 
 def device(x, y, dy, angle):
 
@@ -107,6 +105,8 @@ def device(x, y, dy, angle):
   dh = 1
   yh = ch * 2 + dci.spacing
   th = dci.spacing + dh
+  y1 = y + yh + th
+  y2 = y - yh + th
 
   idev = len(cfg.data)
 
@@ -114,8 +114,9 @@ def device(x, y, dy, angle):
   x1, _ = ports(x, y, angle, dy, -1, -1)
   x2, _ = pbs2(x, y, ch,  1)
   x2, _ = pbs2(x, y, ch, -1)
-  x3, _ = ports(x2, y + yh + th, angle, dy - yh, 1,  1)
-  x3, _ = ports(x2, y - yh + th, angle, dy - yh, 1, -1)
+  x3, _ = ports(x2, y1, angle, y + dy - y1, 1,  1)
+  x4, _ = ports(x2, y2, angle, y + dy + y2, 1, -1)
+  x4, _ = dev.sline(x3, y + dy, x4 - x3)
 
   dxf.srect('edge', x, y, x2 - x, 40)
 
@@ -126,7 +127,11 @@ def device(x, y, dy, angle):
 def device4(x, y, dy, angle):
 
   ch = 2
-  dh = (ch + dci.spacing) * 2
+  dh = 1
+  yh = ch * 2 + dci.spacing
+  th = dci.spacing + dh
+  y1 = y + yh + th
+  y2 = y - yh + th
 
   idev = len(cfg.data)
 
@@ -134,8 +139,9 @@ def device4(x, y, dy, angle):
   x1, _ = ports(x, y, angle, dy, -1, -1)
   x2, _ = pbs4(x, y, angle, dy, ch,  1)
   x2, _ = pbs4(x, y, angle, dy, ch, -1)
-  x3, _ = ports(x2, y + dh, angle, dy - dh, 1,  1)
-  x3, _ = ports(x2, y - dh, angle, dy - dh, 1, -1)
+  x3, _ = ports(x2, y1, angle, y + dy - y1, 1,  1)
+  x4, _ = ports(x2, y2, angle, y + dy + y2, 1, -1)
+  x4, _ = dev.sline(x3, y + dy, x4 - x3)
 
   dxf.srect('edge', x, y, x2 - x, 40)
 
