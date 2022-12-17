@@ -72,9 +72,7 @@ def rotator(df, oxt, rxt):
 
   return xp, yp
 
-def save(fp, wg, radius, angle):
-  
-  m = 100 if cfg.draft != 'mask' else 1000
+def save(fp, wg, radius, angle, m):
   
   rxt = dxf.rmatrix(angle)
   obj = curve(wg, radius, angle, m)
@@ -103,17 +101,18 @@ def save(fp, wg, radius, angle):
 
 def update(wg, radius, angle):
 
-  draft = 'draft' if wg > cfg.wg else cfg.draft
-
+  m = 100 if cfg.draft != 'mask' else 1000
+  m = 100 if wg > cfg.wg else m
+  
   w = str(round(wg, 4)) + '_'
   r = str(round(radius, 4)) + '_'
   a = str(round(angle, 4)) + '_'
-  fp = cfg.libs + 'euler_' + w + r + a + draft + '.npy'
+  fp = cfg.libs + 'euler_' + w + r + a + str(m) + '.npy'
 
   if os.path.isfile(fp):
     df = np.load(fp, allow_pickle=True).item()
   else:
-    df = save(fp, wg, radius, angle)
+    df = save(fp, wg, radius, angle, m)
   
   return df
 
