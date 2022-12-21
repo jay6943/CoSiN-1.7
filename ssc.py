@@ -1,6 +1,7 @@
 import cfg
 import dxf
 import dev
+import tip
 
 xsize = cfg.size
 ysize = 100
@@ -8,13 +9,14 @@ ysize = 100
 def device(x, y, ltip, ltaper, sign):
   
   w = [cfg.wg, 0.8, 0.5, 0.1]
-  l = [ltip, 25, 50, ltaper]
+  l = [ltip - tip.polished, 25, 50, ltaper]
   t = l[0] - sum(l[1:])
 
   if t > 0: x, _ = dev.sline(x, y, t * sign)
   x1, _ = dxf.taper('core', x,  y, sign * l[1], w[0], w[1])
   x2, _ = dxf.taper('core', x1, y, sign * l[2], w[1], w[2])
   x3, _ = dxf.taper('core', x2, y, sign * l[3], w[2], w[3])
+  x4, _ = dev.srect(x3, y, sign * tip.polished, w[3])
 
   dxf.srect('edge', x, y, x3 - x, cfg.eg)
 

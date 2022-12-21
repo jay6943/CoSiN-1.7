@@ -37,18 +37,15 @@ def chip(x, y, lchip):
   y1 = y + ch
   y2 = y - ch
   
-  x9 = x
-
   idev = len(cfg.data)
 
-  for _ in range(10):
-    x1, y1 = dev.sbend(x9, y1, 20, -dh)
-    x1, y2 = dev.sbend(x9, y2, 20,  dh)
-    x2, y3, y4 = device(x1, y)
-    x9, y1 = dev.sbend(x2, y3, 20,  dh)
-    x9, y2 = dev.sbend(x2, y4, 20, -dh)
+  x1, y1 = dev.sbend(x, y1, 20, -dh)
+  x1, y2 = dev.sbend(x, y2, 20,  dh)
+  x2, y3, y4 = device(x1, y)
+  x3, y1 = dev.sbend(x2, y3, 20,  dh)
+  x3, y2 = dev.sbend(x2, y4, 20, -dh)
   
-  x5, x6, ltip = dev.center(idev, x, x9, lchip)
+  x5, x6, ltip = dev.center(idev, x, x3, lchip)
 
   x7, t1 = tip.fiber(x5, y1, ltip, -1)
   x7, t1 = tip.fiber(x5, y2, ltip, -1)

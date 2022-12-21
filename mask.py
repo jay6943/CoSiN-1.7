@@ -9,6 +9,7 @@ import tip
 import ssc
 import tap
 import icr
+import dci
 import y1x2
 import y2x2
 
@@ -33,11 +34,13 @@ def mask_1(fp):
   cfg.layer['recs'] = 1
 
   _, y1 = ohm.chips(xk, yk + 200)
-  _, y1 = tip.chips(xk, y1 + 200, dev.arange(0.2, 0.4, 0.02))
-  _, y1 = y1x2.chips(xk, y1, dev.arange(15, 20, 1))
-  _, y1 = y2x2.chips(xk, y1 + 50, dev.arange(48, 53, 0.5))
-  _, y1 = ssc.chips(xk, y1 - 50, dev.arange(600, 900, 50))
-  _, y1 = tap.chips(xk, y1 - 200, dev.arange(2, 4, 1))
+  _, y1 = y1x2.chips(xk, y1 + 300, dev.arange(16, 18, 1))
+  _, y1 = y2x2.chips(xk, y1 + 50, dev.arange(49, 53, 0.5))
+  _, y1 = dci.chips(xk, y1, dev.arange(0.86, 0.92, 0.01))
+  _, y1 = tip.chips(xk, y1 - 50, dev.arange(0.2, 0.4, 0.02))
+  _, y1 = ssc.chips(xk, y1, dev.arange(600, 900, 50))
+  _, y1 = tap.chips(xk, y1 + 50, dev.arange(1.1, 1.4, 0.1))
+  _, y1 = dev.sline(xk, y1 - 50, cfg.size)
 
   dxf.conversion(fp)
 
@@ -88,6 +91,22 @@ def mask_4(fp):
 
   dxf.conversion(fp)
 
+def mask_4_icr(fp):
+
+  key.frame(4, 1)
+  tip.scuts(xk, yk)
+  dev.cover(xk, yk, 'block')
+
+  cfg.layer['core'] = 4
+  cfg.layer['edge'] = 4
+  cfg.layer['gold'] = 0
+  cfg.layer['tops'] = 4
+  cfg.layer['recs'] = 4
+
+  icr.chips(xk, yk + cfg.size * 0.5)
+
+  dxf.conversion(fp)
+
 if __name__ == '__main__':
 
   cfg.draft = 'draft' # draft or mask
@@ -96,7 +115,7 @@ if __name__ == '__main__':
   key.cross(0, 0)
   dxf.conversion(fp)
 
-  ok = 0
+  ok = 1
   
   if ok == 0 or ok == 1: mask_1(fp)
   if ok == 0 or ok == 2: mask_2(fp)

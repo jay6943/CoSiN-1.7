@@ -2,6 +2,8 @@ import cfg
 import dxf
 import dev
 
+polished = 200
+
 xsize = cfg.size
 ysize = 100
 
@@ -31,7 +33,7 @@ def diode(x, y, ltip, sign):
 
 def scuts(x, y):
 
-  t, w, d = 200, cfg.size, 1
+  t, w, d = polished, cfg.size, 1
 
   dxf.srect('edge', x + t - d, y + w * 0.5, d * 2, w)
   dxf.srect('edge', x - t - d + w, y + w * 0.5, d * 2, w)
