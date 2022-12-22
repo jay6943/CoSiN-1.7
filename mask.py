@@ -39,7 +39,7 @@ def mask_1(fp):
   _, y1 = dci.chips(xk, y1, dev.arange(0.86, 0.92, 0.01))
   _, y1 = tip.chips(xk, y1 - 50, dev.arange(0.2, 0.4, 0.02))
   _, y1 = ssc.chips(xk, y1, dev.arange(600, 900, 50))
-  _, y1 = tap.chips(xk, y1 + 50, dev.arange(1.1, 1.4, 0.1))
+  _, y1 = tap.chips(xk, y1 + 50, dev.arange(1.12, 1.27, 0.05))
   _, y1 = dev.sline(xk, y1 - 50, cfg.size)
 
   dxf.conversion(fp)
