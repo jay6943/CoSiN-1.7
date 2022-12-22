@@ -24,13 +24,14 @@ yk = key.wbar + key.wkey
 def mask_1(fp):
 
   key.frame(1, 1)
+  key.frame(2, 2)
   tip.scuts(xk, yk)
   dev.cover(xk, yk, 'block')
 
   cfg.layer['core'] = 1
   cfg.layer['edge'] = 1
   cfg.layer['tops'] = 1
-  cfg.layer['sio2'] = 0
+  cfg.layer['sio2'] = 2
   cfg.layer['recs'] = 1
 
   _, y1 = ohm.chips(xk, yk + 200)

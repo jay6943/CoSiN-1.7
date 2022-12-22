@@ -26,6 +26,7 @@ def device(x, y):
   x3, _ = taper(x2, y2, cfg.wtpr, cfg.wg)
 
   dxf.srect('edge', x, y, x3 - x, cfg.w2x2 + cfg.eg)
+  dxf.srect('sio2', x, y, x3 - x, cfg.w2x2 + cfg.sg)
 
   return x3, y1, y2
 

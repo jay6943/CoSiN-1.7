@@ -20,6 +20,7 @@ def device(x, y, ltip, wtip, sign):
   x4, _ = dxf.srect('core', x3, y, sign * l[4], w[3])
 
   dxf.srect('edge', x, y, x4 - x, cfg.eg)
+  dxf.srect('sio2', x, y, x4 - x, cfg.sg)
   
   return x4, x
 

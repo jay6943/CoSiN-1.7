@@ -19,6 +19,7 @@ def device(x, y, ltip, ltaper, sign):
   x4, _ = dev.srect(x3, y, sign * tip.polished, w[3])
 
   dxf.srect('edge', x, y, x3 - x, cfg.eg)
+  dxf.srect('sio2', x, y, x3 - x, cfg.sg)
 
   return x3, x
 

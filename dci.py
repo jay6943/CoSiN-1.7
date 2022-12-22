@@ -16,9 +16,11 @@ def bends(x, y, angle, rotate, xsign, ysign):
 
   core = elr.update(wg, radius, angle)
   edge = elr.update(cfg.eg, radius, angle)
+  sio2 = elr.update(cfg.sg, radius, angle)
 
   x1, y1 = dxf.bends('edge', x, y, edge, rotate, xsign, ysign)
   x1, y1 = dxf.bends('core', x, y, core, rotate, xsign, ysign)
+  x1, y1 = dxf.bends('sio2', x, y, sio2, rotate, xsign, ysign)
 
   return x1, y1
 
