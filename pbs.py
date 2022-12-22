@@ -85,6 +85,7 @@ def mzi(x, y, inport, outport):
     tail(x6 + 5, y + outport * cfg.d2x2, 90, 270, outport, -1)
   
   dxf.srect('edge', x, y, x7 - x, cfg.w2x2 + cfg.eg)
+  dxf.srect('sio2', x, y, x7 - x, cfg.w2x2 + cfg.eg)
 
   return x7, y1, y2
 

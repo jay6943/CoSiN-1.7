@@ -30,7 +30,6 @@ def mask_1(fp):
 
   cfg.layer['core'] = 1
   cfg.layer['edge'] = 1
-  cfg.layer['tops'] = 1
   cfg.layer['sio2'] = 2
   cfg.layer['recs'] = 1
 
@@ -53,7 +52,6 @@ def mask_2(fp):
 
   cfg.layer['core'] = 2
   cfg.layer['edge'] = 2
-  cfg.layer['tops'] = 2
   cfg.layer['recs'] = 2
   
   _, y1 = pbs.chips(xk, yk + cfg.ch , dev.arange(54.5, 57.5, 1))
@@ -64,12 +62,13 @@ def mask_2(fp):
 def mask_3(fp):
 
   key.frame(3, 1)
+  key.frame(4, 2)
   tip.scuts(xk, yk)
   dev.cover(xk, yk, 'none')
 
   cfg.layer['core'] = 3
   cfg.layer['edge'] = 3
-  cfg.layer['tops'] = 3
+  cfg.layer['sio2'] = 4
   cfg.layer['recs'] = 3
 
   pbs.chips(xk, yk + cfg.ch, dev.arange(30, 80, 2))
@@ -85,7 +84,6 @@ def mask_4(fp):
   cfg.layer['core'] = 4
   cfg.layer['edge'] = 4
   cfg.layer['gold'] = 0
-  cfg.layer['tops'] = 4
   cfg.layer['recs'] = 4
 
   icr.chips(xk, yk + cfg.size * 0.5)
@@ -101,7 +99,6 @@ def mask_4_icr(fp):
   cfg.layer['core'] = 4
   cfg.layer['edge'] = 4
   cfg.layer['gold'] = 0
-  cfg.layer['tops'] = 4
   cfg.layer['recs'] = 4
 
   icr.chips(xk, yk + cfg.size * 0.5)
@@ -116,12 +113,12 @@ if __name__ == '__main__':
   key.cross(0, 0)
   dxf.conversion(fp)
 
-  ok = 1
+  ok = 0
   
   if ok == 0 or ok == 1: mask_1(fp)
-  if ok == 0 or ok == 2: mask_2(fp)
+  # if ok == 0 or ok == 2: mask_2(fp)
   if ok == 0 or ok == 3: mask_3(fp)
-  if ok == 0 or ok == 4: mask_4(fp)
+  # if ok == 0 or ok == 4: mask_4(fp)
 
   dxf.close(fp)
   dev.removes('__pycache__/')

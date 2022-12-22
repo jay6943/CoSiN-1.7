@@ -13,20 +13,26 @@ ysize = 200
 def bends(x, y, wg, angle, rotate, xsign, ysign):
 
   core = elr.update(wg, dci.radius, angle)
+  sio2 = elr.update(cfg.sg, dci.radius, angle)
+
   x1, y1 = dxf.bends('core', x, y, core, rotate, xsign, ysign)
+  x1, y1 = dxf.bends('sio2', x, y, sio2, rotate, xsign, ysign)
 
   return x1, y1
 
 def sbend(x, y, wg, angle, dy):
 
   core = elr.update(wg, dci.radius, angle)
+  sio2 = elr.update(cfg.sg, dci.radius, angle)
+
   x1, y1 = dxf.sbend('core', x, y, core, angle, dy)
+  x1, y1 = dxf.sbend('sio2', x, y, sio2, angle, dy)
 
   return x1, y1
 
 def arms(x, y, wg, ch, sign):
 
-  x1, y1 = dxf.srect('core', x, y + dci.spacing * sign, cfg.dc, wg)
+  x1, y1 = dxf.srect('core', x, y + cfg.dc * sign, cfg.dc, wg)
   x2, y2 = sbend(x1, y1, wg, dci.tilt,  ch * sign)
   x3, y3 = dxf.taper('core', x2, y2, 10, dci.wg, cfg.wdc)
   if sign > 0: x3, y3 = dxf.srect('core', x3, y3, cfg.ldc, cfg.wdc)
@@ -44,7 +50,7 @@ def ports(x, y, angle, dy, xsign, ysign):
 
   sign = xsign * ysign
 
-  x1, y1 = x, y + dci.spacing * ysign
+  x1, y1 = x, y + cfg.dc * ysign
   x2, y2 = dxf.bends('edge', x1, y1, ef, 0, xsign, ysign)
   x2, y2 = bends(x1, y1, dci.wg, dci.tilt, 0, xsign, ysign)
 
@@ -68,12 +74,12 @@ def pbs2(x, y, ch, sign):
 
   x1, y1 = arms(x, y, dci.wg, ch, sign)
   x2, y2 = sbend(x1, y1, dci.wg, dci.tilt,  ch * 2 * sign)
-  x3, y4 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch,  1)
-  x3, y5 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch, -1)
+  x3, y4 = arms(x2, y2 + cfg.dc * sign, dci.wg, ch,  1)
+  x3, y5 = arms(x2, y2 + cfg.dc * sign, dci.wg, ch, -1)
   x4, y6 = sbend(x3, y4, dci.wg, dci.tilt,  dh)
   x5, y7 = sbend(x3, y5, dci.wg, dci.tilt, -dh)
 
-  x9, y9 = x1, y2 + (dci.spacing * 2 + ch * 2) * sign
+  x9, y9 = x1, y2 + (cfg.dc * 2 + ch * 2) * sign
   sbend(x9, y9, dci.wg, dci.tilt, -ch * 2 * sign)
 
   core = cir.update(dci.wg, 5, 90)
@@ -89,12 +95,12 @@ def pbs4(x, y, angle, dy, ch, sign):
 
   x1, y1 = arms(x, y, dci.wg, ch, sign)
   x2, y2 = sbend(x1, y1, dci.wg, dci.tilt,  ch * 2 * sign)
-  x3, y4 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch,  1)
-  x3, y5 = arms(x2, y2 + dci.spacing * sign, dci.wg, ch, -1)
+  x3, y4 = arms(x2, y2 + cfg.dc * sign, dci.wg, ch,  1)
+  x3, y5 = arms(x2, y2 + cfg.dc * sign, dci.wg, ch, -1)
   x4, y6 = sbend(x3, y4, dci.wg, dci.tilt,  dh)
   x5, y7 = sbend(x3, y5, dci.wg, dci.tilt, -dh)
 
-  x9, y9 = x2, y2 + dci.spacing * sign
+  x9, y9 = x2, y2 + cfg.dc * sign
   ports(x9, y9, angle, dy, -1, sign)
 
   return x4, y6
@@ -103,8 +109,8 @@ def device(x, y, dy, angle):
 
   ch = 2
   dh = 1
-  yh = ch * 2 + dci.spacing
-  th = dci.spacing + dh
+  yh = ch * 2 + cfg.dc
+  th = cfg.dc + dh
   y1 = y + yh + th
   y2 = y - yh + th
 
@@ -128,8 +134,8 @@ def device4(x, y, dy, angle):
 
   ch = 2
   dh = 1
-  yh = ch * 2 + dci.spacing
-  th = dci.spacing + dh
+  yh = ch * 2 + cfg.dc
+  th = cfg.dc + dh
   y1 = y + yh + th
   y2 = y - yh + th
 
