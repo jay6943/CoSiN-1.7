@@ -30,7 +30,7 @@ def mask_1(fp):
 
   cfg.layer['core'] = 1
   cfg.layer['edge'] = 1
-  cfg.layer['sio2'] = 2
+  cfg.layer['sio2'] = 1
   cfg.layer['recs'] = 1
 
   _, y1 = ohm.chips(xk, yk + 200)
@@ -68,7 +68,7 @@ def mask_3(fp):
 
   cfg.layer['core'] = 3
   cfg.layer['edge'] = 3
-  cfg.layer['sio2'] = 4
+  cfg.layer['sio2'] = 3
   cfg.layer['recs'] = 3
 
   pbs.chips(xk, yk + cfg.ch, dev.arange(30, 80, 2))
@@ -116,9 +116,9 @@ if __name__ == '__main__':
   ok = 0
   
   if ok == 0 or ok == 1: mask_1(fp)
-  # if ok == 0 or ok == 2: mask_2(fp)
+  if ok == 0 or ok == 2: mask_2(fp)
   if ok == 0 or ok == 3: mask_3(fp)
-  # if ok == 0 or ok == 4: mask_4(fp)
+  if ok == 0 or ok == 4: mask_4(fp)
 
   dxf.close(fp)
   dev.removes('__pycache__/')
