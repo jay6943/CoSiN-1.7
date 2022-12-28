@@ -30,7 +30,7 @@ def mask_1(fp):
 
   cfg.layer['core'] = 1
   cfg.layer['edge'] = 1
-  cfg.layer['sio2'] = 1
+  cfg.layer['sio2'] = 0
   cfg.layer['recs'] = 1
 
   _, y1 = ohm.chips(xk, yk + 200)
@@ -68,7 +68,7 @@ def mask_3(fp):
 
   cfg.layer['core'] = 3
   cfg.layer['edge'] = 3
-  cfg.layer['sio2'] = 3
+  cfg.layer['sio2'] = 0
   cfg.layer['recs'] = 3
 
   pbs.chips(xk, yk + cfg.ch, dev.arange(30, 80, 2))
