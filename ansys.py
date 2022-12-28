@@ -72,7 +72,7 @@ def sbend(filename):
 
   cfg.draft = 'mask'
 
-  wg, radius, angle, dy = 0.41, 50, 3, 1
+  wg, radius, angle, dy = 1.2, 10, 25, 5
 
   df = elr.update(wg, radius, angle)
 
@@ -90,4 +90,4 @@ if __name__ == '__main__':
   # angle_90('D:/ansys/Euler/90')
   # angle_180('C:/Git/mask/SiN-1.7/180')
   # angle_90x2('D:/ansys/Euler/90x2')
-  sbend('D:/ansys/coupler/')
+  sbend('D:/ansys/tap/w')
