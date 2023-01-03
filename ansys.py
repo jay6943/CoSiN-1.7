@@ -68,19 +68,22 @@ def angle_90x2(filename):
 
   dev.saveas(filename)
 
-def sbend(filename):
+def sbend(folder):
 
   cfg.draft = 'mask'
 
-  wg, radius, angle, dy = 1.2, 10, 25, 5
+  wg, radius, angle, dy = 1.2, 10, 25, 1
+  
+  # Directional Coupler
+  # wg, radius, angle, dy = 0.39, 50, 3, 1
 
   df = elr.update(wg, radius, angle)
 
   dxf.sbend('core', 0, 0, df, angle, -dy)
-  dev.saveas(filename + str(wg) + '-1')
+  dev.saveas(folder + str(wg) + '-1')
 
   dxf.sbend('core', 0, 0, df, angle, dy)
-  dev.saveas(filename + str(wg) + '-2')
+  dev.saveas(folder + str(wg) + '-2')
 
 if __name__ == '__main__':
 
@@ -90,4 +93,4 @@ if __name__ == '__main__':
   # angle_90('D:/ansys/Euler/90')
   # angle_180('C:/Git/mask/SiN-1.7/180')
   # angle_90x2('D:/ansys/Euler/90x2')
-  sbend('D:/ansys/tap/w')
+  sbend('D:/ansys/tap/')
