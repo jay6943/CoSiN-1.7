@@ -5,14 +5,13 @@ import tip
 import numpy as np
 import euler as elr
 
-wg = 0.412
 radius = 50
 tilt = 3
 
 xsize = cfg.size
 ysize = 200
 
-def bends(x, y, angle, rotate, xsign, ysign):
+def bends(x, y, wg, angle, rotate, xsign, ysign):
 
   core = elr.update(wg, radius, angle)
   edge = elr.update(cfg.eg, radius, angle)
@@ -24,14 +23,16 @@ def bends(x, y, angle, rotate, xsign, ysign):
 
   return x1, y1
 
-def units(x, y, dy, angle, xsign, ysign):
+def units(x, y, wg, dy, xsign, ysign):
+
+  angle = 20
 
   df = elr.update(cfg.wg, cfg.radius, angle)
 
   sign = xsign * ysign
 
   x1, y1 = x, y + cfg.dc * ysign
-  x2, y2 = bends(x1, y1, tilt, 0, xsign, ysign)
+  x2, y2 = bends(x1, y1, wg, tilt, 0, xsign, ysign)
 
   idev = len(cfg.data)
   x3, y3 = dev.taper(x2, y2, 100 * xsign, wg, cfg.wg)
@@ -47,14 +48,14 @@ def units(x, y, dy, angle, xsign, ysign):
 
   return x7, y
   
-def device(x, y, dy, angle):
+def device(x, y, wg, ch):
 
   idev = len(cfg.data)
 
-  x1, y1 = units(x, y, dy, angle,  1,  1)
-  x1, y1 = units(x, y, dy, angle,  1, -1)
-  x1, y1 = units(x, y, dy, angle, -1,  1)
-  x1, y1 = units(x, y, dy, angle, -1, -1)
+  x1, y1 = units(x, y, wg, ch,  1,  1)
+  x1, y1 = units(x, y, wg, ch,  1, -1)
+  x1, y1 = units(x, y, wg, ch, -1,  1)
+  x1, y1 = units(x, y, wg, ch, -1, -1)
 
   dxf.move(idev, x, y, x1, y1, x - x1, 0, 0)
 
@@ -62,29 +63,24 @@ def device(x, y, dy, angle):
 
 def chip(x, y, lchip):
   
+  wg = 0.411
   ch = 50
   y1 = y + ch
   y2 = y - ch
 
   idev = len(cfg.data)
+  x1, _ = device(x, y, wg, ch)
+  x3, x4, ltip = dev.center(idev, x, x1, lchip)
 
-  x1, _ = dev.sline(x, y1, 50)
-  x1, _ = dev.sline(x, y2, 50)
-  x1, _ = device(x1, y, ch, 20)
-  x2, _ = dev.sline(x1, y1, 50)
-  x2, _ = dev.sline(x1, y2, 50)
-
-  x5, x6, ltip = dev.center(idev, x, x2, lchip)
-
-  x7, t1 = tip.fiber(x5, y1, ltip, -1)
-  x7, t1 = tip.fiber(x5, y2, ltip, -1)
-  x8, t2 = tip.fiber(x6, y1, ltip, 1)
-  x8, t2 = tip.fiber(x6, y2, ltip, 1)
+  x5, t1 = tip.fiber(x3, y1, ltip, -1)
+  x5, t1 = tip.fiber(x3, y2, ltip, -1)
+  x6, t2 = tip.fiber(x4, y1, ltip, 1)
+  x6, t2 = tip.fiber(x4, y2, ltip, 1)
 
   s = 'dc-' + str(round(cfg.dc, 2))
   dev.texts(t1, y, s, 0.2, 'lc')
   dev.texts(t2, y, s, 0.2, 'rc')
-  print(s, round(x6 - x5), round(x8 - x7))
+  print(s, round(x4 - x3), round(x6 - x5))
 
   return x + lchip, y + ysize
 
@@ -104,4 +100,4 @@ if __name__ == '__main__':
 
   chips(0, 0, dev.arange(0.87, 0.91, 0.01))
 
-  dev.saveas(cfg.work + 'coupler')
+  dev.saveas(cfg.work + 'dci')
