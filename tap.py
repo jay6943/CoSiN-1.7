@@ -9,59 +9,36 @@ import euler as elr
 xsize = cfg.size
 ysize = 200
 
-# def device(x, y, dy, angle, xsign, ysign):
+def units(x, y, wg, dy, xsign, ysign):
 
-#   dh = 2
-#   df = elr.update(cfg.wg, cfg.radius, angle)
+  angle = 20
 
-#   sign = xsign * ysign
+  df = elr.update(cfg.wg, cfg.radius, angle)
 
-#   x1, _ = dev.taper(x, y, 100, cfg.wg, 0.39)
+  sign = xsign * ysign
 
-#   idev = len(cfg.data)
-#   x2, y2 = dci.bends(x1, y + dh * ysign, dci.tilt, 0, -xsign, ysign)
-#   dxf.move(idev, x1, y, x2, y, x1 - x2, 0, 0)
+  x1, y1 = x, y + cfg.dc * ysign
+  x2, y2 = dci.bends(x1, y1, wg, dci.tilt, 0, xsign, ysign)
 
-#   dl = x1 - x2
+  idev = len(cfg.data)
+  x3, y3 = dev.taper(x2, y2, 100 * xsign, wg, cfg.wg)
+  x4, y4 = dev.bends(x3, y3, 90 - dci.tilt, 0, xsign, ysign)
+  x5, y5 = dxf.move(idev, x2, y2, x4, y4, 0, 0, dci.tilt * sign)
 
-#   x3, _ = dev.srect(x1, y, dl * 2, 0.39)
-#   x4, _ = dev.taper(x3, y, 100, 0.39, cfg.wg)
-
-#   idev = len(cfg.data)
-#   x5, y5 = dev.taper(x1, y2, -100 * xsign, 0.39, cfg.wg)
-#   x7, y7 = dxf.move(idev, x1, y2, x5, y5, 0, 0, -dci.tilt * sign)
-
-#   x2, y2 = dci.bends(x1 + dl, y + dh * ysign, dci.tilt, 0,  xsign, ysign)
-
-#   idev = len(cfg.data)
-#   x5, y5 = dev.taper(x2, y2, 100 * xsign, 0.39, cfg.wg)
-#   x6, y6 = dev.bends(x5, y5, angle - dci.tilt, 0, xsign, ysign)
-#   x7, y7 = dxf.move(idev, x2, y2, x6, y6, 0, 0, dci.tilt * sign)
-
-#   if angle < 90:
-#     dh = dy - (y7 - y) * ysign - df['dy']
-#     dl = dh * xsign / np.sin(angle / 180 * np.pi)
-
-#     x7, y7 = dev.tilts(x7, y7, dl, angle * sign)
-#     x7, y7 = x7 + df['dx'] * xsign, y + dy * ysign
-#     dev.bends(x7, y7, angle, 0, -xsign, -ysign)
-
-#   dev.sline(x4, y, x7 - x4)
-
-#   return x7, y7
+  return x5, y5
   
 def device(x, y, wg, ch):
 
   idev = len(cfg.data)
 
-  x1, y1 = dci.units(x, y, wg, ch,  1,  1)
-  x1, y1 = dci.units(x, y, wg, ch,  1, -1)
-  x1, y1 = dci.units(x, y, wg, ch, -1,  1)
-  x1, y1 = dci.units(x, y, wg, ch, -1, -1)
+  x1, y1 = units(x, y, wg, ch, -1, -1)
+  x1, y1 = units(x, y, wg, ch,  1, -1)
+  x2, y2 = dci.units(x, y, wg, ch,  1,  1)
+  x2, y2 = dci.units(x, y, wg, ch, -1,  1)
 
-  dxf.move(idev, x, y, x1, y1, x - x1, 0, 0)
+  dxf.move(idev, x, y, x2, y2, x - x2, -ch, 0)
 
-  return x + (x - x1) * 2, y
+  return x + (x - x2) * 2, x1 + (x - x2), y1 - ch
 
 def chip(x, y, lchip):
   
@@ -79,7 +56,7 @@ def chip(x, y, lchip):
   x6, t2 = tip.fiber(x4, y1, ltip, 1)
   x6, t2 = tip.fiber(x4, y2, ltip, 1)
 
-  s = 'dc-' + str(round(cfg.dc, 2))
+  s = 'tap-' + str(round(cfg.dc, 2))
   dev.texts(t1, y, s, 0.2, 'lc')
   dev.texts(t2, y, s, 0.2, 'rc')
   print(s, round(x4 - x3), round(x6 - x5))

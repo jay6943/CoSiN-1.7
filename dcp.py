@@ -201,4 +201,4 @@ if __name__ == '__main__':
   # chip(0, 0, 50, 20)
   # chips(0, 0, dev.arange(18, 20, 1))
 
-  dev.saveas(cfg.work + 'polarizer')
+  dev.saveas(cfg.work + 'dcp')

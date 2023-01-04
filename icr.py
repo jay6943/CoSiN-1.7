@@ -1,4 +1,5 @@
 import cfg
+import dxf
 import dev
 import pbs
 import voa
@@ -57,7 +58,11 @@ def chip(x, y, lchip):
   x2, y3 = dev.sbend(x1, y1, 45,  ch * 2)
   x2, y4 = dev.sbend(x1, y2, 45, -ch * 2)
 
-  x3, _ = tap.device(x2, y3, 0.39, ch)
+  x3, x20, y20 = tap.device(x2, y3, 0.39, 50)
+  idev = len(cfg.data)
+  x21, y21 = tip.diode(x20, y20, 4000 + y20 - y, 1)
+  dxf.move(idev, x20, y20, x21, y21, 0, 0, -90)
+
   x4, _ = voa.device(x3, y3)
   x4, _ = dev.sline(x2, y4, x4 - x2)
 
@@ -117,7 +122,8 @@ def chips(x, y):
 
 if __name__ == '__main__':
 
-  chip(0, 0, xsize)
-  # chips(0, 0)
+  # chip(0, 0, xsize)
+
+  chips(0, 0)
 
   dev.saveas(cfg.work + 'icr')
