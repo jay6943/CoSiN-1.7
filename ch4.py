@@ -90,7 +90,7 @@ def chip(x, y, lchip):
   
   x2 = x * 2 - x1
 
-  x3, _ = tap.device(x2, y1, 4, 100, 300, yqpsk)
+  x3, _, _ = tap.device(x2, y1, 0.39, 50)
   x3, _ = dev.sline(x2, y2, x3 - x2)
 
   x4, y3 = dev.sbend(x3, y1, 90,  300)
@@ -135,4 +135,4 @@ if __name__ == '__main__':
 
   chip(0, 0, xsize)
 
-  dev.saveas(cfg.work + 'opt')
+  dev.saveas(cfg.work + '4ch')

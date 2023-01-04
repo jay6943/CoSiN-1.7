@@ -71,7 +71,7 @@ def mask_3(fp):
   cfg.layer['sio2'] = 0
   cfg.layer['recs'] = 3
 
-  pbs.chips(xk, yk + cfg.ch, dev.arange(30, 80, 2))
+  pbs.chips(xk, yk + cfg.ch, dev.arange(40, 80, 2))
 
   dxf.conversion(fp)
 

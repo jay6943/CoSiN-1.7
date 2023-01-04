@@ -76,4 +76,4 @@ if __name__ == '__main__':
 
   chips(0, 0, dev.arange(49, 53, 1))
 
-  dev.saveas(cfg.work + 'y2x2')
+  dev.saveas(cfg.work + '2x2')
