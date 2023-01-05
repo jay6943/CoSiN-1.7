@@ -66,9 +66,7 @@ def chip(x, y, lchip):
 def chips(x, y, arange):
 
   var = cfg.l1x2
-
   for cfg.l1x2 in arange: _, y = chip(x, y, xsize)
-
   cfg.l1x2 = var
 
   return x + xsize, y

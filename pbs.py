@@ -125,9 +125,7 @@ def chip(x, y, lchip):
 def chips(x, y, arange):
 
   var = cfg.lpbs
-
   for cfg.lpbs in arange: _, y = chip(x, y, xsize)
-
   cfg.lpbs = var
 
   return x + xsize, y - cfg.ch * 1.5

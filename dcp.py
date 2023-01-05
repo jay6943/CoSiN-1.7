@@ -187,9 +187,7 @@ def chip(x, y, lchip):
 def chips(x, y, arange):
 
   var = cfg.dc
-
   for cfg.dc in arange: _, y = chip(x, y, xsize)
-
   cfg.dc = var
 
   return x + xsize, y

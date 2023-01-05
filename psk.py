@@ -1,6 +1,7 @@
 import cfg
 import dxf
 import dev
+import pbs
 import tip
 import y1x2
 import y2x2
@@ -46,7 +47,7 @@ def device(x, y):
 
   xl = np.sqrt(0.5) * cfg.eg
 
-  xh = (x4 + x2 ) * 0.5 - xl
+  xh = (x4 + x2) * 0.5 - xl
   ya = (y1 + y11) * 0.5 + xl
   yb = (y4 + y22) * 0.5 - xl
 
@@ -73,12 +74,62 @@ def device(x, y):
 
   return x9, y
 
+def chip2x2(x, y):
+
+  y1 = y + cfg.ch * 0.5
+  y2 = y - cfg.ch * 0.5
+
+  ch1x2 = cfg.ch - cfg.d1x2
+  ch2x2 = cfg.ch - cfg.d2x2
+
+  x1, _ = dev.sbend(x, y1, 2, cfg.d2x2)
+  x2, _ = dev.sline(x, y2, x1 - x)
+  pbs.tail(x1, y1 - cfg.d2x2, 90, 90, 1, 1)
+  x1, y11, y12 = y2x2.device(x1, y1)
+  x2, y21, y22 = y1x2.device(x2, y2, 1)
+
+  x3, y31 = dev.sbend(x1, y11, 45,  ch2x2)
+  x3, y32 = dev.sbend(x1, y12, 45, -ch2x2)
+  x4, y41 = dev.sbend(x2, y21, 45,  ch1x2)
+  x4, y42 = dev.sbend(x2, y22, 45, -ch1x2)
+
+  xl = np.sqrt(0.5) * cfg.eg
+
+  xa = (x3 + x1) * 0.5 - xl
+  xb = (x4 + x2) * 0.5 - xl
+  ya = (y31 + y41) * 0.5 + xl
+  yb = (y32 + y42) * 0.5 - xl
+
+  dxf.tilts('core', xa, ya, cfg.eg * 2, cfg.wg, -45)
+  dxf.tilts('core', xb, yb, cfg.eg * 2, cfg.wg,  45)
+
+  x5, _ = dev.sline(x4, y41, x3 - x4)
+  x5, _ = dev.sline(x4, y42, x3 - x4)
+
+  ch2x2 = cfg.ch * 0.5 - cfg.d2x2
+
+  x7, _ = dev.sbend(x5, y31, 45, -ch2x2)
+  x7, _ = dev.sbend(x5, y32, 45, -ch2x2)
+  x7, _ = dev.sbend(x5, y41, 45,  ch2x2)
+  x7, _ = dev.sbend(x5, y42, 45,  ch2x2)
+
+  x8, y31, y32 = y2x2.device(x7, y + cfg.ch)
+  x8, y41, y42 = y2x2.device(x7, y - cfg.ch)
+
+  x9, _ = dev.sbend(x8, y31, 45,  ch2x2)
+  x9, _ = dev.sbend(x8, y32, 45, -ch2x2)
+  x9, _ = dev.sbend(x8, y41, 45,  ch2x2)
+  x9, _ = dev.sbend(x8, y42, 45, -ch2x2)
+
+  return x9, y
+
 def chip(x, y, lchip):
 
   ch = cfg.ch * 0.5
 
   idev = len(cfg.data)
-  x1, _ = device(x, y)
+  # x1, _ = device(x, y)
+  x1, _ = chip2x2(x, y)
   x5, x6, ltip = dev.center(idev, x, x1, lchip)
 
   x7, t1 = tip.fiber(x5, y + ch, ltip, -1)
@@ -96,17 +147,15 @@ def chip(x, y, lchip):
 def chips(x, y, arange):
 
   var = cfg.phase
-
   for cfg.phase in arange: _, y = chip(x, y, xsize)
-
   cfg.phase = var
 
   return x + xsize, y - ysize * 0.5
 
 if __name__ == '__main__':
 
-  # chip(0, 0, 0)
+  chip(0, 0, 0)
   
-  chips(0, 0, dev.arange(70, 115, 5))
+  # chips(0, 0, dev.arange(70, 115, 5))
 
   dev.saveas(cfg.work + 'psk')
