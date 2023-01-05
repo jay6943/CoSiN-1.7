@@ -3,42 +3,39 @@ import dxf
 import dev
 import dci
 import tip
-import numpy as np
-import euler as elr
 
 xsize = cfg.size
 ysize = 200
 
-def units(x, y, wg, dy, xsign, ysign):
+def units(x, y, wg, xsign):
 
-  angle = 20
+  spacing = 2.6
 
-  df = elr.update(cfg.wg, cfg.radius, angle)
-
-  sign = xsign * ysign
-
-  x1, y1 = x, y + cfg.dc * ysign
-  x2, y2 = dci.bends(x1, y1, wg, dci.tilt, 0, xsign, ysign)
+  x1, y1 = x, y - spacing
+  x2, y2 = dci.bends(x1, y1, wg, dci.tilt, 0, xsign, -1)
 
   idev = len(cfg.data)
   x3, y3 = dev.taper(x2, y2, 100 * xsign, wg, cfg.wg)
-  x4, y4 = dev.bends(x3, y3, 90 - dci.tilt, 0, xsign, ysign)
-  x5, y5 = dxf.move(idev, x2, y2, x4, y4, 0, 0, dci.tilt * sign)
+  x4, y4 = dev.bends(x3, y3, 90 - dci.tilt, 0, xsign, -1)
+  x5, y5 = dxf.move(idev, x2, y2, x4, y4, 0, 0, -dci.tilt * xsign)
 
   return x5, y5
   
-def device(x, y, wg, ch):
+def device(x, y):
 
-  idev = len(cfg.data)
+  wg = 0.42
 
-  x1, y1 = units(x, y, wg, ch, -1, -1)
-  x1, y1 = units(x, y, wg, ch,  1, -1)
-  x2, y2 = dci.units(x, y, wg, ch,  1,  1)
-  x2, y2 = dci.units(x, y, wg, ch, -1,  1)
+  x1, _ = dev.sline(x, y, 100)
+  x2, _ = dev.taper(x1, y, 100, cfg.wg, wg)
+  x3, _ = dev.srect(x2, y, 100, wg)
+  x4, _ = dev.srect(x3, y, 100, wg)
+  x5, _ = dev.taper(x4, y, 100, wg, cfg.wg)
+  x6, _ = dev.sline(x5, y, 100)
 
-  dxf.move(idev, x, y, x2, y2, x - x2, -ch, 0)
+  x7, y7 = units(x3, y, wg, -1)
+  x7, y7 = units(x3, y, wg,  1)
 
-  return x + (x - x2) * 2, x1 + (x - x2), y1 - ch
+  return x6, x7, y7
 
 def chip(x, y, lchip):
   
