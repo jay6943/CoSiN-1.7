@@ -4,7 +4,7 @@ import dev
 import key
 import ohm
 import pbs
-import psk
+import qsk
 import tip
 import ssc
 import tap
@@ -55,7 +55,7 @@ def mask_2(fp):
   cfg.layer['recs'] = 2
   
   _, y1 = pbs.chips(xk, yk + cfg.ch , dev.arange(54.5, 57.5, 1))
-  _, y1 = psk.chips(xk, y1 + cfg.ch * 2.5, dev.arange(77.5, 95, 2.5))
+  _, y1 = qsk.chips(xk, y1 + cfg.ch * 2.5, dev.arange(77.5, 95, 2.5))
   
   dxf.conversion(fp)
 

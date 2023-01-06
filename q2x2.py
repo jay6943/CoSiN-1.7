@@ -99,4 +99,4 @@ if __name__ == '__main__':
 
   chip(0, 0, 0)
   
-  dev.saveas(cfg.work + 'q22')
+  dev.saveas(cfg.work + 'q2x2')

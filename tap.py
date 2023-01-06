@@ -19,17 +19,6 @@ def units(x, y, xsign):
 
   return x5, y5
 
-def lines(x, y, length):
-
-  x1, _ = dev.sline(x, y, length)
-  x2, _ = dev.taper(x1, y, 100, cfg.wg, dci.wg)
-  x3, _ = dev.srect(x2, y, 100, dci.wg)
-  x4, _ = dev.srect(x3, y, 100, dci.wg)
-  x5, _ = dev.taper(x4, y, 100, dci.wg, cfg.wg)
-  x6, _ = dev.sline(x5, y, length)
-
-  return x6, y, x3
-
 def device(x, y):
 
   x1, _, x2 = lines(x, y, 100)
@@ -42,34 +31,37 @@ def device(x, y):
 def chip(x, y, lchip):
   
   ch = 50
-  dy = ch * 2 + cfg.spacing - cfg.tapping
   y1 = y + ch
   y2 = y - ch
   y3 = y1 + cfg.spacing - cfg.tapping
+  dy = dci.offset + cfg.tapping - cfg.spacing
 
   idev = len(cfg.data)
 
-  x1, _, x2 = lines(x, y1, 300)
+  x1, _ = dci.sbend(x, y2, 20, ch * 2 - dy, -1,  1)
+  x2, _ = dci.dc(x1, y3, -1, -1)
+  x3, _ = dci.dc(x2, y3,  1, -1)
+  x4, _ = dci.sbend(x3, y1 - dy, 20, ch * 2 - dy,  1, -1)
 
-  x3, _ = dci.units(x2, y3, dy, -1, -1)
-  x3, _ = dci.units(x2, y3, dy,  1, -1)
+  l = (x4 - x - 250) * 0.5
 
-  l = (x2 - x) - (x3 - x2)
+  x1, _ = dev.sline(x, y1, l)
+  x2, _ = dev.taper(x1, y1, 100, cfg.wg, dci.wg)
+  x3, _ = dev.srect(x2, y1, 50, dci.wg)
+  x5, _ = dev.taper(x3, y1, 100, dci.wg, cfg.wg)
+  x6, _ = dev.sline(x5, y1, l)
 
-  dev.sline(x,  y2, l)
-  dev.sline(x3, y2, l)
+  x5, x6, ltip = dev.center(idev, x, x4, lchip)
 
-  x3, x4, ltip = dev.center(idev, x, x1, lchip)
-
-  x5, t1 = tip.fiber(x3, y1, ltip, -1)
-  x5, t1 = tip.fiber(x3, y2, ltip, -1)
-  x6, t2 = tip.fiber(x4, y1, ltip, 1)
-  x6, t2 = tip.fiber(x4, y2, ltip, 1)
+  x7, t1 = tip.fiber(x5, y1, ltip, -1)
+  x7, t1 = tip.fiber(x5, y2, ltip, -1)
+  x8, t2 = tip.fiber(x6, y1, ltip, 1)
+  x8, t2 = tip.fiber(x6, y2, ltip, 1)
 
   s = 'tap-' + str(round(cfg.tapping, 2))
   dev.texts(t1, y, s, 0.2, 'lc')
   dev.texts(t2, y, s, 0.2, 'rc')
-  print(s, round(x4 - x3), round(x6 - x5))
+  print(s, round(x6 - x5), round(x8 - x7))
 
   return x + lchip, y + ysize
 

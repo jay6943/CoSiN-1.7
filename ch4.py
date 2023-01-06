@@ -6,7 +6,7 @@ import voa
 import qsk
 import tip
 import tap
-import elr as elr
+import elr
 import numpy as np
 
 xsize = 4000
