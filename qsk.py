@@ -1,7 +1,6 @@
 import cfg
 import dxf
 import dev
-import pbs
 import tip
 import y1x2
 import y2x2
@@ -14,16 +13,6 @@ refractive = (nTE + nTM) * 0.5
 
 xsize = cfg.size
 ysize = cfg.ch * 4
-
-def sbend(x, y):
-
-  cfg.draft = 'mask'
-
-  x1, y1 = dev.sline(x, y, 10)
-  x2, y2 = dev.sbend(x1, y1, 45, 20)
-  x3, y3 = dev.sline(x2, y2, 10)
-
-  return x3, y3
 
 def device(x, y):
 

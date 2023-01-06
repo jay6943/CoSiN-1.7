@@ -1,5 +1,4 @@
 import cfg
-import dxf
 import dev
 import tip
 import pad

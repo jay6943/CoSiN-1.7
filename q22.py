@@ -10,17 +10,7 @@ import numpy as np
 xsize = cfg.size
 ysize = cfg.ch * 4
 
-def sbend(x, y):
-
-  cfg.draft = 'mask'
-
-  x1, y1 = dev.sline(x, y, 10)
-  x2, y2 = dev.sbend(x1, y1, 45, 20)
-  x3, y3 = dev.sline(x2, y2, 10)
-
-  return x3, y3
-
-def mmi(x, y):
+def shifter(x, y):
 
   y1 = y + cfg.d2x2
   y2 = y - cfg.d2x2
@@ -47,7 +37,7 @@ def device(x, y):
 
   x1, _ = dev.sbend(x, y1, 2, cfg.d2x2)
   x2, _ = dev.sline(x, y2, x1 - x)
-  x1, y11, y12 = mmi(x1, y1)
+  x1, y11, y12 = shifter(x1, y1)
   x2, y21, y22 = y1x2.device(x2, y2, 1)
 
   x3, y31 = dev.sbend(x1, y11, 45,  ch2x2)

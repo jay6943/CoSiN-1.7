@@ -3,7 +3,7 @@ import dxf
 import dev
 import cir
 import tip
-import euler as elr
+import elr
 
 xsize = cfg.size
 ysize = 200

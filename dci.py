@@ -2,8 +2,8 @@ import cfg
 import dxf
 import dev
 import tip
+import elr
 import numpy as np
-import euler as elr
 
 wg = 0.41
 tilted = 3
@@ -24,9 +24,7 @@ def bends(x, y, angle, rotate, xsign, ysign):
 
   return x1, y1
 
-def units(x, y, dy, xsign, ysign):
-
-  angle = 20
+def units(x, y, angle, dy, xsign, ysign):
 
   df = elr.update(cfg.wg, cfg.radius, angle)
 
@@ -48,15 +46,15 @@ def units(x, y, dy, xsign, ysign):
   x8, y8 = dev.bends(x7, y7, angle, 0, -xsign, -ysign)
 
   return x7, y
-  
-def device(x, y, ch):
+
+def device(x, y, angle, ch):
 
   idev = len(cfg.data)
 
-  x1, y1 = units(x, y, ch,  1,  1)
-  x1, y1 = units(x, y, ch,  1, -1)
-  x1, y1 = units(x, y, ch, -1,  1)
-  x1, y1 = units(x, y, ch, -1, -1)
+  x1, y1 = units(x, y, angle, ch,  1,  1)
+  x1, y1 = units(x, y, angle, ch,  1, -1)
+  x1, y1 = units(x, y, angle, ch, -1,  1)
+  x1, y1 = units(x, y, angle, ch, -1, -1)
 
   dxf.move(idev, x, y, x1, y1, x - x1, 0, 0)
 
@@ -69,7 +67,7 @@ def chip(x, y, lchip):
   y2 = y - ch
 
   idev = len(cfg.data)
-  x1, _ = device(x, y, ch)
+  x1, _ = device(x, y, 20, ch)
   x3, x4, ltip = dev.center(idev, x, x1, lchip)
 
   x5, t1 = tip.fiber(x3, y1, ltip, -1)

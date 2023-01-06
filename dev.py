@@ -1,7 +1,7 @@
 import os
 import cfg
 import dxf
-import euler as elr
+import elr
 import numpy as np
 
 def srect(x, y, length, width):

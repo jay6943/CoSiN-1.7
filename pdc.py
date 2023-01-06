@@ -2,10 +2,10 @@ import cfg
 import dxf
 import dev
 import dci
+import elr
 import cir
 import tip
 import numpy as np
-import euler as elr
 
 xsize = cfg.size
 ysize = 200

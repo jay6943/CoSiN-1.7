@@ -1,7 +1,7 @@
 import cfg
 import dxf
 import dev
-import euler as elr
+import elr
 
 l = 10
 

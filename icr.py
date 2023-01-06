@@ -3,10 +3,10 @@ import dxf
 import dev
 import pbs
 import voa
-import psk
+import qsk
 import tip
 import tap
-import euler as elr
+import elr
 import numpy as np
 
 yqpsk = 2400
@@ -93,8 +93,8 @@ def chip(x, y, lchip):
   x10, _ = tbend(x8, y83,  ch * 2, -1)
   x10, _ = tbend(x9, y84, -ch * 4, -1)
 
-  x11, y7 = psk.device(x10, y + yqpsk)
-  x11, y8 = psk.device(x10, y - yqpsk)
+  x11, y7 = qsk.device(x10, y + yqpsk)
+  x11, y8 = qsk.device(x10, y - yqpsk)
 
   ltip = lchip - x11 + x
 
@@ -113,7 +113,7 @@ def chips(x, y):
   fiber_pd(x, y + cfg.ch * 3.5 + yqpsk, xsize)
   voa.chip(x, y - cfg.size * 0.5 + cfg.ch * 2, xsize)
   pbs.chip(x, y + cfg.ch * 5 + yqpsk, xsize)
-  psk.chip(x, y + 4500, xsize)
+  qsk.chip(x, y + 4500, xsize)
 
   dev.sline(x, y + ysize * 0.5, xsize)
   dev.sline(x, y - ysize * 0.5, xsize)

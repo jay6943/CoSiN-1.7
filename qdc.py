@@ -1,41 +1,26 @@
 import cfg
 import dxf
 import dev
-import pbs
+import dci
 import tip
 import y1x2
-import y2x2
 import numpy as np
 
 xsize = cfg.size
 ysize = cfg.ch * 4
 
-def sbend(x, y):
+def units(x, y, angle, ch):
 
-  cfg.draft = 'mask'
+  idev = len(cfg.data)
 
-  x1, y1 = dev.sline(x, y, 10)
-  x2, y2 = dev.sbend(x1, y1, 45, 20)
-  x3, y3 = dev.sline(x2, y2, 10)
+  x1, _ = dci.units(x, y, angle, ch, -1,  1)
+  x1, _ = dci.units(x, y, angle, ch, -1, -1)
+  x2, y1 = dci.units(x, y, 45, cfg.ch,  1,  1)
+  x2, y2 = dci.units(x, y, 45, cfg.ch,  1, -1)
 
-  return x3, y3
+  dxf.move(idev, x, y, x1, y1, x - x1, 0, 0)
 
-def mmi(x, y):
-
-  y1 = y + cfg.d2x2
-  y2 = y - cfg.d2x2
-
-  x1, _ = y2x2.taper(x, y1, cfg.wg, cfg.wtpr)
-  x2, _ = dxf.srect('core', x1, y, cfg.l2x2, cfg.w2x2)
-  x3, _ = y2x2.taper(x2, y1, cfg.wtpr, cfg.wg)
-  x3, _ = y2x2.taper(x2, y2, cfg.wtpr, cfg.wg)
-
-  pbs.tail(x1 - 5, y2, 90, 90, 1, 1)
-
-  dxf.srect('edge', x, y, x3 - x, cfg.w2x2 + cfg.eg)
-  dxf.srect('sio2', x, y, x3 - x, cfg.w2x2 + cfg.sg)
-
-  return x3, y1, y2
+  return x2, y1, y2
 
 def device(x, y):
 
@@ -47,11 +32,9 @@ def device(x, y):
 
   x1, _ = dev.sbend(x, y1, 2, cfg.d2x2)
   x2, _ = dev.sline(x, y2, x1 - x)
-  x1, y11, y12 = mmi(x1, y1)
+  x3, y31, y32 = units(x1, y1, 5, 20)
   x2, y21, y22 = y1x2.device(x2, y2, 1)
 
-  x3, y31 = dev.sbend(x1, y11, 45,  ch2x2)
-  x3, y32 = dev.sbend(x1, y12, 45, -ch2x2)
   x4, y41 = dev.sbend(x2, y21, 45,  ch1x2)
   x4, y42 = dev.sbend(x2, y22, 45, -ch1x2)
 
@@ -70,20 +53,10 @@ def device(x, y):
 
   ch2x2 = cfg.ch * 0.5 - cfg.d2x2
 
-  x7, _ = dev.sbend(x5, y31, 45, -ch2x2)
-  x7, _ = dev.sbend(x5, y32, 45, -ch2x2)
-  x7, _ = dev.sbend(x5, y41, 45,  ch2x2)
-  x7, _ = dev.sbend(x5, y42, 45,  ch2x2)
+  x8, _ = dci.device(x5, y + cfg.ch, 45, cfg.ch * 0.5)
+  x8, _ = dci.device(x5, y - cfg.ch, 45, cfg.ch * 0.5)
 
-  x8, y31, y32 = y2x2.device(x7, y + cfg.ch)
-  x8, y41, y42 = y2x2.device(x7, y - cfg.ch)
-
-  x9, _ = dev.sbend(x8, y31, 45,  ch2x2)
-  x9, _ = dev.sbend(x8, y32, 45, -ch2x2)
-  x9, _ = dev.sbend(x8, y41, 45,  ch2x2)
-  x9, _ = dev.sbend(x8, y42, 45, -ch2x2)
-
-  return x9, y
+  return x8, y
 
 def chip(x, y, lchip):
 
@@ -98,7 +71,7 @@ def chip(x, y, lchip):
 
   for i in [3,1,-1,-3]: x8, t2 = tip.fiber(x6, y + ch * i, ltip, 1)
 
-  s = 'iq-' + str(round(cfg.phase))
+  s = 'iq-dc-' + str(round(cfg.phase))
   dev.texts(t1, y, s, 0.2, 'lc')
   dev.texts(t2, y, s, 0.2, 'rc')
   print(s, round(x6 - x5), round(x8 - x7))

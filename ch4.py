@@ -3,10 +3,10 @@ import dxf
 import dev
 import pbs
 import voa
-import psk
+import qsk
 import tip
 import tap
-import euler as elr
+import elr as elr
 import numpy as np
 
 xsize = 4000
@@ -113,8 +113,8 @@ def chip(x, y, lchip):
 
   idev = len(cfg.data)
 
-  x12, _ = psk.device(x, y + yqpsk)
-  x12, _ = psk.device(x, y - yqpsk)
+  x12, _ = qsk.device(x, y + yqpsk)
+  x12, _ = qsk.device(x, y - yqpsk)
 
   for i in [-3,-1,1,3]:
     x13, _ = tip.diode(x12, y + i * ch + yqpsk, 0, 1)
