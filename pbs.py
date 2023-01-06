@@ -3,43 +3,41 @@ import dxf
 import dev
 import cir
 import tip
+import euler as elr
 
 xsize = cfg.size
 ysize = 200
 
 def taper(x, y, sign):
 
-  w1 = cfg.wg if sign < 0 else cfg.wtpr
-  w2 = cfg.wtpr if sign < 0 else cfg.wg
+  w1 = cfg.wt if sign < 0 else cfg.wtpr
+  w2 = cfg.wtpr if sign < 0 else cfg.wt
 
   if sign < 0:
     x, _ = dxf.taper('core', x, y, 5, cfg.wg, cfg.wt)
     x, _ = dxf.srect('core', x, y, 40, cfg.wt)
-    x, _ = dxf.taper('core', x, y, 5, cfg.wt, cfg.wg)
-    x, _ = dxf.sline('core', x, y, 10)
   x, _ = dxf.taper('core', x, y, cfg.ltpr, w1, w2)
 
   return x, y
 
-def arm(x, y, length, width):
+def arm(x, y, sign):
 
-  l, w, ltaper = 40, width, 10
+  angle, dy, ltaper = 2, 1, 10
 
-  x1, _ = dxf.taper('core', x, y, cfg.ltpr, cfg.wtpr, cfg.wg)
-  x2, _ = dxf.srect('core', x1, y, l, cfg.wg)
-  x3, _ = dxf.taper('core', x2, y, ltaper, cfg.wg, w)
+  core = elr.update(cfg.wt, cfg.radius, angle)
+
+  x1, _ = dxf.taper('core', x, y, cfg.ltpr, cfg.wtpr, cfg.wt)
+  x2, y2 = dxf.sbend('core', x1, y, core, angle, -dy * sign)
+  x3, y2 = dxf.taper('core', x2, y2, ltaper, cfg.wt, cfg.wpbs)
   
-  if length > 0:
-    x4, _ = dxf.srect('core', x3, y, length, w)
-  else:
-    l = l + length + cfg.lpbs
-    x4 = x3
+  if sign > 0: x3, _ = dxf.srect('core', x3, y2, cfg.lpbs, cfg.wpbs)
   
-  x5, _ = dxf.taper('core', x4, y, ltaper, w, cfg.wg)
-  x6, _ = dxf.srect('core', x5, y, l, cfg.wg)
-  x7, _ = dxf.taper('core', x6, y, cfg.ltpr, cfg.wg, cfg.wtpr)
+  x4, _ = dxf.taper('core', x3, y2, ltaper, cfg.wpbs, cfg.wt)
+  if sign < 0: x4, _ = dxf.srect('core', x4, y2, cfg.lpbs, cfg.wt)
+  x5, _ = dxf.sbend('core', x4, y2, core, angle, dy * sign)
+  x6, _ = dxf.taper('core', x5, y, cfg.ltpr, cfg.wt, cfg.wtpr)
 
-  return x7, y
+  return x6, y
 
 def tail(x, y, angle, rotate, port, sign):
 
@@ -67,11 +65,12 @@ def mzi(x, y, inport, outport):
   y3 = y + inport * cfg.d2x2
   y4 = y - outport * cfg.d2x2
 
-  x1, _ = taper(x, y3, -1)
+  if outport == 0: x1, _ = taper(x, y3, -1)
+  else: x1, _ = dxf.taper('core', x, y3, cfg.ltpr, cfg.wt, cfg.wtpr)
   x2, _ = dxf.srect('core', x1, y, cfg.l2x2, cfg.w2x2)
 
-  x5, _ = arm(x2, y1, 0, cfg.wpbs)
-  x5, _ = arm(x2, y2, cfg.lpbs, cfg.wpbs)
+  x5, _ = arm(x2, y1, -1)
+  x5, _ = arm(x2, y2,  1)
 
   x6, _ = dxf.srect('core', x5, y, cfg.l2x2, cfg.w2x2)
 
@@ -82,6 +81,8 @@ def mzi(x, y, inport, outport):
     x7, _ = taper(x6, y2, 1)
   else:
     x7, _ = taper(x6, y4, 1)
+    x7, _ = dxf.srect('core', x7, y4, 40, cfg.wt)
+    x7, _ = dxf.taper('core', x7, y4, cfg.ltpr, cfg.wt, cfg.wg)
     tail(x6 + 5, y + outport * cfg.d2x2, 90, 270, outport, -1)
   
   dxf.srect('edge', x, y, x7 - x, cfg.w2x2 + cfg.eg)
@@ -89,14 +90,27 @@ def mzi(x, y, inport, outport):
 
   return x7, y1, y2
 
+def sbend(x, y, dy):
+
+  radius, angle = 100, 10
+
+  core = elr.update(cfg.wt, radius, angle)
+  edge = elr.update(cfg.eg, radius, angle)
+  sio2 = elr.update(cfg.sg, radius, angle)
+
+  x1, y1 = dxf.sbend('edge', x, y, edge, angle, dy)
+  x1, y1 = dxf.sbend('core', x, y, core, angle, dy)
+  x1, y1 = dxf.sbend('sio2', x, y, sio2, angle, dy)
+
+  return x1, y1
+
 def device(x, y):
 
   ch = 50
 
   x3, y31, y32 = mzi(x, y + cfg.d2x2, -1, 0)
-
-  x4, y41 = dev.sbend(x3, y31, 20,  ch)
-  x4, y42 = dev.sbend(x3, y32, 20, -ch)
+  x4, y41 = sbend(x3, y31,  ch)
+  x4, y42 = sbend(x3, y32, -ch)
   x5, _, y51 = mzi(x4, y41 - cfg.d2x2, 1,  1)
   x5, y52, _ = mzi(x4, y42 - cfg.d2x2, 1, -1)
 
@@ -132,8 +146,8 @@ def chips(x, y, arange):
 
 if __name__ == '__main__':
 
-  # chip(0, 0, 3000)
+  chip(0, 0, 3000)
 
-  chips(0, 0, dev.arange(20, 58, 2))
+  # chips(0, 0, dev.arange(20, 58, 2))
 
   dev.saveas(cfg.work + 'pbs')

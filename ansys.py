@@ -86,20 +86,22 @@ def dc(folder):
 
   cfg.draft = 'mask'
 
-  wg, radius, angle, dy = 0.42, 50, 3, 1
+  radius, angle, dy = 50, 3, 1
 
-  df = elr.update(wg, radius, angle)
-  rf = elr.update(wg, radius, 20)
+  for i in range(7):
+    wg = round(0.37 + i * 0.01, 2)
 
-  x1, y1 = dxf.sbend('core', 0, 0, df, angle, dy)
-  dev.saveas(folder + str(wg) + '-sbend')
+    df = elr.update(wg, radius, angle)
+    rf = elr.update(wg, radius, 20)
 
-  x2, y2 = dxf.bends('core', x1, 0, rf, 0, -1, 1)
-  dev.saveas(folder + str(wg) + '-bends')
+    x1, _ = dxf.sbend('core', 0, 0, df, angle, -dy)
+    dev.saveas(folder + str(wg) + '-1')
 
-  x1, y1 = dxf.sbend('core', 0, 0, df, angle, dy)
-  x2, y2 = dxf.bends('core', x1, y1, rf, 0, -1, 1)
-  dev.saveas(folder + str(wg))
+    x1, _ = dxf.sbend('core', 0, 0, df, angle, dy)
+    dev.saveas(folder + str(wg) + '-2')
+
+    x2, y2 = dxf.bends('core', x1, 0, rf, 0, -1, 1)
+    dev.saveas(folder + str(wg) + '-3')
 
   return x2, y2
 

@@ -5,13 +5,14 @@ import tip
 import numpy as np
 import euler as elr
 
+wg = 0.41
+tilted = 3
 radius = 50
-tilt = 3
 
 xsize = cfg.size
 ysize = 200
 
-def bends(x, y, wg, angle, rotate, xsign, ysign):
+def bends(x, y, angle, rotate, xsign, ysign):
 
   core = elr.update(wg, radius, angle)
   edge = elr.update(cfg.eg, radius, angle)
@@ -23,7 +24,7 @@ def bends(x, y, wg, angle, rotate, xsign, ysign):
 
   return x1, y1
 
-def units(x, y, wg, dy, xsign, ysign):
+def units(x, y, dy, xsign, ysign):
 
   angle = 20
 
@@ -32,12 +33,12 @@ def units(x, y, wg, dy, xsign, ysign):
   sign = xsign * ysign
 
   x1, y1 = x, y + cfg.spacing * ysign
-  x2, y2 = bends(x1, y1, wg, tilt, 0, xsign, ysign)
+  x2, y2 = bends(x1, y1, tilted, 0, xsign, ysign)
 
   idev = len(cfg.data)
   x3, y3 = dev.taper(x2, y2, 100 * xsign, wg, cfg.wg)
-  x4, y4 = dev.bends(x3, y3, angle - tilt, 0, xsign, ysign)
-  x5, y5 = dxf.move(idev, x2, y2, x4, y4, 0, 0, tilt * sign)
+  x4, y4 = dev.bends(x3, y3, angle - tilted, 0, xsign, ysign)
+  x5, y5 = dxf.move(idev, x2, y2, x4, y4, 0, 0, tilted * sign)
 
   dh = dy - (y5 - y) * ysign - df['dy']
   dl = dh * xsign / np.sin(angle / 180 * np.pi)
@@ -48,14 +49,14 @@ def units(x, y, wg, dy, xsign, ysign):
 
   return x7, y
   
-def device(x, y, wg, ch):
+def device(x, y, ch):
 
   idev = len(cfg.data)
 
-  x1, y1 = units(x, y, wg, ch,  1,  1)
-  x1, y1 = units(x, y, wg, ch,  1, -1)
-  x1, y1 = units(x, y, wg, ch, -1,  1)
-  x1, y1 = units(x, y, wg, ch, -1, -1)
+  x1, y1 = units(x, y, ch,  1,  1)
+  x1, y1 = units(x, y, ch,  1, -1)
+  x1, y1 = units(x, y, ch, -1,  1)
+  x1, y1 = units(x, y, ch, -1, -1)
 
   dxf.move(idev, x, y, x1, y1, x - x1, 0, 0)
 
@@ -63,13 +64,12 @@ def device(x, y, wg, ch):
 
 def chip(x, y, lchip):
   
-  wg = 0.411
   ch = 50
   y1 = y + ch
   y2 = y - ch
 
   idev = len(cfg.data)
-  x1, _ = device(x, y, wg, ch)
+  x1, _ = device(x, y, ch)
   x3, x4, ltip = dev.center(idev, x, x1, lchip)
 
   x5, t1 = tip.fiber(x3, y1, ltip, -1)
