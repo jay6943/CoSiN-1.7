@@ -21,12 +21,25 @@ def units(x, y, xsign):
 
 def device(x, y):
 
-  x1, _, x2 = lines(x, y, 100)
+  dy = dci.offset + cfg.tapping - cfg.spacing
 
-  x3, y3 = units(x2, y, -1)
-  x3, y3 = units(x2, y,  1)
+  y1 = y + cfg.spacing - cfg.tapping
+  y2 = y - dy
 
-  return x1, x3, y3
+  x1, _ = dev.taper(x, y, 100, cfg.wg, dci.wg)
+  x2, _ = dev.srect(x1, y, 50, dci.wg)
+  x3, _ = dev.srect(x2, y, 50, dci.wg)
+  x4, _ = dev.taper(x3, y, 100, dci.wg, cfg.wg)
+  x5, _ = dev.sline(x4, y, 200)
+
+  x6, _ = dci.arm(x2, y1, -1, -1)
+  x6, _ = dci.arm(x2, y1,  1, -1)
+
+  idev = len(cfg.data)
+  x7, y7 = dev.bends(x6, y2, 90 - dci.tilted, 0, 1, -1)
+  x8, y8 = dxf.move(idev, x6, y2, x7, y7, 0, 0, -dci.tilted)
+
+  return x5, x8, y8
 
 def chip(x, y, lchip):
   

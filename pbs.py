@@ -22,7 +22,7 @@ def taper(x, y, sign):
 
 def arm(x, y, sign):
 
-  angle, dy, ltaper = 2, 1, 10
+  angle, dy, ltaper = 2, 1, 5
 
   core = elr.update(cfg.wt, cfg.radius, angle)
 

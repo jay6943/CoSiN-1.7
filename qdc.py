@@ -9,34 +9,27 @@ import numpy as np
 xsize = cfg.size
 ysize = cfg.ch * 4
 
-def units(x, y, angle, ch):
-
-  idev = len(cfg.data)
-
-  x1, _ = dci.units(x, y, angle, ch, -1,  1)
-  x1, _ = dci.units(x, y, angle, ch, -1, -1)
-  x2, y1 = dci.units(x, y, 45, cfg.ch,  1,  1)
-  x2, y2 = dci.units(x, y, 45, cfg.ch,  1, -1)
-
-  dxf.move(idev, x, y, x1, y1, x - x1, 0, 0)
-
-  return x2, y1, y2
-
 def device(x, y):
 
   y1 = y + cfg.ch * 0.5
   y2 = y - cfg.ch * 0.5
 
-  ch1x2 = cfg.ch - cfg.d1x2
-  ch2x2 = cfg.ch - cfg.d2x2
+  dy = 10
 
-  x1, _ = dev.sbend(x, y1, 2, cfg.d2x2)
-  x2, _ = dev.sline(x, y2, x1 - x)
-  x3, y31, y32 = units(x1, y1, 5, 20)
+  x1, y3 = dev.sbend(x, y1, 9, dy)
+  x1, _ = dci.sbend(x1, y3, 4, dy - dci.offset, -1, -1)
+  x1, y11, y12 = dci.device(x1, y1)
+
+  x2, _ = dev.sline(x, y2, x1 - x - cfg.l1x2 - 100)
   x2, y21, y22 = y1x2.device(x2, y2, 1)
 
-  x4, y41 = dev.sbend(x2, y21, 45,  ch1x2)
-  x4, y42 = dev.sbend(x2, y22, 45, -ch1x2)
+  dy = cfg.ch - dci.offset
+  ch = cfg.ch - cfg.d1x2
+
+  x3, y31 = dci.sbend(x1, y11, 45, dy, 1,  1)
+  x3, y32 = dci.sbend(x1, y12, 45, dy, 1, -1)
+  x4, y41 = dev.sbend(x2, y21, 45,  ch)
+  x4, y42 = dev.sbend(x2, y22, 45, -ch)
 
   xl = np.sqrt(0.5) * cfg.eg
 
@@ -51,10 +44,20 @@ def device(x, y):
   x5, _ = dev.sline(x4, y41, x3 - x4)
   x5, _ = dev.sline(x4, y42, x3 - x4)
 
-  ch2x2 = cfg.ch * 0.5 - cfg.d2x2
+  dy = cfg.ch * 0.5 - dci.offset
 
-  x8, _ = dci.device(x5, y + cfg.ch, 45, cfg.ch * 0.5)
-  x8, _ = dci.device(x5, y - cfg.ch, 45, cfg.ch * 0.5)
+  x6, _ = dci.sbend(x5, y31, 45, dy, -1, -1)
+  x6, _ = dci.sbend(x5, y32, 45, dy, -1, -1)
+  x6, _ = dci.sbend(x5, y41, 45, dy, -1,  1)
+  x6, _ = dci.sbend(x5, y42, 45, dy, -1,  1)
+
+  x7, y71, y72 = dci.device(x6, y + cfg.ch)
+  x7, y73, y74 = dci.device(x6, y - cfg.ch)
+
+  x8, _ = dci.sbend(x7, y71, 45, dy, 1,  1)
+  x8, _ = dci.sbend(x7, y72, 45, dy, 1, -1)
+  x8, _ = dci.sbend(x7, y73, 45, dy, 1,  1)
+  x8, _ = dci.sbend(x7, y74, 45, dy, 1, -1)
 
   return x8, y
 

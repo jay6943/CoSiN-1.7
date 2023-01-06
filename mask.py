@@ -10,6 +10,8 @@ import ssc
 import tap
 import icr
 import dci
+import qdc
+import q2x2
 import y1x2
 import y2x2
 

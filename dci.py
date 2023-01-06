@@ -44,7 +44,7 @@ def rbend(x, y, angle, dy, xsign, ysign):
   x4, y3 = x3 + df['dx'] * xsign, y + dy * ysign
   x3, y4 = dev.bends(x4, y3, angle, 0, -xsign, -ysign)
 
-  return x4, y4
+  return x4, y3 if xsign > 0 else y4
 
 def sbend(x, y, angle, dy, xsign, ysign):
 
@@ -53,7 +53,7 @@ def sbend(x, y, angle, dy, xsign, ysign):
     idev = len(cfg.data)
     x1, y1 = rbend(x, y + dy * ysign, angle, dy, xsign, -ysign)
     x2, y2 = dxf.move(idev, x, y, x1, y1, x - x1, 0, 0)
-    x2 = x2 + x - x1
+    x2, y2 = x2 + x - x1, y1
 
   return x2, y2
 
