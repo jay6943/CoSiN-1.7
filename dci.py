@@ -31,7 +31,7 @@ def units(x, y, wg, dy, xsign, ysign):
 
   sign = xsign * ysign
 
-  x1, y1 = x, y + cfg.dc * ysign
+  x1, y1 = x, y + cfg.spacing * ysign
   x2, y2 = bends(x1, y1, wg, tilt, 0, xsign, ysign)
 
   idev = len(cfg.data)
@@ -77,7 +77,7 @@ def chip(x, y, lchip):
   x6, t2 = tip.fiber(x4, y1, ltip, 1)
   x6, t2 = tip.fiber(x4, y2, ltip, 1)
 
-  s = 'dc-' + str(round(cfg.dc, 2))
+  s = 'dc-' + str(round(cfg.spacing, 2))
   dev.texts(t1, y, s, 0.2, 'lc')
   dev.texts(t2, y, s, 0.2, 'rc')
   print(s, round(x4 - x3), round(x6 - x5))
@@ -86,9 +86,9 @@ def chip(x, y, lchip):
 
 def chips(x, y, arange):
 
-  var = cfg.dc
-  for cfg.dc in arange: _, y = chip(x, y, xsize)
-  cfg.dc = var
+  var = cfg.spacing
+  for cfg.spacing in arange: _, y = chip(x, y, xsize)
+  cfg.spacing = var
 
   return x + xsize, y
 

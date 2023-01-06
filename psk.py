@@ -74,6 +74,23 @@ def device(x, y):
 
   return x9, y
 
+def dev2x2(x, y):
+
+  y1 = y + cfg.d2x2
+  y2 = y - cfg.d2x2
+
+  x1, _ = y2x2.taper(x, y1, cfg.wg, cfg.wtpr)
+  x2, _ = dxf.srect('core', x1, y, cfg.l2x2, cfg.w2x2)
+  x3, _ = y2x2.taper(x2, y1, cfg.wtpr, cfg.wg)
+  x3, _ = y2x2.taper(x2, y2, cfg.wtpr, cfg.wg)
+
+  pbs.tail(x1 - 5, y2, 90, 90, 1, 1)
+
+  dxf.srect('edge', x, y, x3 - x, cfg.w2x2 + cfg.eg)
+  dxf.srect('sio2', x, y, x3 - x, cfg.w2x2 + cfg.sg)
+
+  return x3, y1, y2
+
 def chip2x2(x, y):
 
   y1 = y + cfg.ch * 0.5
@@ -84,8 +101,7 @@ def chip2x2(x, y):
 
   x1, _ = dev.sbend(x, y1, 2, cfg.d2x2)
   x2, _ = dev.sline(x, y2, x1 - x)
-  pbs.tail(x1, y1 - cfg.d2x2, 90, 90, 1, 1)
-  x1, y11, y12 = y2x2.device(x1, y1)
+  x1, y11, y12 = dev2x2(x1, y1)
   x2, y21, y22 = y1x2.device(x2, y2, 1)
 
   x3, y31 = dev.sbend(x1, y11, 45,  ch2x2)

@@ -43,16 +43,14 @@ def device(x, y):
 
   return x1, x3, y3
 
-def chip(x, y, dc, lchip):
+def chip(x, y, lchip):
   
-  # dc = 2.6
-
   wg = 0.42
   ch = 50
-  dy = ch * 2 + cfg.dc - dc
+  dy = ch * 2 + cfg.spacing - cfg.tapping
   y1 = y + ch
   y2 = y - ch
-  y3 = y1 + cfg.dc - dc
+  y3 = y1 + cfg.spacing - cfg.tapping
 
   idev = len(cfg.data)
 
@@ -73,7 +71,7 @@ def chip(x, y, dc, lchip):
   x6, t2 = tip.fiber(x4, y1, ltip, 1)
   x6, t2 = tip.fiber(x4, y2, ltip, 1)
 
-  s = 'tap-' + str(round(dc, 2))
+  s = 'tap-' + str(round(cfg.tapping, 2))
   dev.texts(t1, y, s, 0.2, 'lc')
   dev.texts(t2, y, s, 0.2, 'rc')
   print(s, round(x4 - x3), round(x6 - x5))
@@ -82,7 +80,9 @@ def chip(x, y, dc, lchip):
 
 def chips(x, y, arange):
 
-  for dc in arange: _, y = chip(x, y, dc, xsize)
+  var = cfg.tapping
+  for cfg.tapping in arange: _, y = chip(x, y, xsize)
+  cfg.tapping = var
 
   return x + xsize, y
 

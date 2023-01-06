@@ -21,15 +21,14 @@ d1x2 = 1.46
 w2x2 = 8.4
 l2x2 = 51.5
 d2x2 = 1.46
-dc = 0.89
-wdc = 0.6
-ldc = 20
 lpbs = 60
 wpbs = 1.8
 ltpr = 5
 wtpr = 2
 targ = 58
 lvoa = 200
+spacing = 0.89 # x 2 times
+tapping = 2.6
 
 size = 10000
 mask = 10900
