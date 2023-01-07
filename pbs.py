@@ -8,6 +8,20 @@ import elr
 xsize = cfg.size
 ysize = 200
 
+def sbend(x, y, dy):
+
+  radius, angle = 100, 10
+
+  core = elr.update(cfg.wt, radius, angle)
+  edge = elr.update(cfg.eg, radius, angle)
+  sio2 = elr.update(cfg.sg, radius, angle)
+
+  x1, y1 = dxf.sbend('edge', x, y, edge, angle, dy)
+  x1, y1 = dxf.sbend('core', x, y, core, angle, dy)
+  x1, y1 = dxf.sbend('sio2', x, y, sio2, angle, dy)
+
+  return x1, y1
+
 def taper(x, y, sign):
 
   w1 = cfg.wt if sign < 0 else cfg.wtpr
@@ -90,20 +104,6 @@ def mzi(x, y, inport, outport):
 
   return x7, y1, y2
 
-def sbend(x, y, dy):
-
-  radius, angle = 100, 10
-
-  core = elr.update(cfg.wt, radius, angle)
-  edge = elr.update(cfg.eg, radius, angle)
-  sio2 = elr.update(cfg.sg, radius, angle)
-
-  x1, y1 = dxf.sbend('edge', x, y, edge, angle, dy)
-  x1, y1 = dxf.sbend('core', x, y, core, angle, dy)
-  x1, y1 = dxf.sbend('sio2', x, y, sio2, angle, dy)
-
-  return x1, y1
-
 def device(x, y):
 
   ch = 50
@@ -146,8 +146,8 @@ def chips(x, y, arange):
 
 if __name__ == '__main__':
 
-  chip(0, 0, 3000)
+  # chip(0, 0, 3000)
 
-  # chips(0, 0, dev.arange(20, 58, 2))
+  chips(0, 0, dev.arange(10, 20, 1))
 
   dev.saveas(cfg.work + 'pbs')

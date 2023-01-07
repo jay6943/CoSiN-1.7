@@ -85,16 +85,18 @@ def chip(x, y, lchip):
 
 def chips(x, y, arange):
 
+  y = y + cfg.ch * 1.5
+  
   var = cfg.phase
   for cfg.phase in arange: _, y = chip(x, y, xsize)
   cfg.phase = var
 
-  return x + xsize, y - ysize * 0.5
+  return x + xsize, y - (ysize + cfg.ch) * 0.5
 
 if __name__ == '__main__':
 
-  chip(0, 0, 0)
+  # chip(0, 0, 0)
   
-  # chips(0, 0, dev.arange(70, 115, 5))
+  chips(0, 0, dev.arange(84, 96, 3))
 
   dev.saveas(cfg.work + 'qsk')

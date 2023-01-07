@@ -63,6 +63,8 @@ def device(x, y):
 
 def chip(x, y, lchip):
 
+  y = y + cfg.ch * 1.5
+
   ch = cfg.ch * 0.5
 
   idev = len(cfg.data)
@@ -74,12 +76,12 @@ def chip(x, y, lchip):
 
   for i in [3,1,-1,-3]: x8, t2 = tip.fiber(x6, y + ch * i, ltip, 1)
 
-  s = 'iq-dc-' + str(round(cfg.phase))
+  s = 'iq-dc-' + str(round(cfg.spacing, 2))
   dev.texts(t1, y, s, 0.2, 'lc')
   dev.texts(t2, y, s, 0.2, 'rc')
   print(s, round(x6 - x5), round(x8 - x7))
-  
-  return x + lchip, y + ysize
+
+  return x + lchip, y + cfg.ch * 1.5
 
 if __name__ == '__main__':
 

@@ -9,16 +9,6 @@ import numpy as np
 xsize = cfg.size
 ysize = 200
 
-def bends(x, y, rotate, xsign, ysign):
-
-  core = elr.update(dci.wg, dci.radius, dci.tilted)
-  sio2 = elr.update(cfg.sg, dci.radius, dci.tilted)
-
-  x1, y1 = dxf.bends('core', x, y, core, rotate, xsign, ysign)
-  x1, y1 = dxf.bends('sio2', x, y, sio2, rotate, xsign, ysign)
-
-  return x1, y1
-
 def sbend(x, y, dy):
 
   core = elr.update(dci.wg, dci.radius, dci.tilted)
@@ -44,55 +34,58 @@ def arm(x, y, ch, sign):
 
 def mzi(x, y, ch, sign):
 
-  dh = 1
+  dy = 1
 
   x1, y1 = arm(x, y, ch, sign)
   x2, y2 = sbend(x1, y1,  ch * 2 * sign)
   x3, y4 = arm(x2, y2 + cfg.spacing * sign, ch,  1)
   x3, y5 = arm(x2, y2 + cfg.spacing * sign, ch, -1)
-  x4, y6 = sbend(x3, y4,  dh)
-  x5, y7 = sbend(x3, y5, -dh)
+  x4, y6 = sbend(x3, y4,  dy)
+  x5, y7 = sbend(x3, y5, -dy)
+  x5, y7 = sbend(x4, y6, -cfg.spacing - dy)
 
   sbend(x1, y2 + (cfg.spacing * 2 + ch * 2) * sign, -ch * 2 * sign)
 
-  return x4, y6
+  return x5, y7
 
-def device(x, y, dy, angle):
+def device(x, y):
 
   ch = 1
 
-  x1, y1 = dci.sbend(0, y + dy, angle, dy - dci.offset, -1, -1)
-  x1, y2 = dci.sbend(0, y - dy, angle, dy - dci.offset, -1,  1)
-  x2, y1 = dci.dc(x1, y, -1,  1)
-  x2, y2 = dci.dc(x1, y, -1, -1)
+  x2, y1 = dci.dc(x, y, -1,  1)
+  x2, y2 = dci.dc(x, y, -1, -1)
   x3, y1 = mzi(x2, y, ch,  1)
   x3, y2 = mzi(x2, y, ch, -1)
-  x4, y1 = dev.taper(x3, y1, 100, 0.4, cfg.wg)
-  x4, y2 = dev.taper(x3, y2, 100, 0.4, cfg.wg)
-  x5, y3 = dev.sbend(x4, y1, angle, y + dy - y1)
-  x6, y4 = dev.sbend(x4, y2, angle, y - dy - y2)
-  x6, y3 = dev.sline(x5, y3, x6 - x5)
+  x4, y1 = dxf.taper('core', x3, y1, 100, 0.4, cfg.wg)
+  x4, y2 = dxf.taper('core', x3, y2, 100, 0.4, cfg.wg)
 
-  dxf.srect('edge', x2, y, x3 - x2, 40)
+  dxf.srect('edge', x2, y, x4 - x2, 40)
 
-  return x6, y
+  return x4, y1, y2
 
 def chip(x, y, lchip):
   
-  ch = 50
+  ch, angle = 50, 20
+
   y1 = y + ch
   y2 = y - ch
 
   idev = len(cfg.data)
-  x1, _ = device(x, y, ch, 20)
-  x5, x6, ltip = dev.center(idev, x, x1, lchip)
+
+  x1, _ = dci.sbend(x, y1, angle, ch - dci.offset, -1, -1)
+  x1, _ = dci.sbend(x, y2, angle, ch - dci.offset, -1,  1)
+  x2, y3, y4 = device(x1, y)
+  x3, y5 = dev.sbend(x2, y3, angle, y + ch - y3)
+  x4, y6 = dev.sbend(x2, y4, angle, y - ch - y4)
+
+  x5, x6, ltip = dev.center(idev, x, x4, lchip)
 
   x7, t1 = tip.fiber(x5, y1, ltip, -1)
   x7, t1 = tip.fiber(x5, y2, ltip, -1)
   x8, t2 = tip.fiber(x6, y1, ltip, 1)
   x8, t2 = tip.fiber(x6, y2, ltip, 1)
 
-  s = 'dc-' + str(round(cfg.spacing, 1))
+  s = 'pbs-dc-' + str(round(cfg.spacing, 2))
   dev.texts(t1, y, s, 0.2, 'lc')
   dev.texts(t2, y, s, 0.2, 'rc')
   print(s, round(x6 - x5), round(x8 - x7))
@@ -109,7 +102,7 @@ def chips(x, y, arange):
 
 if __name__ == '__main__':
 
-  chip(0, 0, 0)
+  chip(0, 0, 2500)
 
   # chips(0, 0, dev.arange(18, 20, 1))
 

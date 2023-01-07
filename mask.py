@@ -56,8 +56,15 @@ def mask_2(fp):
   cfg.layer['edge'] = 2
   cfg.layer['recs'] = 2
   
-  _, y1 = pbs.chips(xk, yk + cfg.ch , dev.arange(54.5, 57.5, 1))
-  _, y1 = qsk.chips(xk, y1 + cfg.ch * 2.5, dev.arange(77.5, 95, 2.5))
+  _, y1 = tip.chip(xk, yk + 100, cfg.size, 0.36)
+  _, y1 = dci.chip(xk, y1 + 50, cfg.size)
+  _, y1 = q2x2.chip(xk, y1 + cfg.ch - 150, cfg.size)
+  _, y1 = qdc.chip(xk, y1 + cfg.ch, cfg.size)
+  _, y1 = qsk.chips(xk, y1 + cfg.ch, dev.arange(84, 96, 3))
+  _, y1 = q2x2.chip(xk, y1 + cfg.ch, cfg.size)
+  _, y1 = qdc.chip(xk, y1 + cfg.ch, cfg.size)
+  _, y1 = y2x2.chip(xk, y1 + 50 + cfg.ch, cfg.size)
+  _, y1 = tip.chip(xk, yk + cfg.size - 100, cfg.size, 0.36)
   
   dxf.conversion(fp)
 
@@ -115,7 +122,7 @@ if __name__ == '__main__':
   key.cross(0, 0)
   dxf.conversion(fp)
 
-  ok = 0
+  ok = 2
   
   if ok == 0 or ok == 1: mask_1(fp)
   if ok == 0 or ok == 2: mask_2(fp)

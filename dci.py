@@ -93,17 +93,18 @@ def device(x, y):
 
 def chip(x, y, lchip):
   
-  ch = 50
+  ch, angle = 50, 20
+
   y1 = y + ch
   y2 = y - ch
 
   idev = len(cfg.data)
 
-  x1, _ = sbend(x, y1, 20, ch - offset, -1, -1)
-  x1, _ = sbend(x, y2, 20, ch - offset, -1,  1)
+  x1, _ = sbend(x, y1, angle, ch - offset, -1, -1)
+  x1, _ = sbend(x, y2, angle, ch - offset, -1,  1)
   x1, y3, y4 = device(x1, y)
-  x2, _ = sbend(x1, y3, 20, ch - offset, 1,  1)
-  x2, _ = sbend(x1, y4, 20, ch - offset, 1, -1)
+  x2, _ = sbend(x1, y3, angle, ch - offset, 1,  1)
+  x2, _ = sbend(x1, y4, angle, ch - offset, 1, -1)
 
   x3, x4, ltip = dev.center(idev, x, x2, lchip)
 
