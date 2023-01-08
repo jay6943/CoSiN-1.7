@@ -11,9 +11,6 @@ nTE = 1.66636 # SiN 0.4T x 1.2W @ 1.55
 nTM = 1.58571 # SiN 0.4T x 1.2W @ 1.55
 refractive = (nTE + nTM) * 0.5
 
-xsize = cfg.size
-ysize = cfg.ch * 4
-
 def device(x, y):
 
   k = wavelength / refractive
@@ -81,17 +78,17 @@ def chip(x, y, lchip):
   dev.texts(t2, y, s, 0.2, 'rc')
   print(s, round(x6 - x5), round(x8 - x7))
   
-  return x + lchip, y + ysize
+  return x + lchip, y
 
 def chips(x, y, arange):
 
-  y = y + cfg.ch * 1.5
+  y = y - cfg.ch * 2.5
   
   var = cfg.phase
-  for cfg.phase in arange: _, y = chip(x, y, xsize)
+  for cfg.phase in arange: _, y = chip(x, y + cfg.ch * 4, cfg.size)
   cfg.phase = var
 
-  return x + xsize, y - (ysize + cfg.ch) * 0.5
+  return x + cfg.size, y + cfg.ch * 1.5
 
 if __name__ == '__main__':
 

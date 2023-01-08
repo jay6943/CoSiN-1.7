@@ -3,9 +3,6 @@ import dxf
 import dev
 import tip
 
-xsize = cfg.size
-ysize = 100
-
 def device(x, y, ltip, ltaper, sign):
   
   w = [cfg.wg, 0.8, 0.5, 0.1]
@@ -37,13 +34,15 @@ def chip(x, y, lchip, ltaper):
   dev.texts(t2, y - 50, s, 0.2, 'rc')
   print(s, round(x3 - x2), round(x5 - x4))
 
-  return x + lchip, y + ysize
+  return x + lchip, y
 
 def chips(x, y, arange):
   
-  for ltaper in arange: x1, y = chip(x, y, xsize, ltaper)
+  y = y - cfg.sch
 
-  return x1, y
+  for ltaper in arange: _, y = chip(x, y + cfg.sch, cfg.size, ltaper)
+
+  return x + cfg.size, y
 
 if __name__ == '__main__':
 

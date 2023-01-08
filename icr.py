@@ -11,9 +11,6 @@ import numpy as np
 
 yqpsk = 2400
 
-xsize = cfg.size
-ysize = 8000
-
 def tbend(x, y, dy, xsign):
 
   ysign = 1 if dy > 0 else -1
@@ -110,17 +107,19 @@ def chip(x, y, lchip):
 
 def chips(x, y):
 
-  chip(x, y, xsize)
+  chip(x, y, cfg.size)
 
-  fiber_pd(x, y + cfg.ch * 3.5 + yqpsk, xsize)
-  voa.chip(x, y - cfg.size * 0.5 + cfg.ch * 2, xsize)
-  pbs.chip(x, y + cfg.ch * 5 + yqpsk, xsize)
-  qsk.chip(x, y + 4500, xsize)
+  fiber_pd(x, y + cfg.ch * 3.5 + yqpsk, cfg.size)
+  voa.chip(x, y - cfg.size * 0.5 + cfg.ch * 2, cfg.size)
+  pbs.chip(x, y + cfg.ch * 5 + yqpsk, cfg.size)
+  qsk.chip(x, y + 4500, cfg.size)
 
-  dev.sline(x, y + ysize * 0.5, xsize)
-  dev.sline(x, y - ysize * 0.5, xsize)
+  ysize = 8000
+  
+  dev.sline(x, y + ysize * 0.5, cfg.size)
+  dev.sline(x, y - ysize * 0.5, cfg.size)
 
-  return x + xsize, y
+  return x + cfg.size, y
 
 if __name__ == '__main__':
 

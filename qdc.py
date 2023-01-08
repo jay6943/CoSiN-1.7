@@ -6,9 +6,6 @@ import tip
 import y1x2
 import numpy as np
 
-xsize = cfg.size
-ysize = cfg.ch * 4
-
 def device(x, y):
 
   y1 = y + cfg.ch * 0.5

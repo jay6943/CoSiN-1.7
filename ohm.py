@@ -4,9 +4,6 @@ import dev
 import tip
 import elr
 
-xsize = cfg.size
-ysize = 200
-
 def bends(x, y, radius, angle, rotate, xsign, ysign):
 
   core = elr.update(cfg.wg, radius, angle)
@@ -84,6 +81,8 @@ def device(x, y, radius, angle):
 
 def chip(x, y, lchip, radius, angle):
 
+  ch = cfg.sch * 0.5
+
   idev = len(cfg.data)
   x2, y2 = device(x, y, radius, angle)
   x5, x6, ltip = dev.center(idev, x, x2, lchip)
@@ -93,39 +92,34 @@ def chip(x, y, lchip, radius, angle):
   
   if angle > 3:
     r = str(radius) + 'r-' + str(angle)
-    dev.texts(t1, y - 50, r, 0.2, 'lc')
-    dev.texts(t2, y - 50, r, 0.2, 'rc')
+    dev.texts(t1, y - ch, r, 0.2, 'lc')
+    dev.texts(t2, y - ch, r, 0.2, 'rc')
     print(r, round(x5 - x))
   else:
     a = (angle * 2 - 1) * 8000 + 2000
     b = (angle - 1) * 2 * 3.14 * 125
     r = str(round(a + b))
-    dev.texts(t1, y  - 50, r, 0.2, 'lc')
-    dev.texts(t2, y2 - 50, r, 0.2, 'rc')
+    dev.texts(t1, y  - ch, r, 0.2, 'lc')
+    dev.texts(t2, y2 - ch, r, 0.2, 'rc')
     print(r, round(x6 - x5), round(x8 - x7))
 
   return x + lchip, y
 
 def chips(x, y):
 
-  ch = 100
+  _, y = chip(x, y, cfg.size, 0, 1)
+  _, y = chip(x, y + cfg.sch, cfg.size, 0, 2)
+  _, y = chip(x, y + cfg.sch * 4, cfg.size, 0, 3)
 
-  _, y = dev.sline(x, y, xsize)
-  _, y = dev.sline(x, y + ch, xsize)
-
-  _, y = chip(x, y + ch, xsize, 0, 1)
-  _, y = chip(x, y + ch, xsize, 0, 2)
-  _, y = chip(x, y + ch * 4, xsize, 0, 3)
-
-  _, y = chip(x, y + ch * 7, xsize, 50, 180)
-  _, y = chip(x, y + ch * 2, xsize, 75, 180)
-  _, y = chip(x, y + ch * 3, xsize, 100, 180)
+  _, y = chip(x, y + cfg.sch * 6, cfg.size, 50, 180)
+  _, y = chip(x, y + cfg.sch * 2, cfg.size, 75, 180)
+  _, y = chip(x, y + cfg.sch * 3, cfg.size, 100, 180)
   
-  _, y = chip(x, y + ch * 3, xsize, 125, 180)
-  _, y = chip(x, y + ch * 4, xsize, 125, 90)
-  _, y = chip(x, y + ch * 4, xsize, 125, 45)
+  _, y = chip(x, y + cfg.sch * 3, cfg.size, 125, 180)
+  _, y = chip(x, y + cfg.sch * 4, cfg.size, 125, 90)
+  _, y = chip(x, y + cfg.sch * 4, cfg.size, 125, 45)
 
-  return x + xsize, y
+  return x + cfg.size, y
 
 if __name__ == '__main__':
 

@@ -7,9 +7,6 @@ import tip
 
 yqpsk = cfg.ch * 2
 
-xsize = cfg.size
-ysize = cfg.ch * 8
-
 def chip(x, y, lchip):
 
   ch = cfg.ch * 0.5
@@ -47,14 +44,8 @@ def chip(x, y, lchip):
 
   return x + lchip, y
 
-def chips(x, y):
-
-  for i in range(4):
-    chip(x, y + i * ysize, xsize)
-    chip(x + xsize, y + i * ysize, xsize)
-
 if __name__ == '__main__':
 
-  chip(0, 0, xsize)
+  chip(0, 0, cfg.size)
 
   dev.saveas(cfg.work + '8ch')

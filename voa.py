@@ -4,9 +4,6 @@ import tip
 import pad
 import y1x2
 
-xsize = cfg.size
-ysize = cfg.ch * 4
-
 def arm(x, y, sign):
 
   x1, y = dev.sline(x, y, cfg.lvoa)
@@ -53,25 +50,24 @@ def chip(x, y, lchip):
   dev.texts(t2, y - ch, s, 0.2, 'rc')
   print(s, round(x6 - x5), round(x8 - x7))
 
-  return x + lchip, y + ysize
+  return x + lchip, y
 
 def chips(x, y, arange):
 
   var = cfg.lvoa
 
-  ltip = 1700
-  x1 = x + ltip
-
-  tip.fiber(x1, y, ltip, -1)
-
+  x2 = x
+  idev = len(cfg.data)
   for cfg.lvoa in arange:
-    x2, _ = device(x1, y)
+    x1, _ = device(x2, y)
     dev.texts((x2 + x1) * 0.5, y, str(int(cfg.lvoa)), 1, 'cc')
-    x1, y = dev.sline(x2, y, 600)
+    x2, y = dev.sline(x1, y, 600)
+  x3, x4, ltip = dev.center(idev, x, x2, cfg.size)
 
-  x1, _ = tip.fiber(x1, y, xsize - x1 + x, 1)
+  x5, _ = tip.fiber(x3, y, ltip, -1)
+  x6, _ = tip.fiber(x4, y, ltip, 1)
 
-  print('VOA', round(x1 - x))
+  print('VOA', round(x4 - 3), round(x6 - x5))
 
   cfg.lvoa = var
 
@@ -79,7 +75,7 @@ def chips(x, y, arange):
 
 if __name__ == '__main__':
 
-  # chip(0, 0, xsize)
+  # chip(0, 0, 2000)
   
   chips(0, 0, dev.arange(200, 500, 100))
 

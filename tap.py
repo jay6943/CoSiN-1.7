@@ -4,9 +4,6 @@ import dev
 import dci
 import tip
 
-xsize = cfg.size
-ysize = 200
-
 def units(x, y, xsign):
 
   x1, y1 = x, y - cfg.tapping
@@ -43,7 +40,8 @@ def device(x, y):
 
 def chip(x, y, lchip):
   
-  ch = 50
+  ch = cfg.sch * 0.5
+
   y1 = y + ch
   y2 = y - ch
   y3 = y1 + cfg.spacing - cfg.tapping
@@ -76,15 +74,17 @@ def chip(x, y, lchip):
   dev.texts(t2, y, s, 0.2, 'rc')
   print(s, round(x6 - x5), round(x8 - x7))
 
-  return x + lchip, y + ysize
+  return x + lchip, y
 
 def chips(x, y, arange):
 
+  y = y - cfg.sch * 1.5
+
   var = cfg.tapping
-  for cfg.tapping in arange: _, y = chip(x, y, xsize)
+  for cfg.tapping in arange: _, y = chip(x, y + cfg.sch * 2, cfg.size)
   cfg.tapping = var
 
-  return x + xsize, y
+  return x + cfg.size, y + cfg.sch * 0.5
 
 if __name__ == '__main__':
 

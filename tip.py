@@ -61,11 +61,9 @@ def chip(x, y, lchip, wtip):
 
 def chips(x, y, arange):
 
-  ch = 100
-
-  y = y - ch
+  y = y - cfg.sch
   
-  for w in arange: _, y = chip(x, y + ch, cfg.size, w)
+  for w in arange: _, y = chip(x, y + cfg.sch, cfg.size, w)
 
   return x + cfg.size, y
 

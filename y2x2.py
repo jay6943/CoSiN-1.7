@@ -3,9 +3,6 @@ import dxf
 import dev
 import tip
 
-xsize = cfg.size
-ysize = 200
-
 def taper(x, y, wstart, wstop):
 
   x1, _ = dxf.taper('core', x,  y, cfg.ltpr, wstart, cfg.wt)
@@ -58,15 +55,17 @@ def chip(x, y, lchip):
   dev.texts(t2, y, s, 0.2, 'rc')
   print(s, round(x6 - x5), round(x8 - x7))
 
-  return x + lchip, y + ysize
+  return x + lchip, y
 
 def chips(x, y, arange):
 
+  y = y - cfg.sch * 1.5
+
   var = cfg.l2x2
-  for cfg.l2x2 in arange: _, y = chip(x, y, xsize)
+  for cfg.l2x2 in arange: _, y = chip(x, y + cfg.sch * 2, cfg.size)
   cfg.l2x2 = var
 
-  return x + xsize, y
+  return x + cfg.size, y + cfg.sch * 0.5
 
 if __name__ == '__main__':
 

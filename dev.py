@@ -91,7 +91,7 @@ def cover(x, y, pattern):
       for i in xp[:-1] + w * 0.5:
         dxf.crect('recs', i, j, i+d, j+d)
   
-  if pattern == 'block':
+  if pattern == 'fill':
     dxf.crect('recs', x, y, x + cfg.size, y + cfg.size)
 
 def texts(x, y, title, scale, align):

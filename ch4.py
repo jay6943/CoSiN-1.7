@@ -9,9 +9,6 @@ import tap
 import elr
 import numpy as np
 
-xsize = 4000
-ysize = 5000
-
 yqpsk = 1800
 xback = 1500
 yhigh = 900
@@ -90,7 +87,7 @@ def chip(x, y, lchip):
   
   x2 = x * 2 - x1
 
-  x3, _, _ = tap.device(x2, y1, 0.39, 50)
+  x3, _, _ = tap.device(x2, y1)
   x3, _ = dev.sline(x2, y2, x3 - x2)
 
   x4, y3 = dev.sbend(x3, y1, 90,  300)
@@ -133,6 +130,6 @@ def chip(x, y, lchip):
 
 if __name__ == '__main__':
 
-  chip(0, 0, xsize)
+  chip(0, 0, 4000)
 
   dev.saveas(cfg.work + '4ch')

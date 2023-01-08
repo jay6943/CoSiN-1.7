@@ -4,10 +4,6 @@ import dev
 import dci
 import elr
 import tip
-import numpy as np
-
-xsize = cfg.size
-ysize = 200
 
 def sbend(x, y, dy):
 
@@ -65,7 +61,7 @@ def device(x, y):
 
 def chip(x, y, lchip):
   
-  ch, angle = 50, 20
+  angle, ch = 20, cfg.sch * 0.5
 
   y1 = y + ch
   y2 = y - ch
@@ -85,25 +81,27 @@ def chip(x, y, lchip):
   x8, t2 = tip.fiber(x6, y1, ltip, 1)
   x8, t2 = tip.fiber(x6, y2, ltip, 1)
 
-  s = 'pbs-dc-' + str(round(cfg.spacing, 2))
+  s = 'pbs-dc-' + str(round(cfg.lpbs, 2))
   dev.texts(t1, y, s, 0.2, 'lc')
   dev.texts(t2, y, s, 0.2, 'rc')
   print(s, round(x6 - x5), round(x8 - x7))
 
-  return x + lchip, y + ysize
+  return x + lchip, y
 
 def chips(x, y, arange):
 
-  var = cfg.spacing
-  for cfg.spacing in arange: _, y = chip(x, y, xsize)
-  cfg.spacing = var
+  y = y - cfg.sch * 1.5
 
-  return x + xsize, y
+  var = cfg.lpbs
+  for cfg.lpbs in arange: _, y = chip(x, y + cfg.sch * 2, cfg.size)
+  cfg.lpbs = var
+
+  return x + cfg.size, y - cfg.sch * 0.5
 
 if __name__ == '__main__':
 
-  chip(0, 0, 2500)
+  # chip(0, 0, 2500)
 
-  # chips(0, 0, dev.arange(18, 20, 1))
+  chips(0, 0, dev.arange(10, 20, 1))
 
   dev.saveas(cfg.work + 'pdc')
