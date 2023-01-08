@@ -56,15 +56,15 @@ def mask_2(fp):
   cfg.layer['edge'] = 2
   cfg.layer['recs'] = 2
   
-  _, y1 = tip.chip(xk, yk + cfg.yh * 2, cfg.size, 0.36)
-  _, y1 = dci.chip(xk, y1 + cfg.yh + cfg.yh * 2, cfg.size)
-  _, y1 = q2x2.chip(xk, y1 + cfg.yh + cfg.ch, cfg.size)
+  _, y1 = tip.chip(xk, yk + cfg.sch, cfg.size, 0.36)
+  _, y1 = dci.chip(xk, y1 + cfg.sch * 1.5, cfg.size)
+  _, y1 = q2x2.chip(xk, y1 + cfg.sch * 0.5 + cfg.ch, cfg.size)
   _, y1 = qdc.chip(xk, y1 + cfg.ch, cfg.size)
   _, y1 = qsk.chips(xk, y1 + cfg.ch, dev.arange(84, 96, 3))
   _, y1 = q2x2.chip(xk, y1 + cfg.ch, cfg.size)
   _, y1 = qdc.chip(xk, y1 + cfg.ch, cfg.size)
-  _, y1 = y2x2.chip(xk, y1 + cfg.yh + cfg.ch, cfg.size)
-  _, y1 = tip.chip(xk, yk + cfg.size - cfg.yh * 2, cfg.size, 0.36)
+  _, y1 = y2x2.chip(xk, y1 + cfg.sch * 0.5 + cfg.ch, cfg.size)
+  _, y1 = tip.chip(xk, yk + cfg.size - cfg.sch, cfg.size, 0.36)
   
   dxf.conversion(fp)
 
@@ -80,7 +80,9 @@ def mask_3(fp):
   cfg.layer['sio2'] = 0
   cfg.layer['recs'] = 3
 
-  pbs.chips(xk, yk + cfg.ch, dev.arange(40, 80, 2))
+  _, y1 = tip.chip(xk, yk + cfg.sch, cfg.size, 0.36)
+  _, y1 = pbs.chips(xk, y1 + cfg.sch, dev.arange(40, 80, 2))
+  _, y1 = tip.chip(xk, yk + cfg.size - cfg.sch, cfg.size, 0.36)
 
   dxf.conversion(fp)
 
@@ -122,7 +124,7 @@ if __name__ == '__main__':
   key.cross(0, 0)
   dxf.conversion(fp)
 
-  ok = 2
+  ok = 3
   
   if ok == 0 or ok == 1: mask_1(fp)
   if ok == 0 or ok == 2: mask_2(fp)

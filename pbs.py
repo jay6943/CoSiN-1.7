@@ -5,9 +5,6 @@ import cir
 import tip
 import elr
 
-xsize = cfg.size
-ysize = 200
-
 def sbend(x, y, dy):
 
   radius, angle = 100, 10
@@ -106,7 +103,7 @@ def mzi(x, y, inport, outport):
 
 def device(x, y):
 
-  ch = 50
+  ch = cfg.sch * 0.5
 
   x3, y31, y32 = mzi(x, y + cfg.d2x2, -1, 0)
   x4, y41 = sbend(x3, y31,  ch)
@@ -118,7 +115,7 @@ def device(x, y):
 
 def chip(x, y, lchip):
 
-  ch = 50
+  ch = cfg.sch * 0.5
 
   idev = len(cfg.data)
   x1, _, _ = device(x, y)
@@ -134,15 +131,17 @@ def chip(x, y, lchip):
   dev.texts(t2, y, s, 0.2, 'rc')
   print(s, round(x6 - x5), round(x8 - x7))
 
-  return x + lchip, y + ysize
+  return x + lchip, y
 
 def chips(x, y, arange):
 
+  y = y - cfg.sch * 1.5
+
   var = cfg.lpbs
-  for cfg.lpbs in arange: _, y = chip(x, y, xsize)
+  for cfg.lpbs in arange: _, y = chip(x, y + cfg.sch * 2, cfg.size)
   cfg.lpbs = var
 
-  return x + xsize, y - cfg.ch * 1.5
+  return x + cfg.size, y - cfg.sch * 0.5
 
 if __name__ == '__main__':
 

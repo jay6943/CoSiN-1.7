@@ -90,18 +90,18 @@ def device(x, y):
 
 def chip(x, y, lchip):
   
-  angle = 20
+  angle, ch = 20, cfg.sch * 0.5
   
-  y1 = y + cfg.yh
-  y2 = y - cfg.yh
+  y1 = y + ch
+  y2 = y - ch
 
   idev = len(cfg.data)
 
-  x1, _ = sbend(x, y1, angle, cfg.yh - offset, -1, -1)
-  x1, _ = sbend(x, y2, angle, cfg.yh - offset, -1,  1)
+  x1, _ = sbend(x, y1, angle, ch - offset, -1, -1)
+  x1, _ = sbend(x, y2, angle, ch - offset, -1,  1)
   x1, y3, y4 = device(x1, y)
-  x2, _ = sbend(x1, y3, angle, cfg.yh - offset, 1,  1)
-  x2, _ = sbend(x1, y4, angle, cfg.yh - offset, 1, -1)
+  x2, _ = sbend(x1, y3, angle, ch - offset, 1,  1)
+  x2, _ = sbend(x1, y4, angle, ch - offset, 1, -1)
 
   x3, x4, ltip = dev.center(idev, x, x2, lchip)
 
@@ -119,13 +119,13 @@ def chip(x, y, lchip):
 
 def chips(x, y, arange):
 
-  y = y - cfg.yh * 3
+  y = y - cfg.sch * 1.5
 
   var = cfg.spacing
-  for cfg.spacing in arange: _, y = chip(x, y + cfg.yh * 4, cfg.size)
+  for cfg.spacing in arange: _, y = chip(x, y + cfg.sch * 2, cfg.size)
   cfg.spacing = var
 
-  return x + cfg.size, y + cfg.yh
+  return x + cfg.size, y + cfg.sch * 0.5
 
 if __name__ == '__main__':
 
