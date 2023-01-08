@@ -11,7 +11,6 @@ radius = 50
 ltaper = 100
 ybends = elr.update(wg, radius, tilted)
 offset = ltaper * np.sin(tilted * np.pi / 180) + cfg.spacing + ybends['dy']
-spacing = 50
 
 def bends(x, y, angle, rotate, xsign, ysign):
 
@@ -93,16 +92,16 @@ def chip(x, y, lchip):
   
   angle = 20
   
-  y1 = y + spacing
-  y2 = y - spacing
+  y1 = y + cfg.yh
+  y2 = y - cfg.yh
 
   idev = len(cfg.data)
 
-  x1, _ = sbend(x, y1, angle, spacing - offset, -1, -1)
-  x1, _ = sbend(x, y2, angle, spacing - offset, -1,  1)
+  x1, _ = sbend(x, y1, angle, cfg.yh - offset, -1, -1)
+  x1, _ = sbend(x, y2, angle, cfg.yh - offset, -1,  1)
   x1, y3, y4 = device(x1, y)
-  x2, _ = sbend(x1, y3, angle, spacing - offset, 1,  1)
-  x2, _ = sbend(x1, y4, angle, spacing - offset, 1, -1)
+  x2, _ = sbend(x1, y3, angle, cfg.yh - offset, 1,  1)
+  x2, _ = sbend(x1, y4, angle, cfg.yh - offset, 1, -1)
 
   x3, x4, ltip = dev.center(idev, x, x2, lchip)
 
@@ -120,13 +119,13 @@ def chip(x, y, lchip):
 
 def chips(x, y, arange):
 
-  y = y - spacing * 3
+  y = y - cfg.yh * 3
 
   var = cfg.spacing
-  for cfg.spacing in arange: _, y = chip(x, y + spacing * 4, cfg.size)
+  for cfg.spacing in arange: _, y = chip(x, y + cfg.yh * 4, cfg.size)
   cfg.spacing = var
 
-  return x + cfg.size, y + spacing
+  return x + cfg.size, y + cfg.yh
 
 if __name__ == '__main__':
 

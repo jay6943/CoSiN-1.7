@@ -4,9 +4,6 @@ import dev
 
 polished = 200
 
-xsize = cfg.size
-ysize = 100
-
 def device(x, y, ltip, wtip, sign):
   
   w = [cfg.wg, 0.8, 0.5, wtip]
@@ -60,13 +57,17 @@ def chip(x, y, lchip, wtip):
   dev.texts(t2, y - 50, s, 0.2, 'rc')
   print(s, round(x3 - x2), round(x5 - x4))
 
-  return x2, y + ysize
+  return x2, y
 
 def chips(x, y, arange):
-  
-  for w in arange: x1, y = chip(x, y, xsize, w)
 
-  return x1, y
+  ch = 100
+
+  y = y - ch
+  
+  for w in arange: _, y = chip(x, y + ch, cfg.size, w)
+
+  return x + cfg.size, y
 
 if __name__ == '__main__':
 

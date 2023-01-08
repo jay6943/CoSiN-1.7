@@ -12,6 +12,7 @@ eg = 30
 sg = 6
 wt = 0.8
 ch = 250
+yh = 50
 
 radius = 100
 

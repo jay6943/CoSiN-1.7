@@ -7,9 +7,6 @@ import y1x2
 import y2x2
 import numpy as np
 
-xsize = cfg.size
-ysize = cfg.ch * 4
-
 def shifter(x, y):
 
   y1 = y + cfg.d2x2
