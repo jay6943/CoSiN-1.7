@@ -42,7 +42,7 @@ def mask_1(fp):
   _, y1 = y2x2.chips(xk, y1 + cfg.sch * 1.5, dev.arange(49, 53, 0.5))
   _, y1 = dci.chips(xk, y1 + cfg.sch, dev.arange(0.86, 0.92, 0.01))
   _, y1 = tip.chips(xk, y1 + cfg.sch, dev.arange(0.2, 0.4, 0.02))
-  _, y1 = ssc.chips(xk, y1, dev.arange(600, 900, 50))
+  _, y1 = ssc.chips(xk, y1 + cfg.sch, dev.arange(500, 900, 50))
   _, y1 = tap.chips(xk, y1 + cfg.sch, dev.arange(1.16, 1.46, 0.1))
   _, y1 = tip.chip(xk, yk + cfg.size - cfg.sch, cfg.size, 0.36)
 
@@ -83,8 +83,8 @@ def mask_3(fp):
   cfg.layer['recs'] = 3
 
   _, y1 = tip.chip(xk, yk + cfg.sch, cfg.size, 0.36)
-  _, y1 = pbs.chips(xk, y1 + cfg.sch, dev.arange(40, 80, 2))
-  _, y1 = pdc.chips(xk, y1 + cfg.sch * 2, dev.arange(10, 20, 1))
+  _, y1 = pbs.chips(xk, y1 + cfg.sch, dev.arange(1, 30, 1))
+  _, y1 = pdc.chips(xk, y1 + cfg.sch * 2, dev.arange(1, 36, 2))
   _, y1 = tip.chip(xk, yk + cfg.size - cfg.sch, cfg.size, 0.36)
 
   dxf.conversion(fp)
@@ -127,7 +127,7 @@ if __name__ == '__main__':
   key.cross(0, 0)
   dxf.conversion(fp)
 
-  ok = 0
+  ok = 3
   
   if ok == 0 or ok == 1: mask_1(fp)
   if ok == 0 or ok == 2: mask_2(fp)
