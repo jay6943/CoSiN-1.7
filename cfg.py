@@ -46,6 +46,5 @@ layer['gold'] = 2
 layer['keys'] = 2
 layer['bars'] = 2
 layer['hole'] = 2
-layer['akey'] = 2
 layer['recs'] = 2
 layer['text'] = 2

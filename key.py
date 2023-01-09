@@ -14,15 +14,15 @@ def contact_align_key(x, y, scale):
   for i in [0, 1, 3, 4, 5]:
     l, w = 120 * scale, 28 * scale
     x1, y1 = x + (70 + 260 * i) * scale, y + 130 * scale
-    dxf.srect('akey', x1, y1, l, w)
-    dxf.srect('akey', x1 + 46 * scale, y1, w, l)
+    dxf.srect('edge', x1, y1, l, w)
+    dxf.srect('edge', x1 + 46 * scale, y1, w, l)
 
     l, d = 40 * scale, 80 * scale
     x2, y2 = x + 590 * scale, y + (690 - 260 * i) * scale
-    dxf.srect('akey', x2, y2, l, l)
-    dxf.srect('akey', x2 + d, y2, l, l)
-    dxf.srect('akey', x2, y2 - d, l, l)
-    dxf.srect('akey', x2 + d, y2 - d, l, l)
+    dxf.srect('edge', x2, y2, l, l)
+    dxf.srect('edge', x2 + d, y2, l, l)
+    dxf.srect('edge', x2, y2 - d, l, l)
+    dxf.srect('edge', x2 + d, y2 - d, l, l)
 
   return x, y
 

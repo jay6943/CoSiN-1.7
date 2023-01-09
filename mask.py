@@ -124,7 +124,7 @@ def mask_4_key(fp):
   key.frame(4, 1)
   dev.cover(key.xorg, key.yorg, 'fill')
 
-  cfg.layer['akey'] = 4
+  cfg.layer['edge'] = 4
   cfg.layer['recs'] = 4
 
   key.contact_align_keys(key.xorg, key.yorg)
