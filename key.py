@@ -6,6 +6,45 @@ wbar = 250
 wkey = 400
 lbar = cfg.mask - wbar
 lkey = cfg.mask - wbar * 2
+xorg = wbar + wkey
+yorg = wbar + wkey
+
+def contact_align_key(x, y, scale):
+
+  for i in [0, 1, 3, 4, 5]:
+    l, w = 120 * scale, 28 * scale
+    x1, y1 = x + (70 + 260 * i) * scale, y + 130 * scale
+    dxf.srect('akey', x1, y1, l, w)
+    dxf.srect('akey', x1 + 46 * scale, y1, w, l)
+
+    l, d = 40 * scale, 80 * scale
+    x2, y2 = x + 590 * scale, y + (690 - 260 * i) * scale
+    dxf.srect('akey', x2, y2, l, l)
+    dxf.srect('akey', x2 + d, y2, l, l)
+    dxf.srect('akey', x2, y2 - d, l, l)
+    dxf.srect('akey', x2 + d, y2 - d, l, l)
+
+  return x, y
+
+def contact_align_keys(x, y):
+
+  xo = x + cfg.size * 0.5
+  yo = y + cfg.size * 0.5
+
+  for i in range(4):
+
+    idev = len(cfg.data)
+    
+    xt, rt = xo + 1300, 1
+    
+    for _ in range(4):
+      contact_align_key(xt, yo, rt)
+      xt = xt + 1820 * rt
+      rt = rt * 0.5
+    
+    dxf.move(idev, xo, yo, 0, 0, 0, 0, 90 * i)
+
+  print('Contact Align Keys')
 
 def cross(x, y):
 
