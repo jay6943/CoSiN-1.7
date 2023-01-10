@@ -83,8 +83,8 @@ def mask_3(fp):
   cfg.layer['recs'] = 3
 
   _, y1 = tip.chip(xo, yo + cfg.sch, cfg.size, 0.36)
-  _, y1 = pbs.chips(xo, y1 + cfg.sch, dev.arange(1, 30, 1))
-  _, y1 = pdc.chips(xo, y1 + cfg.sch * 2, dev.arange(1, 36, 2))
+  _, y1 = pbs.chips(xo, y1 + cfg.sch, dev.arange(10, 30, 1))
+  _, y1 = pdc.chips(xo, y1 + cfg.sch * 2, dev.arange(10, 30, 1))
   _, y1 = tip.chip(xo, yo + cfg.size - cfg.sch, cfg.size, 0.36)
 
   dxf.conversion(fp)
