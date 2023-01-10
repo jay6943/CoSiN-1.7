@@ -176,7 +176,7 @@ import dci
 
 def pdc_in(x, y, dy):
 
-  wdc = 0.6
+  wdc = 0.8
 
   df = elr.update(dci.wg, dci.radius, dci.tilted)
 
@@ -233,5 +233,5 @@ if __name__ == '__main__':
   # angle_90x2('D:/ansys/Euler/90x2')
   # sbend('D:/ansys/tap/')
   # dc('D:/ansys/tap/')
-  pbs_mzi('D:/ansys/PBS/')
-  # pdc_mzi('D:/ansys/PBS/')
+  # pbs_mzi('D:/ansys/PBS/')
+  pdc_mzi('D:/ansys/PBS/')

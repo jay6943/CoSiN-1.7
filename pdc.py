@@ -7,17 +7,18 @@ import tip
 
 def sbend(x, y, dy):
 
-  core = elr.update(dci.wg, dci.radius, dci.tilted)
-  sio2 = elr.update(cfg.sg, dci.radius, dci.tilted)
+  angle = 4
+  core = elr.update(dci.wg, dci.radius, angle)
+  sio2 = elr.update(cfg.sg, dci.radius, angle)
 
-  x1, y1 = dxf.sbend('core', x, y, core, dci.tilted, dy)
-  x1, y1 = dxf.sbend('sio2', x, y, sio2, dci.tilted, dy)
+  x1, y1 = dxf.sbend('core', x, y, core, angle, dy)
+  x1, y1 = dxf.sbend('sio2', x, y, sio2, angle, dy)
 
   return x1, y1
 
 def arm(x, y, ch, sign):
 
-  wdc, ltaper = 0.6, 5
+  wdc, ltaper = 0.8, 5
 
   x1, y1 = sbend(x, y + cfg.spacing * sign, ch * sign)
   x2, y2 = dxf.taper('core', x1, y1, ltaper, dci.wg, wdc)
@@ -30,15 +31,15 @@ def arm(x, y, ch, sign):
 
 def mzi(x, y, ch, sign):
 
-  dy = 1
+  ch = 1.5
 
   x1, y1 = arm(x, y, ch, sign)
   x2, y2 = sbend(x1, y1,  ch * 2 * sign)
   x3, y4 = arm(x2, y2 + cfg.spacing * sign, ch,  1)
   x3, y5 = arm(x2, y2 + cfg.spacing * sign, ch, -1)
-  x4, y6 = sbend(x3, y4,  dy)
-  x5, y7 = sbend(x3, y5, -dy)
-  x5, y7 = sbend(x4, y6, -cfg.spacing - dy)
+  x4, y6 = sbend(x3, y4,  ch)
+  x5, y7 = sbend(x3, y5, -ch)
+  x5, y7 = sbend(x4, y6, -cfg.spacing - ch)
 
   sbend(x1, y2 + (cfg.spacing * 2 + ch * 2) * sign, -ch * 2 * sign)
 
@@ -46,7 +47,7 @@ def mzi(x, y, ch, sign):
 
 def device(x, y):
 
-  ch = 1
+  ch = 1.5
 
   x2, y1 = dci.dc(x, y, -1,  1)
   x2, y2 = dci.dc(x, y, -1, -1)
