@@ -117,7 +117,7 @@ def mask_4_key(fp):
 
 if __name__ == '__main__':
 
-  cfg.draft = 'draft' # draft or mask
+  cfg.draft = 'mask' # draft or mask
 
   fp = dxf.start(cfg.work + cfg.draft)
   key.cross(0, 0)

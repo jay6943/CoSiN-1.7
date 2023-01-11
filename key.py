@@ -190,6 +190,8 @@ def contact_align_keys(x, y, sign):
       rt = rt * 0.5
     
     dxf.move(idev, xo, yo, 0, 0, 0, 0, 90 * i)
+  
+  dxf.srect('edge', x, yo, cfg.size, 5)
 
   print('Contact Align Keys')
 
