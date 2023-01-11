@@ -149,9 +149,7 @@ def frame(quadrant, align):
   key2('keys', xp, yp, quadrant)
   dxf.move(idev, xp, yp, 0, 0, 400, 0, 90)
 
-def contact_align_key(x, y, scale, sign):
-
-  layer = 'edge' if sign > 0 else 'core'
+def contact_align_key(layer, x, y, scale, sign):
 
   for i in [0, 1, 3, 4, 5]:
     x1, y1 = x + (70 + 260 * i) * scale, y + 130 * scale
@@ -173,7 +171,7 @@ def contact_align_key(x, y, scale, sign):
 
   return x, y
 
-def contact_align_keys(x, y, sign):
+def contact_align_keys(layer, x, y, sign):
 
   xo = x + cfg.size * 0.5
   yo = y + cfg.size * 0.5
@@ -185,13 +183,13 @@ def contact_align_keys(x, y, sign):
     xt, rt = xo + 1300, 1
     
     for _ in range(4):
-      contact_align_key(xt, yo, rt, sign)
+      contact_align_key(layer, xt, yo, rt, sign)
       xt = xt + 1820 * rt
       rt = rt * 0.5
     
     dxf.move(idev, xo, yo, 0, 0, 0, 0, 90 * i)
   
-  dxf.srect('edge', x, yo, cfg.size, 5)
+  dxf.srect(layer, x, yo, cfg.size, 5)
 
   print('Contact Align Keys')
 
@@ -209,7 +207,7 @@ if __name__ == '__main__':
   cfg.layer['core'] = 4
   cfg.layer['edge'] = 4
 
-  contact_align_keys(0, 0,  1)
-  contact_align_keys(0, 0, -1)
+  contact_align_keys('core', 0, 0,  1)
+  contact_align_keys('hole', 0, 0, -1)
 
   dev.saveas(cfg.work + 'key')

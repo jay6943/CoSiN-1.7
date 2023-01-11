@@ -106,12 +106,11 @@ def mask_4_icr(fp):
 def mask_4_key(fp):
 
   key.frame(4, 1)
-  dev.cover(key.xorg, key.yorg, 'fill')
+  dev.cover(key.xorg, key.yorg, 'none')
 
-  cfg.layer['edge'] = 4
-  cfg.layer['recs'] = 4
+  cfg.layer['core'] = 4
 
-  key.contact_align_keys(key.xorg, key.yorg, 1)
+  key.contact_align_keys('core', key.xorg, key.yorg, 1)
 
   dxf.conversion(fp)
 
