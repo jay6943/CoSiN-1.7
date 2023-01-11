@@ -102,7 +102,7 @@ def save(fp, wg, radius, angle, m):
 def update(wg, radius, angle):
 
   m = 100 if cfg.draft != 'mask' else 1000
-  m = 100 if wg > cfg.wg else m
+  m = 100 if wg > cfg.wr else m
   
   w = str(round(wg, 4)) + '_'
   r = str(round(radius, 4)) + '_'
