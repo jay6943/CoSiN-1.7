@@ -48,3 +48,4 @@ layer['bars'] = 2
 layer['hole'] = 2
 layer['recs'] = 2
 layer['text'] = 2
+layer['cuts'] = 2
