@@ -6,7 +6,7 @@ import y1x2
 
 def arm(x, y, sign):
 
-  x1, y = dev.sline(x, y, cfg.lvoa)
+  x1, y = dev.srect(x, y, cfg.lvoa, cfg.wr)
   
   pad.electrode('gold', x, y, cfg.lvoa, cfg.wg + 2, sign)
   pad.electrode('edge', x, y, cfg.lvoa, cfg.eg, sign)

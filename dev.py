@@ -6,8 +6,6 @@ import numpy as np
 
 def srect(x, y, length, width):
 
-  wg = 0 if width < cfg.wtpr else width
-
   x1, y1 = dxf.srect('edge', x, y, length, cfg.eg)
   x1, y1 = dxf.srect('core', x, y, length, width)
   x1, y1 = dxf.srect('sio2', x, y, length, cfg.sg)
@@ -34,10 +32,10 @@ def tline(x, y, length):
 
   return x1 - w, y1
 
-def tilts(x, y, length, angle):
+def tilts(x, y, length, wg, angle):
 
   x1, y1 = dxf.tilts('edge', x, y, length, cfg.eg, angle)
-  x1, y1 = dxf.tilts('core', x, y, length, cfg.wg, angle)
+  x1, y1 = dxf.tilts('core', x, y, length, wg, angle)
   x1, y1 = dxf.tilts('sio2', x, y, length, cfg.sg, angle)
 
   return x1, y1
@@ -52,7 +50,7 @@ def taper(x, y, length, wstart, wstop):
 
 def bends(x, y, angle, rotate, xsign, ysign):
 
-  core = elr.update(cfg.wg, cfg.radius, angle)
+  core = elr.update(cfg.wr, cfg.radius, angle)
   edge = elr.update(cfg.eg, cfg.radius, angle)
   sio2 = elr.update(cfg.sg, cfg.radius, angle)
 
@@ -64,7 +62,7 @@ def bends(x, y, angle, rotate, xsign, ysign):
 
 def sbend(x, y, angle, dy):
 
-  core = elr.update(cfg.wg, cfg.radius, angle)
+  core = elr.update(cfg.wr, cfg.radius, angle)
   edge = elr.update(cfg.eg, cfg.radius, angle)
   sio2 = elr.update(cfg.sg, cfg.radius, angle)
 

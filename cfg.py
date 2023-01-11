@@ -7,10 +7,10 @@ draft = 'draft' # draft: 100, mask: 1000
 
 phase = 90
 
-wg = 1.2
+wg = 0.8
 eg = 30
 sg = 6
-wt = 0.8
+wr = 1.2
 ch = 250
 sch = 100
 
@@ -20,10 +20,10 @@ w1x2 = 5.6
 l1x2 = 17
 d1x2 = 1.46
 w2x2 = 8.4
-l2x2 = 51.5
+l2x2 = 50
 d2x2 = 1.46
 lpbs = 10
-wpbs = 0.4
+wpbs = 1.85
 ltpr = 5
 wtpr = 2
 targ = 58

@@ -5,9 +5,9 @@ import tip
 
 def taper(x, y, wstart, wstop):
 
-  x1, _ = dxf.taper('core', x,  y, cfg.ltpr, wstart, cfg.wt)
-  x2, _ = dxf.srect('core', x1, y, 50 - cfg.ltpr * 2, cfg.wt)
-  x3, _ = dxf.taper('core', x2, y, cfg.ltpr, cfg.wt, wstop)
+  x1, _ = dxf.taper('core', x,  y, cfg.ltpr, wstart, cfg.wg)
+  x2, _ = dxf.srect('core', x1, y, 50 - cfg.ltpr * 2, cfg.wg)
+  x3, _ = dxf.taper('core', x2, y, cfg.ltpr, cfg.wg, wstop)
 
   return x3, y
 
@@ -16,11 +16,11 @@ def device(x, y):
   y1 = y + cfg.d2x2
   y2 = y - cfg.d2x2
 
-  x1, _ = taper(x, y1, cfg.wg, cfg.wtpr)
-  x1, _ = taper(x, y2, cfg.wg, cfg.wtpr)
+  x1, _ = taper(x, y1, cfg.wr, cfg.wtpr)
+  x1, _ = taper(x, y2, cfg.wr, cfg.wtpr)
   x2, _ = dxf.srect('core', x1, y, cfg.l2x2, cfg.w2x2)
-  x3, _ = taper(x2, y1, cfg.wtpr, cfg.wg)
-  x3, _ = taper(x2, y2, cfg.wtpr, cfg.wg)
+  x3, _ = taper(x2, y1, cfg.wtpr, cfg.wr)
+  x3, _ = taper(x2, y2, cfg.wtpr, cfg.wr)
 
   dxf.srect('edge', x, y, x3 - x, cfg.w2x2 + cfg.eg)
   dxf.srect('sio2', x, y, x3 - x, cfg.w2x2 + cfg.sg)

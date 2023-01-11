@@ -1,10 +1,23 @@
 import cfg
 import dxf
 import dev
+import elr
 import dci
 import tip
 import y1x2
 import numpy as np
+
+def sbend(x, y, angle, dy):
+
+  core = elr.update(cfg.wg, cfg.radius, angle)
+  edge = elr.update(cfg.eg, cfg.radius, angle)
+  sio2 = elr.update(cfg.sg, cfg.radius, angle)
+
+  x1, y1 = dxf.sbend('edge', x, y, edge, angle, dy)
+  x1, y1 = dxf.sbend('core', x, y, core, angle, dy)
+  x1, y1 = dxf.sbend('sio2', x, y, sio2, angle, dy)
+
+  return x1, y1
 
 def device(x, y):
 
@@ -13,7 +26,7 @@ def device(x, y):
 
   dy = 10
 
-  x1, y3 = dev.sbend(x, y1, 9, dy)
+  x1, y3 = sbend(x, y1, 9, dy)
   x1, _ = dci.sbend(x1, y3, 4, dy - dci.offset, -1, -1)
   x1, y11, y12 = dci.device(x1, y1)
 

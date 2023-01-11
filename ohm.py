@@ -6,7 +6,7 @@ import elr
 
 def bends(x, y, radius, angle, rotate, xsign, ysign):
 
-  core = elr.update(cfg.wg, radius, angle)
+  core = elr.update(cfg.wr, radius, angle)
   edge = elr.update(cfg.eg, radius, angle)
   sio2 = elr.update(cfg.sg, radius, angle)
 
@@ -23,59 +23,59 @@ def device(x, y, radius, angle):
   if angle == 45:
     
     for _ in range(10):
-      x1, y1 = dev.sline(x, y, l)
+      x1, y1 = dev.srect(x, y, l, cfg.wr)
       x2, y2 = dev.sbend(x1, y1, 45, cfg.ch * 0.5)
-      x3, y3 = dev.sline(x2, y2, l * 2)
+      x3, y3 = dev.srect(x2, y2, l * 2, cfg.wr)
       x4, y4 = dev.sbend(x3, y3, 45, -cfg.ch * 0.5)
-      x, y = dev.sline(x4, y4, l)
+      x, y = dev.srect(x4, y4, l, cfg.wr)
 
   if angle == 90:
 
     for _ in range(10):
-      x1, y1 = dev.sline(x, y, l)
+      x1, y1 = dev.srect(x, y, l, cfg.wr)
       x2, y2 = dev.sbend(x1, y1, 90, cfg.ch)
-      x3, y3 = dev.sline(x2, y2, l * 2)
+      x3, y3 = dev.srect(x2, y2, l * 2, cfg.wr)
       x4, y4 = dev.sbend(x3, y3, 90, -cfg.ch)
-      x, y = dev.sline(x4, y4, l)
+      x, y = dev.srect(x4, y4, l, cfg.wr)
 
   if angle == 180:
 
     l = 200
 
     for _ in range(10):
-      x1, y1 = dev.sline(x, y, l)
+      x1, y1 = dev.srect(x, y, l, cfg.wr)
       x2, y2 = bends(x1, y1, radius, 180, 0, 1, 1)
-      x3, y3 = dev.sline(x2, y2, -50)
+      x3, y3 = dev.srect(x2, y2, -50, cfg.wr)
       x4, y4 = bends(x3, y3, radius, 180, 180, 1, -1)
-      x5, y5 = dev.sline(x4, y4, l * 2)
+      x5, y5 = dev.srect(x4, y4, l * 2, cfg.wr)
       x6, y6 = bends(x5, y5, radius, 180, 0, 1, -1)
-      x7, y7 = dev.sline(x6, y6, -50)
+      x7, y7 = dev.srect(x6, y6, -50, cfg.wr)
       x8, y8 = bends(x7, y7, radius, 180, 180, 1, 1)
-      x, y = dev.sline(x8, y8, l)
+      x, y = dev.srect(x8, y8, l, cfg.wr)
 
   if angle == 1:
 
-    x, y = dev.sline(x, y, l)
+    x, y = dev.srect(x, y, 8000, cfg.wr)
 
   if angle == 2:
 
-    x1, y1 = dev.sline(x, y, 8000)
+    x1, y1 = dev.srect(x, y, 8000, cfg.wr)
     x2, y2 = dev.bends(x1, y1, 180, 0, 1, 1)
-    x3, y3 = dev.sline(x2, y2, -8000)
+    x3, y3 = dev.srect(x2, y2, -8000, cfg.wr)
     x4, y4 = dev.bends(x3, y3, 180, 0, -1, 1)
-    x , y  = dev.sline(x4, y4, 8000)
+    x , y  = dev.srect(x4, y4, 8000, cfg.wr)
 
   if angle == 3:
 
-    x1, y1 = dev.sline(x, y, 8000)
+    x1, y1 = dev.srect(x, y, 8000, cfg.wr)
     x2, y2 = dev.bends(x1, y1, 180, 0, 1, 1)
-    x3, y3 = dev.sline(x2, y2, -8000)
+    x3, y3 = dev.srect(x2, y2, -8000, cfg.wr)
     x4, y4 = dev.bends(x3, y3, 180, 0, -1, 1)
-    x5, y5 = dev.sline(x4, y4, 8000)
+    x5, y5 = dev.srect(x4, y4, 8000, cfg.wr)
     x6, y6 = dev.bends(x5, y5, 180, 0, 1, 1)
-    x7, y7 = dev.sline(x6, y6, -8000)
+    x7, y7 = dev.srect(x6, y6, -8000, cfg.wr)
     x8, y8 = dev.bends(x7, y7, 180, 0, -1, 1)
-    x, y = dev.sline(x8, y8, 8000)
+    x, y = dev.srect(x8, y8, 8000, cfg.wr)
 
   return x, y
 
@@ -84,8 +84,10 @@ def chip(x, y, lchip, radius, angle):
   ch = cfg.sch * 0.5
 
   idev = len(cfg.data)
-  x2, y2 = device(x, y, radius, angle)
-  x5, x6, ltip = dev.center(idev, x, x2, lchip)
+  x1, y1 = dev.taper(x, y, cfg.ltpr, cfg.wg, cfg.wr)
+  x2, y2 = device(x1, y1, radius, angle)
+  x4, y4 = dev.taper(x2, y2, cfg.ltpr, cfg.wr, cfg.wg)
+  x5, x6, ltip = dev.center(idev, x, x4, lchip)
 
   x7, t1 = tip.fiber(x5, y,  ltip, -1)
   x8, t2 = tip.fiber(x6, y2, ltip,  1)

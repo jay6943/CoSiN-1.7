@@ -1,21 +1,35 @@
 import cfg
 import dxf
 import dev
+import elr
 import pbs
 import tip
 import y1x2
 import y2x2
 import numpy as np
 
+def sbend(x, y, angle, dy):
+
+  core = elr.update(cfg.wg, cfg.radius, angle)
+  edge = elr.update(cfg.eg, cfg.radius, angle)
+  sio2 = elr.update(cfg.sg, cfg.radius, angle)
+
+  x1, y1 = dxf.sbend('edge', x, y, edge, angle, dy)
+  x1, y1 = dxf.sbend('core', x, y, core, angle, dy)
+  x1, y1 = dxf.sbend('sio2', x, y, sio2, angle, dy)
+
+  return x1, y1
+
 def shifter(x, y):
 
   y1 = y + cfg.d2x2
   y2 = y - cfg.d2x2
 
-  x1, _ = y2x2.taper(x, y1, cfg.wg, cfg.wtpr)
+  x1, _ = dxf.srect('core', x, y1, 50 - cfg.ltpr * 2, cfg.wg)
+  x1, _ = dxf.taper('core', x1, y1, cfg.ltpr, cfg.wg, cfg.wtpr)
   x2, _ = dxf.srect('core', x1, y, cfg.l2x2, cfg.w2x2)
-  x3, _ = y2x2.taper(x2, y1, cfg.wtpr, cfg.wg)
-  x3, _ = y2x2.taper(x2, y2, cfg.wtpr, cfg.wg)
+  x3, _ = y2x2.taper(x2, y1, cfg.wtpr, cfg.wr)
+  x3, _ = y2x2.taper(x2, y2, cfg.wtpr, cfg.wr)
 
   pbs.tail(x1 - 5, y2, 90, 90, 1, 1)
 
@@ -32,7 +46,7 @@ def device(x, y):
   ch1x2 = cfg.ch - cfg.d1x2
   ch2x2 = cfg.ch - cfg.d2x2
 
-  x1, _ = dev.sbend(x, y1, 2, cfg.d2x2)
+  x1, _ = sbend(x, y1, 2, cfg.d2x2)
   x2, _ = dev.sline(x, y2, x1 - x)
   x1, y11, y12 = shifter(x1, y1)
   x2, y21, y22 = y1x2.device(x2, y2, 1)
@@ -70,7 +84,10 @@ def device(x, y):
   x9, _ = dev.sbend(x8, y41, 45,  ch2x2)
   x9, _ = dev.sbend(x8, y42, 45, -ch2x2)
 
-  return x9, y
+  for i in [y + cfg.ch * (i - 1.5) for i in range(4)]:
+    x10, _ = dev.taper(x9, i, cfg.ltpr, cfg.wr, cfg.wg)
+
+  return x10, y
 
 def chip(x, y, lchip):
 

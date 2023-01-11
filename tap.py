@@ -4,18 +4,6 @@ import dev
 import dci
 import tip
 
-def units(x, y, xsign):
-
-  x1, y1 = x, y - cfg.tapping
-  x2, y2 = dci.bends(x1, y1, dci.tilted, 0, xsign, -1)
-
-  idev = len(cfg.data)
-  x3, y3 = dev.taper(x2, y2, 100 * xsign, dci.wg, cfg.wg)
-  x4, y4 = dev.bends(x3, y3, 90 - dci.tilted, 0, xsign, -1)
-  x5, y5 = dxf.move(idev, x2, y2, x4, y4, 0, 0, -dci.tilted * xsign)
-
-  return x5, y5
-
 def device(x, y):
 
   dy = dci.offset + cfg.tapping - cfg.spacing
@@ -23,17 +11,18 @@ def device(x, y):
   y1 = y + cfg.spacing - cfg.tapping
   y2 = y - dy
 
-  x1, _ = dev.taper(x, y, 100, cfg.wg, dci.wg)
+  x1, _ = dev.taper(x, y, dci.ltaper, cfg.wg, dci.wg)
   x2, _ = dev.srect(x1, y, 50, dci.wg)
   x3, _ = dev.srect(x2, y, 50, dci.wg)
-  x4, _ = dev.taper(x3, y, 100, dci.wg, cfg.wg)
+  x4, _ = dev.taper(x3, y, dci.ltaper, dci.wg, cfg.wg)
   x5, _ = dev.sline(x4, y, 200)
 
   x6, _ = dci.arm(x2, y1, -1, -1)
   x6, _ = dci.arm(x2, y1,  1, -1)
 
   idev = len(cfg.data)
-  x7, y7 = dev.bends(x6, y2, 90 - dci.tilted, 0, 1, -1)
+  x7, y7 = dev.taper(x6, y2, cfg.ltpr, cfg.wg, cfg.wr)
+  x7, y7 = dev.bends(x7, y7, 90 - dci.tilted, 0, 1, -1)
   x8, y8 = dxf.move(idev, x6, y2, x7, y7, 0, 0, -dci.tilted)
 
   return x5, x8, y8
@@ -54,12 +43,13 @@ def chip(x, y, lchip):
   x3, _ = dci.dc(x2, y3,  1, -1)
   x4, _ = dci.sbend(x3, y1 - dy, 20, ch * 2 - dy,  1, -1)
 
-  l = (x4 - x - 250) * 0.5
+  s = 50
+  l = (x4 - x - dci.ltaper * 2 - s) * 0.5
 
   x1, _ = dev.sline(x, y1, l)
-  x2, _ = dev.taper(x1, y1, 100, cfg.wg, dci.wg)
-  x3, _ = dev.srect(x2, y1, 50, dci.wg)
-  x5, _ = dev.taper(x3, y1, 100, dci.wg, cfg.wg)
+  x2, _ = dev.taper(x1, y1, dci.ltaper, cfg.wg, dci.wg)
+  x3, _ = dev.srect(x2, y1, s, dci.wg)
+  x5, _ = dev.taper(x3, y1, dci.ltaper, dci.wg, cfg.wg)
   x6, _ = dev.sline(x5, y1, l)
 
   x5, x6, ltip = dev.center(idev, x, x4, lchip)

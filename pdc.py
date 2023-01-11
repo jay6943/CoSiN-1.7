@@ -5,7 +5,15 @@ import dci
 import elr
 import tip
 
-def sbend(x, y, dy):
+def sbend(x, y, angle, dy):
+
+  x1, y1 = dev.taper(x, y, cfg.ltpr, cfg.wg, cfg.wr)
+  x2, y2 = dev.sbend(x1, y1, angle, dy)
+  x3, y3 = dev.taper(x2, y2, cfg.ltpr, cfg.wr, cfg.wg)
+
+  return x3, y3
+
+def ybend(x, y, dy):
 
   angle = 4
   core = elr.update(dci.wg, dci.radius, angle)
@@ -20,12 +28,12 @@ def arm(x, y, ch, sign):
 
   wdc, ltaper = 0.8, 5
 
-  x1, y1 = sbend(x, y + cfg.spacing * sign, ch * sign)
+  x1, y1 = ybend(x, y + cfg.spacing * sign, ch * sign)
   x2, y2 = dxf.taper('core', x1, y1, ltaper, dci.wg, wdc)
   if sign > 0: x2, y2 = dxf.srect('core', x2, y2, cfg.lpbs, wdc)
   x3, y3 = dxf.taper('core', x2, y2, ltaper, wdc, dci.wg)
   if sign < 0: x3, y3 = dxf.srect('core', x3, y3, cfg.lpbs, dci.wg)
-  x4, y4 = sbend(x3, y3, -ch * sign)
+  x4, y4 = ybend(x3, y3, -ch * sign)
 
   return x4, y4
 
@@ -34,14 +42,14 @@ def mzi(x, y, ch, sign):
   ch = 1.5
 
   x1, y1 = arm(x, y, ch, sign)
-  x2, y2 = sbend(x1, y1,  ch * 2 * sign)
+  x2, y2 = ybend(x1, y1,  ch * 2 * sign)
   x3, y4 = arm(x2, y2 + cfg.spacing * sign, ch,  1)
   x3, y5 = arm(x2, y2 + cfg.spacing * sign, ch, -1)
-  x4, y6 = sbend(x3, y4,  ch)
-  x5, y7 = sbend(x3, y5, -ch)
-  x5, y7 = sbend(x4, y6, -cfg.spacing - ch)
+  x4, y6 = ybend(x3, y4,  ch)
+  x5, y7 = ybend(x3, y5, -ch)
+  x5, y7 = ybend(x4, y6, -cfg.spacing - ch)
 
-  sbend(x1, y2 + (cfg.spacing * 2 + ch * 2) * sign, -ch * 2 * sign)
+  ybend(x1, y2 + (cfg.spacing * 2 + ch * 2) * sign, -ch * 2 * sign)
 
   return x5, y7
 
@@ -53,8 +61,8 @@ def device(x, y):
   x2, y2 = dci.dc(x, y, -1, -1)
   x3, y1 = mzi(x2, y, ch,  1)
   x3, y2 = mzi(x2, y, ch, -1)
-  x4, y1 = dxf.taper('core', x3, y1, 100, 0.4, cfg.wg)
-  x4, y2 = dxf.taper('core', x3, y2, 100, 0.4, cfg.wg)
+  x4, y1 = dxf.taper('core', x3, y1, 50, 0.4, cfg.wg)
+  x4, y2 = dxf.taper('core', x3, y2, 50, 0.4, cfg.wg)
 
   dxf.srect('edge', x2, y, x4 - x2, 40)
 
@@ -72,8 +80,8 @@ def chip(x, y, lchip):
   x1, _ = dci.sbend(x, y1, angle, ch - dci.offset, -1, -1)
   x1, _ = dci.sbend(x, y2, angle, ch - dci.offset, -1,  1)
   x2, y3, y4 = device(x1, y)
-  x3, y5 = dev.sbend(x2, y3, angle, y + ch - y3)
-  x4, y6 = dev.sbend(x2, y4, angle, y - ch - y4)
+  x3, y5 = sbend(x2, y3, angle, y + ch - y3)
+  x4, y6 = sbend(x2, y4, angle, y - ch - y4)
 
   x5, x6, ltip = dev.center(idev, x, x4, lchip)
 

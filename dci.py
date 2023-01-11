@@ -8,7 +8,7 @@ import numpy as np
 wg = 0.41
 tilted = 3
 radius = 50
-ltaper = 100
+ltaper = 50
 ybends = elr.update(wg, radius, tilted)
 offset = ltaper * np.sin(tilted * np.pi / 180) + cfg.spacing + ybends['dy']
 
@@ -31,17 +31,19 @@ def rbend(x, y, angle, dy, xsign, ysign):
   sign = xsign * ysign
 
   idev = len(cfg.data)
-  x1, y1 = dev.bends(x, y, angle - tilted, 0, xsign, ysign)
+  x1, y1 = dev.taper(x, y, cfg.ltpr * xsign, cfg.wg, cfg.wr)
+  x1, y1 = dev.bends(x1, y1, angle - tilted, 0, xsign, ysign)
   x2, y2 = dxf.move(idev, x, y, x1, y1, 0, 0, tilted * sign)
 
   dh = dy - (y2 - y) * ysign - df['dy']
   dl = dh * xsign / np.sin(angle / 180 * np.pi)
 
-  x3, y3 = dev.tilts(x2, y2, dl, angle * sign)
+  x3, y3 = dev.tilts(x2, y2, dl, cfg.wr, angle * sign)
   x4, y3 = x3 + df['dx'] * xsign, y + dy * ysign
-  x3, y4 = dev.bends(x4, y3, angle, 0, -xsign, -ysign)
+  x5, y4 = dev.bends(x4, y3, angle, 0, -xsign, -ysign)
+  x5, y3 = dev.taper(x4, y3, cfg.ltpr * xsign, cfg.wr, cfg.wg)
 
-  return x4, y3 if xsign > 0 else y4
+  return x5, y3 if xsign > 0 else y4
 
 def sbend(x, y, angle, dy, xsign, ysign):
 

@@ -9,7 +9,7 @@ def sbend(x, y, dy):
 
   radius, angle = 100, 10
 
-  core = elr.update(cfg.wt, radius, angle)
+  core = elr.update(cfg.wg, radius, angle)
   edge = elr.update(cfg.eg, radius, angle)
   sio2 = elr.update(cfg.sg, radius, angle)
 
@@ -19,51 +19,36 @@ def sbend(x, y, dy):
 
   return x1, y1
 
-def taper(x, y, sign):
-
-  w1 = cfg.wt if sign < 0 else cfg.wtpr
-  w2 = cfg.wtpr if sign < 0 else cfg.wt
-
-  if sign < 0:
-    x, _ = dxf.taper('core', x, y, 5, cfg.wg, cfg.wt)
-    x, _ = dxf.srect('core', x, y, 40, cfg.wt)
-  x, _ = dxf.taper('core', x, y, cfg.ltpr, w1, w2)
-
-  return x, y
-
 def arm(x, y, sign):
 
-  angle, dy, ltaper = 2, 1, 5
+  wg = 1.2 if sign > 0 else cfg.wpbs
 
-  core = elr.update(cfg.wt, cfg.radius, angle)
+  angle, dy, ltaper = 2, 1, 10
+  core = elr.update(cfg.wg, cfg.radius, angle)
 
-  x1, _ = dxf.taper('core', x, y, cfg.ltpr, cfg.wtpr, cfg.wt)
-  x2, y2 = dxf.sbend('core', x1, y, core, angle, -dy * sign)
-  x3, y2 = dxf.taper('core', x2, y2, ltaper, cfg.wt, cfg.wpbs)
-  
-  if sign > 0: x3, _ = dxf.srect('core', x3, y2, cfg.lpbs, cfg.wpbs)
-  
-  x4, _ = dxf.taper('core', x3, y2, ltaper, cfg.wpbs, cfg.wt)
-  if sign < 0: x4, _ = dxf.srect('core', x4, y2, cfg.lpbs, cfg.wt)
-  x5, _ = dxf.sbend('core', x4, y2, core, angle, dy * sign)
-  x6, _ = dxf.taper('core', x5, y, cfg.ltpr, cfg.wt, cfg.wtpr)
+  x1, y1 = dxf.taper('core', x, y, cfg.ltpr, cfg.wtpr, cfg.wg)
+  x2, y2 = dxf.sbend('core', x1, y1, core, angle, dy * sign)
+  x3, y2 = dxf.taper('core', x2, y2, ltaper, cfg.wg, wg)
+  x3, y2 = dxf.srect('core', x3, y2, cfg.lpbs, wg)
+  x4, y2 = dxf.taper('core', x3, y2, ltaper, wg, cfg.wg)
+  x5, y1 = dxf.sbend('core', x4, y2, core, angle, -dy * sign)
+  x6, y1 = dxf.taper('core', x5, y1, cfg.ltpr, cfg.wg, cfg.wtpr)
 
   return x6, y
 
 def tail(x, y, angle, rotate, port, sign):
 
-  core = cir.update(cfg.wt, 5, angle)
+  core = cir.update(cfg.wg, 5, angle)
 
-  x1, y1 = dxf.taper('core', x, y, sign * cfg.ltpr, cfg.wt, cfg.wtpr)
+  x1, y1 = dxf.taper('core', x, y, sign * cfg.ltpr, cfg.wg, cfg.wtpr)
   x1, y1 = dxf.bends('core', x, y, core, rotate, 1, port)
 
-  w = cfg.wt * 0.5
+  w = cfg.wg * 0.5
   s = 1 if rotate != 90 else -1
 
   data = ['core']
   data.append([x1 + w, y1])
-  data.append([x1 + 0.05, y1 + s * port * 5])
-  data.append([x1 - 0.05, y1 + s * port * 5])
+  data.append([x1, y1 + s * port * 5])
   data.append([x1 - w, y1])
   cfg.data.append(data)
 
@@ -76,24 +61,22 @@ def mzi(x, y, inport, outport):
   y3 = y + inport * cfg.d2x2
   y4 = y - outport * cfg.d2x2
 
-  if outport == 0: x1, _ = taper(x, y3, -1)
-  else: x1, _ = dxf.taper('core', x, y3, cfg.ltpr, cfg.wt, cfg.wtpr)
-  x2, _ = dxf.srect('core', x1, y, cfg.l2x2, cfg.w2x2)
-
-  x5, _ = arm(x2, y1, -1)
-  x5, _ = arm(x2, y2,  1)
-
-  x6, _ = dxf.srect('core', x5, y, cfg.l2x2, cfg.w2x2)
-
+  x1, _ = dxf.srect('core', x, y3, 40, cfg.wg)
+  x1, _ = dxf.taper('core', x1, y3, cfg.ltpr, cfg.wg, cfg.wtpr)
+  
   tail(x1 - 5, y - inport * cfg.d2x2, 90, 90, inport, 1)
   
-  if outport == 0:
-    x7, _ = taper(x6, y1, 1)
-    x7, _ = taper(x6, y2, 1)
-  else:
-    x7, _ = taper(x6, y4, 1)
-    x7, _ = dxf.srect('core', x7, y4, 40, cfg.wt)
-    x7, _ = dxf.taper('core', x7, y4, cfg.ltpr, cfg.wt, cfg.wg)
+  x2, _ = dxf.srect('core', x1, y, cfg.l2x2, cfg.w2x2)
+
+  x5, _ = arm(x2, y1,  1)
+  x5, _ = arm(x2, y2, -1)
+
+  x6, _ = dxf.srect('core', x5, y, cfg.l2x2, cfg.w2x2)
+  x7, _ = dxf.taper('core', x6, y1, cfg.ltpr, cfg.wtpr, cfg.wg)
+  x7, _ = dxf.taper('core', x6, y2, cfg.ltpr, cfg.wtpr, cfg.wg)
+
+  if outport != 0:
+    x7, _ = dxf.srect('core', x7, y4, 40, cfg.wg)
     tail(x6 + 5, y + outport * cfg.d2x2, 90, 270, outport, -1)
   
   dxf.srect('edge', x, y, x7 - x, cfg.w2x2 + cfg.eg)
@@ -125,7 +108,7 @@ def chip(x, y, lchip):
   x8, t2 = tip.fiber(x6, y + ch, ltip, 1)
   x8, t2 = tip.fiber(x6, y - ch, ltip, 1)
 
-  s = 'pbs-' + str(round(cfg.lpbs))
+  s = 'pbs-' + str(round(cfg.l2x2)) + '-' + str(round(cfg.lpbs))
   dev.texts(t1, y - ch, s, 0.2, 'lc')
   dev.texts(t1, y + ch, s, 0.2, 'lc')
   dev.texts(t2, y, s, 0.2, 'rc')
@@ -137,9 +120,16 @@ def chips(x, y, arange):
 
   y = y - cfg.sch * 1.5
 
-  var = cfg.lpbs
+  lpbs = cfg.lpbs
+  l2x2 = cfg.l2x2
+
   for cfg.lpbs in arange: _, y = chip(x, y + cfg.sch * 2, cfg.size)
-  cfg.lpbs = var
+
+  for cfg.l2x2 in [49, 51, 52]:
+    for cfg.lpbs in dev.arange(24, 40, 2): _, y = chip(x, y + cfg.sch * 2, cfg.size)
+
+  cfg.lpbs = lpbs
+  cfg.l2x2 = l2x2
 
   return x + cfg.size, y - cfg.sch * 0.5
 
@@ -147,6 +137,6 @@ if __name__ == '__main__':
 
   # chip(0, 0, 3000)
 
-  chips(0, 0, dev.arange(10, 20, 1))
+  chips(0, 0, dev.arange(20, 30, 2))
 
   dev.saveas(cfg.work + 'pbs')

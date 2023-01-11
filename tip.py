@@ -6,20 +6,18 @@ polished = 200
 
 def device(x, y, ltip, wtip, sign):
   
-  w = [cfg.wg, 0.8, 0.5, wtip]
-  l = [ltip, 5, 20, 50, 500]
+  w = [cfg.wg, wtip]
+  l = [ltip, 100, 500]
   t = l[0] - sum(l[1:])
 
-  if t > 0: x, _ = dev.sline(x, y, t * sign)
+  if t > 0: x, _ = dev.srect(x, y, t * sign, w[0])
   x1, _ = dxf.taper('core', x,  y, sign * l[1], w[0], w[1])
-  x2, _ = dxf.taper('core', x1, y, sign * l[2], w[1], w[2])
-  x3, _ = dxf.taper('core', x2, y, sign * l[3], w[2], w[3])
-  x4, _ = dxf.srect('core', x3, y, sign * l[4], w[3])
+  x3, _ = dxf.srect('core', x1, y, sign * l[2], w[1])
 
-  dxf.srect('edge', x, y, x4 - x, cfg.eg)
-  dxf.srect('sio2', x, y, x4 - x, cfg.sg)
+  dxf.srect('edge', x, y, x3 - x, cfg.eg)
+  dxf.srect('sio2', x, y, x3 - x, cfg.sg)
   
-  return x4, x
+  return x3, x
 
 def fiber(x, y, ltip, sign):
 

@@ -11,6 +11,14 @@ import numpy as np
 
 yqpsk = 2400
 
+def sbend(x, y, angle, dy):
+  
+  x1, y1 = dev.taper(x, y, cfg.ltpr, cfg.wg, cfg.wr)
+  x2, y2 = dev.sbend(x1, y1, angle, dy)
+  x3, y3 = dev.taper(x2, y2, cfg.ltpr, cfg.wr, cfg.wg)
+
+  return x3, y3
+
 def tbend(x, y, dy, xsign):
 
   ysign = 1 if dy > 0 else -1
@@ -23,10 +31,12 @@ def tbend(x, y, dy, xsign):
   xo = df['dy'] if xsign > 0 else df['dx']
   yo = df['dx'] if xsign > 0 else df['dy']
 
+  if xsign > 0: x, y = dev.taper(x, y, cfg.ltpr, cfg.wg, cfg.wr)
   x1, y1 = dev.bends(x, y, 45, a1, xsign, ysign)
-  x2, y2 = dev.tilts(x1, y1, dl, 45 * ysign)
+  x2, y2 = dev.tilts(x1, y1, dl, cfg.wr, 45 * ysign)
   x3, y3 = x2 + xo, y2 + yo * ysign
   x4, y4 = dev.bends(x3, y3, 45, a2, xsign, -ysign)
+  if xsign < 0: x3, y3 = dev.taper(x3, y3, cfg.ltpr, cfg.wr, cfg.wg)
 
   return x3, y3
 
@@ -52,8 +62,8 @@ def chip(x, y, lchip):
   tip.fiber(x1, y1, ltip, -1)
   tip.fiber(x1, y2, ltip, -1)
   
-  x2, y3 = dev.sbend(x1, y1, 45,  ch * 2)
-  x2, y4 = dev.sbend(x1, y2, 45, -ch * 2)
+  x2, y3 = sbend(x1, y1, 45,  ch * 2)
+  x2, y4 = sbend(x1, y2, 45, -ch * 2)
 
   ######################################################
   x3, x20, y20 = tap.device(x2, y3)
@@ -65,8 +75,8 @@ def chip(x, y, lchip):
   x4, _ = voa.device(x3, y3)
   x4, _ = dev.sline(x2, y4, x4 - x2)
 
-  x5, y5 = dev.sbend(x4, y3, 45, -ch * 2)
-  x5, y6 = dev.sbend(x4, y4, 45,  ch * 2)
+  x5, y5 = sbend(x4, y3, 45, -ch * 2)
+  x5, y6 = sbend(x4, y4, 45,  ch * 2)
 
   x6, _ = dev.sline(x5, y5, 500)
   x6, _ = dev.sline(x5, y6, 500)
@@ -82,10 +92,10 @@ def chip(x, y, lchip):
   h1 = y + yqpsk - ch - y71 - (y71 - y61)
   h2 = y + yqpsk + ch - y73 - (y73 - y63)
 
-  _, y81 = dev.tline(x9, y71,  h1)
-  _, y82 = dev.tline(x8, y72, -h2)
-  _, y83 = dev.tline(x8, y73,  h2)
-  _, y84 = dev.tline(x9, y74, -h1)
+  _, y81 = dev.tilts(x9, y71,  h1, cfg.wr, 90)
+  _, y82 = dev.tilts(x8, y72, -h2, cfg.wr, 90)
+  _, y83 = dev.tilts(x8, y73,  h2, cfg.wr, 90)
+  _, y84 = dev.tilts(x9, y74, -h1, cfg.wr, 90)
 
   x10, _ = tbend(x9, y81,  ch * 4, -1)
   x10, _ = tbend(x8, y82, -ch * 2, -1)
