@@ -2,6 +2,7 @@ import cfg
 import dxf
 import dev
 import key
+import mask
 import numpy as np
 
 radius = 150 * 0.5 * 1000
@@ -29,7 +30,7 @@ def wafer(x, y):
   dxf.crect('fill', x + rmax, y - rmax, rmax - t, t - rmax)
   dxf.crect('fill', x + rmax, y + rmax, rmax - t, rmax - t)
 
-def cells(x, y, n, title):
+def cells(x, y, n, title, fp):
 
   cs = cfg.size * 0.5
   dx, dy = 400, 400 + cs
@@ -42,9 +43,11 @@ def cells(x, y, n, title):
 
 def tooling(x, y):
 
+  fp = cfg.work + 'wafer'
+
   for i in range(11):
     dy, n = size * (i - 5.5), 10 if i % 10 else 8
-    cells(x, y + dy, n, '0' + str(i % 4 + 1))
+    cells(x, y + dy, n, '0' + str(i % 4 + 1), fp)
   
   a = cfg.size * 6
   b = cfg.size * 2
@@ -60,6 +63,6 @@ def tooling(x, y):
 
   wafer(0, 0)
 
-  dev.saveas(cfg.work + 'wafer')
+  dev.saveas(fp)
 
 if __name__ == '__main__': tooling(0, 0)
