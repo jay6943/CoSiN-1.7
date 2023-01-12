@@ -83,7 +83,7 @@ def copier(fp, layer, area):
 
       polyline(fp, layer)
       
-      for [x, y] in device[1:]: vertex(fp, layer, x + dx, y + dy)                    
+      for [x, y] in device[1:]: vertex(fp, layer, x + dx, y + dy)
           
       seqend(fp, layer)
   
